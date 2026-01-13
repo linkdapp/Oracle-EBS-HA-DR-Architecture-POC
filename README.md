@@ -4,7 +4,7 @@ A VirtualBox-based POC showcasing Oracle EBS 12.2 with HA (Data Guard FSFO &amp;
 # Oracle EBS 12.2 High Availability and Disaster Recovery POC
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Oracle DBA Showcase](https://img.shields.io/badge/Expertise-Oracle%20DBA%20(20%2B%20Years)-blue)](https://github.com/yourusername/Oracle-EBS-HA-DR-POC)
+[![Oracle DBA Showcase](https://img.shields.io/badge/Expertise-Oracle%20DBA%20(15%2B%20Years)-blue)](https://github.com/yourusername/Oracle-EBS-HA-DR-POC)
 
 ## Overview
 This repository is a proof-of-concept (POC) demonstrating a robust Oracle E-Business Suite (EBS) 12.2 architecture with a focus on **High Availability (HA)**, **Disaster Recovery (DR)**, **Security**, **Automation**, **Performance Tuning**, **OEM Monitoring**, **Maintenance Patching**, and **integrations with non-Oracle databases** like MongoDB and SQL Server. Built using VirtualBox VMs on a host with 32 CPUs and 128 GB RAM, it simulates a production-like environment starting from a single-instance EBS setup (App Tier + DB Tier) and evolving to a multi-site RAC-enabled system.
