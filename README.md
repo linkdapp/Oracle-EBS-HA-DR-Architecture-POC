@@ -28,9 +28,13 @@ Key Features:
 
 This setup runs on ~8 VirtualBox VMs (scalable to 4 for minimal POC), allocating ~64 GB RAM total across VMs.
 
+
 ## Architecture Diagram
-[High-Level Architecture](diagrams/architecture.png)  
-*(Upload a PNG from Draw.io or similar tool showing VMs, data flows, and components.)*
+
+
+<img width="1140" height="880" alt="image" src="https://github.com/user-attachments/assets/ac8fb60d-341d-4416-a057-009d940b3b49" />
+
+
 
 Host Machine (32 CPUs, 128 GB RAM) - VirtualBox
 ├── Primary Site
