@@ -26,13 +26,19 @@ Both methods are showcased here for completeness in this GitHub POC. (Reference:
 ## Method 1: Agent Push (Recommended – from OEM Console)
 
 1. Log in to OEM console as SYSMAN.
+![Step 1: Deploy Agent Screenshot](screenshots/step1_Log_in_to_OEM_console_as_SYSMAN.jpg)
+
 2. Navigate: **Setup** → **Add Target** → **Add Targets Manually**
+![Step 2: Deploy Agent Screenshot](screenshots/Step2_setup_page_add_target.jpg)
+
 3. Select **Install Agent on Host** → Click **Add**
+![Step 3: Deploy Agent Screenshot](screenshots/step3_install_agent_on_host.jpg)
+
 4. Enter host details:
 - Hostname: dbserver_hostname (or IP)
 - Platform: Linux x86-64 (match your VM)
 - Click **Next**
-
+![Step 4: Deploy Agent Screenshot](screenshots/step4_add_hosts_details.jpg)
 
 5. On Installation Details screen:
 - Installation Base Directory: /u01/app/oracle/agent (example – choose consistent path)
@@ -40,13 +46,21 @@ Both methods are showcased here for completeness in this GitHub POC. (Reference:
 - Port: 3872 (default agent listen port)
 - Registration Password: the one you set
 - Additional Parameters (optional): -ignorePrereqs if testing
+![Step 4: Deploy Agent Screenshot](screenshots/step5_host_installation_details.jpg)
 
-7. Review → **Deploy Agent**
-8. Monitor progress on **Add Host Status** page.
-9. After success: Run root.sh on each target (as root):
+6. Review → **Deploy Agent**
+![Step 4: Deploy Agent Screenshot](screenshots/step6_review_and_deploy.jpg)
+
+7. Monitor progress on **Add Host Status** page.
+![Step 4: Deploy Agent Screenshot](screenshots/step7_moniotor_progress.jpg)
+
+8. After success: Run root.sh on each target (as root):
 --- /u01/app/oracle/agent/root.sh
-10. Verify: 
+![Step 4: Deploy Agent Screenshot](screenshots/step8_successful_deployment.png)
+
+9. Verify: 
 --- emctl status agent
+![Step 4: Deploy Agent Screenshot](screenshots/step9_verify_agent_status.png)
 
 Targets auto-discover (DB, listener, EBS apps) in OEM.
 
