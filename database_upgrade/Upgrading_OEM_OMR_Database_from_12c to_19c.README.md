@@ -179,8 +179,9 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
     /media/sf_eoracle/Patch/12c/35239280
 
     ```
-
-	Verification:
+	
+	```bash
+	Patch verification:
 
 	opatch lsinventory | grep "Patch  "
 	
@@ -200,6 +201,8 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	col ACTION_TIME for a30
 	col status for a12
 	select INSTALL_ID,PATCH_ID,PATCH_UID,VERSION,ACTION,STATUS,FLAGS,ACTION_TIME from dba_registry_sqlpatch;
+	```
+
 
 4. Performing the OMR 12c Oracle database upgrade to 19c using AutoUpgrade:  
 
