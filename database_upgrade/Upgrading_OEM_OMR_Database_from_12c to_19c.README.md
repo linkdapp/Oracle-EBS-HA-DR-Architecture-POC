@@ -180,17 +180,14 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 
     ```
 
+	Verification:
 
-Verification:
-
-	```Bash
-	
 	opatch lsinventory | grep "Patch  "
 	
 	sqlplus / as sysdba
 	
 	select owner, object_name, object_type from dba_invalid_objects order by owner, object_type, object_name;
-
+	
 	col comp_name for a40
 	col status for a12
 	col comp_id for a10
@@ -198,19 +195,18 @@ Verification:
 	select substr(comp_name,1,40) comp_name, substr(comp_id,1,10)  
 	comp_id,substr(version,1,12) version,status from dba_registry ;
 	
-
+	
 	set linesize 300
 	col ACTION_TIME for a30
 	col status for a12
 	select INSTALL_ID,PATCH_ID,PATCH_UID,VERSION,ACTION,STATUS,FLAGS,ACTION_TIME from dba_registry_sqlpatch;
-
-  ```
+	```
 
 4. Performing the OMR 12c Oracle database upgrade to 19c using AutoUpgrade:  
 
 	- Back Up Oracle Database Before Upgrading
-	Since I'm using a VM I just take a snapshot or ask SYSADMIN/Storage to take one for you.
-	You can do both RMAN and snapshot. 
+	  Since I'm using a VM I just take a snapshot or ask SYSADMIN/Storage to take one for you.
+	  You can do both RMAN and snapshot. 
 
 	```bash
 	rman "target / nocatalog"
