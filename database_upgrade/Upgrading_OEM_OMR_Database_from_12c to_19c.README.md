@@ -200,13 +200,12 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	col ACTION_TIME for a30
 	col status for a12
 	select INSTALL_ID,PATCH_ID,PATCH_UID,VERSION,ACTION,STATUS,FLAGS,ACTION_TIME from dba_registry_sqlpatch;
-	```
 
 4. Performing the OMR 12c Oracle database upgrade to 19c using AutoUpgrade:  
 
-	- Back Up Oracle Database Before Upgrading
-	  Since I'm using a VM I just take a snapshot or ask SYSADMIN/Storage to take one for you.
-	  You can do both RMAN and snapshot. 
+ - Back Up Oracle Database Before Upgrading
+   Since I'm using a VM I just take a snapshot or ask SYSADMIN/Storage to take one for you.
+   You can do both RMAN and snapshot. 
 
 	```bash
 	rman "target / nocatalog"
@@ -221,8 +220,8 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	}
 	```
 	
-	- As sys execute *dbupgdiag.sql* script. Download the script from My Oracle Support note 556610
-	  The dbupgdiag.sql script collects diagnostic information about the status of the database, either before or after the upgrade.
+  - As sys execute *dbupgdiag.sql* script. Download the script from My Oracle Support note 556610
+	The dbupgdiag.sql script collects diagnostic information about the status of the database, either before or after the upgrade.
 	
 	```bash
 	sqlplus / as sysdba
@@ -236,10 +235,10 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	![Step 4: AutoUpgrade Config](screenshots/step4_dbupgdiag_sql_results.png) 
 	
 	
-	- AutoUpgrade file location: 19c $ORACLE_HOME 
-	  Oracle recommended to download the latest version: My Oracle Support Document 2485457.1
-	  The AutoUpgrade Utility is a Java JAR file provided by Oracle that helps to ensure 
-	  that your upgrade completes successfully.
+ - AutoUpgrade file location: 19c $ORACLE_HOME 
+   Oracle recommended to download the latest version: My Oracle Support Document 2485457.1
+   The AutoUpgrade Utility is a Java JAR file provided by Oracle that helps to ensure 
+   that your upgrade completes successfully.
 
 	```bash
 	
