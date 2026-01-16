@@ -11,7 +11,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 ## Prerequisites
 1. Backup: 
 	- RMAN full backup of 12c DB (e.g., `rman target /` → `backup database plus archivelog;`).
-	- Take a snapshot of all the server after all aplications have been shutdown. (Fastest restore and least headache)
+	- Take a snapshot of all the server after all applications have been shutdown. (Fastest restore and least headache)
 2. Download: AutoUpgrade JAR (latest from MOS Doc ID 2485457.1); 19c software (p33446294_190000_Linux-x86-64.zip).  
 3. OS Checks: OL7/8 certified; HugePages tuned (vm.dirty_ratio=20, vm.dirty_background_ratio=3 per best practices for caching).  
 4. Pre-Upgrade: Run preupgrade.jar (from 19c home): `java -jar $ORACLE_HOME/rdbms/admin/preupgrade.jar`. Fix issues (e.g., invalid objects).  
@@ -19,7 +19,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 6. Params: Set PROCESSES=300, SGA_TARGET=4GB+ (tune via AWR).  
 7. Patches: Apply latest 19c RU (e.g., 19.21 as of 2024 per MOS 555.1).  
 
-![Pre-Upgrade Checks Screenshot](screenshots/preupgrade_jar_output.png)  
+ 
 
 ## Step-by-Step Upgrade Using AutoUpgrade
 
@@ -33,7 +33,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	```bash
 	rpm -ivh oracle-database-preinstall-19c-1.0-3.el7.x86_64.rpm
 	```
-	![Step 1: 19c Software Install](screenshots/19c_install_silent.png)
+	![Step 1: 19c Software Install](screenshots/step1_oracle-database-preinstall.png)
 	
 	
 2. 	As the Oracle OS user, install 19c Software (Silent): 
@@ -41,7 +41,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	- Copy the responseFile *db_install.rsp* from $ORACLE_HOME/install/response to the staging directory
 	- Edit the file. Filling out the values for the install.
 	- Upgrade the OPatch to the latest version
-	- Run: `./runInstaller -silent -responseFile /path/to/db_install.rsp`. 
+	- Run: *./runInstaller -silent -responseFile /path/to/db_install.rsp*. 
     - Note: I am installing the 19c Software-only and applying the patches at the same time. Cool!	
 
 	```bash
@@ -179,10 +179,11 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
     /media/sf_eoracle/Patch/12c/35239280
 
     ```
-	
+
+
+Verification:
+
 	```Bash
-	
-	# Verification:
 	
 	opatch lsinventory | grep "Patch  "
 	
@@ -204,7 +205,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	select INSTALL_ID,PATCH_ID,PATCH_UID,VERSION,ACTION,STATUS,FLAGS,ACTION_TIME from dba_registry_sqlpatch;
 
   ```
-  
+
 4. Performing the OMR 12c Oracle database upgrade to 19c using AutoUpgrade:  
 
 	- Back Up Oracle Database Before Upgrading
