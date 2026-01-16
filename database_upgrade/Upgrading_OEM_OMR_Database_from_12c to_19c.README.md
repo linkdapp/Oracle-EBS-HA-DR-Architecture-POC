@@ -297,11 +297,11 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	  java -jar autoupgrade.jar -config 12c_to_19c_autoupgrade_config.cfg.cfg -mode analyze
 	```
 	
-	![Step 3: Analyze Output](screenshots/autoupgrade_analyze_1a.png) 
+	![Step 4: Analyze Output](screenshots/Step4_autoupgrade_analyze_1a.png) 
 	
-	![Step 3: Analyze Output](screenshots/autoupgrade_analyze_1b.png)
+	![Step 4: Analyze Output](screenshots/step4_autoupgrade_analyze_1b.png)
 	
-	![Step 3: Analyze Output](screenshots/autoupgrade_analyze_1c.png)
+	![Step 4: Analyze Output](screenshots/step4_autoupgrade_analyze_1c.png)
 	
 	
 	```bash
@@ -312,7 +312,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	  
 	```
 	
-	![Pre-Upgrade Checks Screenshot](screenshots/step4_Fixup Report_.png)
+	![Pre-Upgrade Checks Screenshot](screenshots/step4_Fixup Report_1.png)
 	
 
 	```bash
@@ -326,7 +326,11 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 		
 	```  	
 	
-	![Pre-Upgrade Checks Screenshot](screenshots/preupgrade_jar_output.png)  
+	![Pre-Upgrade Checks Screenshot](screenshots/step4_run_upgrade_jar_output1a.png)
+	
+	![Pre-Upgrade Checks Screenshot](screenshots/step4_run_upgrade_jar_output1b.png) 
+	
+	
 
 
 
