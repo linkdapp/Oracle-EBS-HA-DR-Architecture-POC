@@ -87,3 +87,7 @@ Demonstrating both **Agent Push** (console) and **Agent Pull** (`AgentPull.sh`) 
 
 Detailed step-by-step guide:  
 [Deploying OEM Agents - Push vs Pull](monitoring/Deploy-OEM-Agents-Push-Pull.md)
+
+## Upgrades Showcase
+- [OMR Database Upgrade (12c to 19c)](database_upgrade/Upgrading_OEM_OMR_Database_from_12c to_19c.README.md) – Using AutoUpgrade for best practices.  
+- [OMS Upgrade (13.3 to 13.5)](oem_upgrade/README.md) – Security-focused upgrade.
