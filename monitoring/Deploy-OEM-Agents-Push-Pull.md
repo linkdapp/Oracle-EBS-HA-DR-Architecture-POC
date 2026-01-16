@@ -44,11 +44,12 @@ Both methods are showcased here for completeness in this GitHub POC. (Reference:
 4. Enter host details:
 	- Hostname: dbserver_hostname (or IP)
 	- Platform: Linux x86-64 (match your VM)
-	- Click **Next**
-	
+		
 	![Step 4: Deploy Agent Screenshot](screenshots/step4_add_hosts_details.jpg)
 
-
+	- Click **Next**
+	
+	
 5. On Installation Details screen:
 	- Installation Base Directory: *'/u01/app/oracle/agent'* (example – choose consistent path)
 	- Instance Directory: auto-filled or *'/u01/app/oracle/agent/agent_inst'*
@@ -58,12 +59,16 @@ Both methods are showcased here for completeness in this GitHub POC. (Reference:
 	
 	![Step 5: Deploy Agent Screenshot](screenshots/step5_host_installation_details.jpg)
 
-
+	- Click **Next**
+	
+	
 6. Review → **Deploy Agent**
 
 	![Step 6: Deploy Agent Screenshot](screenshots/step6_review_and_deploy.jpg)
 
-
+	- Click **Deploy Agent**
+	
+	
 7. Monitor progress on **Add Host Status** page.
 
 	![Step 7: Deploy Agent Screenshot](screenshots/step7_moniotor_progress.jpg)
@@ -92,11 +97,11 @@ Targets auto-discover (DB, listener, EBS apps) in OEM.
 
 1. On OMS set the Agent Registration Password. 
  
-- Go to Setup > Security > Registration Passwords. 
- 
+- Go to **Setup** → **Security** → **Registration Passwords**. 
+
 	![Step 1: Deploy Agent Screenshot](screenshots/method2_step1a_create_agent_reg_passwd_in_oms.png)  
 
-- Click "Add Registration Password" > Enter a new password.  
+- Click **Create** > Enter a new password. Set **Expiry Date**  
 
 	![Step 2: Deploy Agent Screenshot](screenshots/method2_step1b_create_agent_reg_passwd_in_oms.png)  
 
@@ -104,38 +109,38 @@ Targets auto-discover (DB, listener, EBS apps) in OEM.
 2. On OMS host and destination (target) host, create a staging Directory:  
 	
 	```bash
-	mkdir -p /u01/app/oracle/staging/agentsoftware
-	cd /u01/app/oracle/staging/agentsoftware
+	*mkdir -p /u01/app/oracle/staging/agentsoftware
+	*cd /u01/app/oracle/staging/agentsoftware
 	```
 	
 3. Generate the Management Agent software and copy it to the destination server via scp":
 	
 	```bash
-	emcli login -username=sysman
-	emcli sync
-	emcli get_supported_platforms # Identify your Platform mine is Linux x86-64
-	emcli get_agentimage -destination=/u01/app/oracle/staging/agentsoftware -platform="Linux x86-64" -version=13.3.0.0.0
-	scp *13.3.0.0.0_AgentCore_226.zip* oracle@dbserver_hostname:/u01/app/oracle/staging/agentsoftware
+	*emcli login -username=sysman
+	*emcli sync
+	*emcli get_supported_platforms # Identify your Platform mine is Linux x86-64
+	*emcli get_agentimage -destination=/u01/app/oracle/staging/agentsoftware -platform="Linux x86-64" -version=13.3.0.0.0
+	*scp *13.3.0.0.0_AgentCore_226.zip* oracle@dbserver_hostname:/u01/app/oracle/staging/agentsoftware
 	```
 	
-	![Step 4: Deploy Agent Screenshot](screenshots//method2_step4_generate_management_agent_software.png)
+	![Step 4: Deploy Agent Screenshot](screenshots/method2_step4_generate_management_agent_software.png)
 
 
 4. On the target host (as oracle user) unzip 13.3.0.0.0_AgentCore_226.zip and edit the agent.rsp:
 
 	```bash
-	cd /u01/app/oracle/staging/agentsoftware
-	unzip 13.3.0.0.0_AgentCore_226.zip
-	vi agent.rsp # Typical entries below:
-	OMS_HOST=oemserver01.usat.com
-	EM_UPLOAD_PORT=4903
-	AGENT_REGISTRATION_PASSWORD=agent12
+	*cd /u01/app/oracle/staging/agentsoftware
+	*unzip 13.3.0.0.0_AgentCore_226.zip
+	*vi agent.rsp # Typical entries below:
+	*OMS_HOST=oemserver01.usat.com
+	*EM_UPLOAD_PORT=4903
+	*AGENT_REGISTRATION_PASSWORD=agent12
 	
-	AGENT_BASE_DIR=/u01/app/oracle/agent
-	AGENT_INSTANCE_HOME=/u01/app/oracle/agent/agent_inst
-	AGENT_PORT=3872
-	ORACLE_HOSTNAME=
-	s_agentHomeName="agent13R3"
+	*AGENT_BASE_DIR=/u01/app/oracle/agent
+	*AGENT_INSTANCE_HOME=/u01/app/oracle/agent/agent_inst
+	*AGENT_PORT=3872
+	*ORACLE_HOSTNAME=
+	*s_agentHomeName="agent13R3"
 	```
 
 	![Step 5: Deploy Agent Screenshot](screenshots/method2_step5_run_agentdeploy_command.png)
@@ -144,10 +149,10 @@ Targets auto-discover (DB, listener, EBS apps) in OEM.
 5. Run the *agentDeploy.sh* command (adjust paths/ports as needed):
 
 	```bash
-	cd /u01/app/oracle/staging/agentsoftware/
-	./agentDeploy.sh \
-	RESPONSE_FILE=/u01/app/oracle/staging/agentsoftware/agent.rsp \
-	-ignorePrereqs
+	*cd /u01/app/oracle/staging/agentsoftware/
+	*./agentDeploy.sh \
+	*RESPONSE_FILE=/u01/app/oracle/staging/agentsoftware/agent.rsp \
+	*-ignorePrereqs
 	```
  
 6. Wait for install (may take 10-20 mins).
@@ -156,19 +161,19 @@ Targets auto-discover (DB, listener, EBS apps) in OEM.
 7. Run root.sh (as root):
 	
 	```bash
-	/u01/app/oracle/agent/agent_13.3.0.0.0/root.sh
+	*/u01/app/oracle/agent/agent_13.3.0.0.0/root.sh
 	```
 
 
 8. Start and verify agent:
 
 	```bash
-	/u01/app/oracle/agent/agent_inst/bin/emctl start agent
+	*/u01/app/oracle/agent/agent_inst/bin/emctl start agent
 	
-	/u01/app/oracle/agent/agent_inst/bin/emctl status agent
+	*/u01/app/oracle/agent/agent_inst/bin/emctl status agent
 	```
 	
-	![Step 8: Deploy Agent Screenshot](screenshots/method2_step9_agent_status_cmd.pn)
+	![Step 8: Deploy Agent Screenshot](screenshots/method2_step9_agent_status_cmd.png)
 	
 	via OMS:
 		
