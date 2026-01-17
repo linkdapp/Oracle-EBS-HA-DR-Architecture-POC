@@ -334,28 +334,56 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	![Pre-Upgrade Checks Screenshot](screenshots/step4_run_upgrade_jar_output1b.png) 
 	
 	
+5. Post-Upgrade: Run utlrp.sql for recompiles; dbupgdiag.sql (MOS 556610.1) for diagnostics. 
 
+	```bash
+	
+	cd /media/sf_eoracle/19c/
+	
+	sqlplus / as sysdba
+	
+	
+	@dbupgdiag.sql
+	
+	@?/rdbms/admin/utlrp.sql
+	
+	```
+	
+	![Step 5: Post-Upgrade Checks](screenshots/step5_run_post_upgrade_jar_output1a.png)  
+	
+  - Update COMPATIBLE=19.0.0.
+	
+	```bash
+	sqlplus / as sysdba
 
+	SQL>
+	SQL> show parameter COMPATIBLE
+	
+	NAME                                 TYPE        VALUE
+	------------------------------------ ----------- ------------------------------
+	compatible                           string      12.2.0
+	noncdb_compatible                    boolean     FALSE
+	SQL>
+	SQL>
+	SQL> create pfile from spfile;
+	SQL>
+	SQL> alter system set COMPATIBLE='19.0.0' scope=spfile;
+	
+	System altered.
 
-5. Upgrade: Shutdown 12c DB. Run: `java -jar autoupgrade.jar -config auto_upgrade.cfg -mode upgrade`.  
+	#--- parameter will take effect on the next database startup.
+	```	
+	
+	![Step 5: Post-Upgrade Checks](screenshots/step6_run_post_upgrade_jar_compatible.png)
+	
 
-![Step 5: Upgrade Process](screenshots/autoupgrade_upgrade_log.png)  
+6. Validate: Start DB, check AWR for performance; rediscover in OEM.  
 
-6. Post-Upgrade: Run utlrp.sql for recompiles; dbupgdiag.sql (MOS 556610.1) for diagnostics. Update COMPATIBLE=19.0.0.  
+	
+	![Step 6: Post-Upgrade Checks](screenshots/step5_run_post_upgrade_jar_output1b.png)
+	
+	
+	
 
-![Step 6: Post-Upgrade Checks](screenshots/dbupgdiag_output.png)  
+## Congratulations. You have successfully completed the Upgrade of 12c OMA to 19c!!!
 
-7. Validate: Start DB, check AWR for performance; rediscover in OEM.  
-
-## Best Practices & Security
-- Automation: Script the process (e.g., Bash for backups/pre-checks).  
-- Tuning: Post-upgrade, enable AMM (MEMORY_TARGET=6GB+); monitor with OEM.  
-- Security: Apply 19c security patches (MOS 555.1); enable TDE on sysman schema.  
-- Testing: Simulate in POC; rollback via Flashback if issues.  
-- Time: ~25-40 mins per your doc (adapt for OEM repo size).
-
-Add screenshots to /screenshots/ and commit.
-
----
-
-### oem_upgrade/README.md Content (Copy-Paste This)
