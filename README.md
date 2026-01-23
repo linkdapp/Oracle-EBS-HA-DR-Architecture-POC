@@ -83,11 +83,9 @@ MIT License. Credits: Oracle MOS docs, usatdba@gmail.com.
 For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 
-## TASK 1: OEM Agent Deployment Showcase
-Demonstrating both **Agent Push** (console) and **Agent Pull** (`AgentPull.sh`) methods for monitoring DB/App servers in EBS HA/DR POC.
+## TASK 1: Deployment Showcase
 
-Detailed step-by-step guide:  
-[Deploying OEM Agents - Push vs Pull](monitoring/Deploy-OEM-Agents-Push-Pull.md)
+- [Deploying OEM Agents - Push vs Pull](monitoring/Deploy-OEM-Agents-Push-Pull.md)
 
 ## TASK 2: Upgrades Showcase
 - [OMR Database Upgrade (12c to 19c)](database_upgrade/Upgrading_OEM_OMR_Database.README.md) – Using AutoUpgrade for best practices.  
