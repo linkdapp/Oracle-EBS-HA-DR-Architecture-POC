@@ -7,7 +7,7 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 (Reference: Oracle EM Upgrade Guide; MOS for RUs.)
 
 
-Prerequisites
+Prerequisites:
 
  - Certified DB: Upgraded to 19c (certified).
  - Agents: Upgrade to 13.5-compatible (use Agent Upgrade Console).
@@ -39,7 +39,7 @@ Prerequisites
 2. The downloaded files are compressed with the zip format. Use any unzip tool to uncompress the file, or download a utility from eDelivery http://updates.oracle.com/unzips/unzips.html. This will generate the compressed zip files.
 
 
-```bash
+	```bash
 	cd /staging_area
 
 	unzip V1007079-01.zip
@@ -48,23 +48,21 @@ Prerequisites
 	unzip V1007082-01.zip
 	unzip V1007083-01.zip
 
-	
-```
-
+	```
 
 
 3. Server (system) Pre-Checks: To check the local server's OS packages, kernel parameters, and hardware (RAM/Swap) before you even touch a database 
    Run EM Prereqchecker: *./em13500_linux64.bin -prereqchecker*.
 
 
-```bash
+	```bash
 
 	./em13500_linux64.bin -silent -prereqchecker -entryPoint oracle.sysman.top.oms_Core \ 
 	-J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/prerequisites/log
 	
 	```
 
-```bash
+	```bash
 
 	# Sample outputxczxc
 	
@@ -96,9 +94,9 @@ Prerequisites
 	
 	The log(s) can be found here: /tmp/OraInstall2026-01-19_04-46-09PM.
 	
-```
+	```
 
-	![Step 3: 19c Software Install](screenshots/step3_running_prechecker_on_oms.png)
+	![Step 3: OMS_Upgrade_13.5](screenshots/step3_exec_prechecker_on_oms.png)
 	
 
 
@@ -107,16 +105,18 @@ Prerequisites
 
   - Extract and edit the Response file.
   
-  ```bash
-  cd /media/sf_eoracle/oem/13.5
-  - ./em13500_linux64.bin -getResponseFileTemplates -outputLoc /media/sf_eoracle/oem/13.5/responsefile
+	```bash
+	cd /media/sf_eoracle/oem/13.5
+	- ./em13500_linux64.bin -getResponseFileTemplates -outputLoc /media/sf_eoracle/oem/13.5/responsefile
   
-  ```
-  
+	```
+	
+	![Step 3: OMS_Upgrade_13.5](screenshots/step4_creating_response_file1.png)
+	
   
   - Edit the *softwareOnlyWithPlugins_upgrade.rsp* file
   
-  ```bash
+	```bash
 	cd /media/sf_eoracle/oem/13.5/responsefile
 	vi softwareOnlyWithPlugins_install.rsp
 	
@@ -127,39 +127,41 @@ Prerequisites
 	AGENT_BASE_DIR=/u01/app/oracle/Middleware/agent/13.5
 	ORACLE_HOSTNAME=oemserver01.usat.com
 	CONFIGURATION_TYPE=LATER
-```
+	```
  
  
   - Unset CLASSPATH. Will set it later:
  
-```bash
+	```bash
 	cd /media/sf_eoracle/oem/13.5/
 	echo $CLASSPATH 
 	export CLASSPATH=
 	echo $CLASSPATH
-```
+	```
 
-	![Step 3: 19c Software Install](screenshots/step4_unset_classpath2.png)
+	![Step 3: OMS_Upgrade_13.5](screenshots/step4_unset_classpath2.png)
 
 	
 	
   - Execute the software-only installation. 
 	
-```bash		
+	```bash		
 	./em13500_linux64.bin -silent -responseFile /media/sf_eoracle/oem/13.5/responsefile/softwareOnlyWithPlugins_upgrade.rsp \
 	-J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/log
 		
-```
+	```
 
-```bash
+	```bash
 	
 		Run the allroot.sh Script
-```
+		
+		/u01/app/oracle/Middleware/oms/13.5/allroot.sh
+	```
 
 
 5. Updating OMSPatcher and applying OMS patch to the new OMS_HOME
 
-```bash
+	```bash
     export ORACLE_HOME=/u01/app/oracle/Middleware/oms/13.5
 	export OMS_HOME=$ORACLE_HOME
 	export PATH=$PATH:$ORACLE_HOME/bin:$ORACLE_HOME/OMSPatcher:$ORACLE_HOME/OPatch
@@ -204,7 +206,7 @@ Prerequisites
 	
 	$ORACLE_HOME/OMSPatcher/omspatcher apply -analyze -bitonly
 	
-```	
+	```	
 
  
 
@@ -225,30 +227,33 @@ Prerequisites
 
 7. Execute PrereqChecks for Upgrades: Each database environment is very unique. Therefore you as the DBA is responsible for making sure that all prerequisite checks are successfully met for the environment.
 
-   - I found these documents very helpful is performing my Prerequisite checks before Configuring OMS.
+ - I found these documents very helpful is performing my Prerequisite checks before Configuring OMS.
   
-     *13.5: Checklist for Upgrading Enterprise Manager Cloud Control from Version 13.3/13.4 to 13.5(Doc ID 2761728.1)
-     * Doc ID 2761728.1 Oracle recently resigned  their website so this doc might not be found that easily.
+   *13.5: Checklist for Upgrading Enterprise Manager Cloud Control from Version 13.3/13.4 to 13.5(Doc ID 2761728.1)*
+   *Doc ID 2761728.1 Oracle recently resigned  their website so this doc might not be found that easily.*
      
-     Prerequisites for Upgrading to Enterprise Manager Cloud Control 13c Release 5:
-     https://docs.oracle.com/en/enterprise-manager/cloud-control/enterprise-manager-cloud-control/13.5/emupg/prerequisites-upgrading-enterprise-manager-cloud-control-13c-release.html#GUID-F6CFDFAD-D742-4644-A11A-4CBB5A6E8338
+   Prerequisites for Upgrading to Enterprise Manager Cloud Control 13c Release 5:
+   *https://docs.oracle.com/en/enterprise-manager/cloud-control/enterprise-manager-cloud-control/13.5/emupg/prerequisites-upgrading-enterprise-manager-cloud-control-13c-release.html#GUID-F6CFDFAD-D742-4644-A11A-4CBB5A6E8338*
 
 	
-   - For Upgrades: Using EMPREREQ_KIT=true
+ - For Upgrades: Using EMPREREQ_KIT=true
 	 This is the modern method for OEM 13.5 and 24c. It triggers a specific logic that validates the existing repository database and the middleware environment.
 
 
-   - Executing the *em13500_linux64.bin EMPREREQ_KIT=true* file 
+ - Executing the *em13500_linux64.bin EMPREREQ_KIT=true* file 
 
-```bash
+	```bash
 	 cd /media/sf_eoracle/oem/13.5
 
 	 ./em13500_linux64.bin EMPREREQ_KIT=true -silent -J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/log \
 	 -responseFile /media/sf_eoracle/oem/13.5/responsefile/emprereqkit_upgrade.rsp
-```  
+	```  
  
+	![Step 3: OMS_Upgrade_13.5](screenshots/step5_prereq_results_failed1.png)
 	
-	Sample Check fixes for my environment
+	```bash
+	
+	# ---- Sample Check fixes for my environment
 	
 	Disabling triggers
 	
@@ -288,6 +293,9 @@ Prerequisites
 	
 	no rows selected
 	
+
+	# ---- Backup Spfile
+	
 	SQL> create pfile='init.ora_20260120.bak' from spfile;
 	
 	SQL> alter system set parallel_min_servers=0 scope=both sid='*';
@@ -296,11 +304,14 @@ Prerequisites
 	SQL> alter system set "_allow_insert_with_update_check"=TRUE scope=both sid='*';
 	SQL> alter system set parallel_max_servers=0 scope=both  sid='*';
 	
-	before values:
+	
+	# --- Before values:
+	
 	job_queue_processes                  integer     80
 	parallel_max_servers                 integer     80
 	parallel_min_servers                 integer     2
 	
+	```
 
  Prior to upgrade, the EM KEY must be copied into the repository: 
  EMKEY Copy Requirements
@@ -314,11 +325,6 @@ Prerequisites
  > $ORACLE_HOME/bin/emctl config emkey -copy_to_repos -sysman_pwd oracle4u
  
 
-
-alter system set "_allow_insert_with_update_check"=TRUE scope=both sid='*';
-alter system set "job_queue_processes"=0 scope=both sid='*';
-alter system set parallel_min_servers=0 scope=spfile sid='*';
- 
 5: Configuring the Software Only with Plug-ins in Silent Mode.
 
 
