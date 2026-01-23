@@ -20,29 +20,29 @@ Available for all platforms on which Oracle E-Business Suite is supported, the n
 
  - Running on DB Tier as the Oracle user.
  
- ```bash
+	```bash
  
-   unzip /media/sf_doracle/software/ebs/p17537119_R12_ETCC_GENERIC.zip -d /media/sf_doracle/software/ebs/17537119_R12_ETCC
+	unzip /media/sf_doracle/software/ebs/p17537119_R12_ETCC_GENERIC.zip -d /media/sf_doracle/software/ebs/17537119_R12_ETCC
    
-   cd /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/ETCC
+	cd /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/ETCC
    
-   ./checkDBpatch.sh
+	./checkDBpatch.sh
    
    
-```
+	```
 
 	![Step 1: Executing etpat_at](screenshots/checkDBpatch.sh_results.png)
 	
    
  -  Running on APP Tier as the applmgr user.
 
-```bash
+	```bash
 
-   cd /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/ETCC
+	cd /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/ETCC
    
-   ./checkMTpatch.sh
+	./checkMTpatch.sh
 
-```
+	```
 
 
 	
@@ -58,57 +58,60 @@ Available for all platforms on which Oracle E-Business Suite is supported, the n
 		
    ![Step 1: Executing etpat_at](screenshots/executing_etpat_at_error3.png)
 	
-```bash
+	```bash
 
-   # --- Fix
+	# --- Fix
    
-   mv /u01/app/oracle/ebsR122/fs1/EBSapps/10.1.2/bin/unzip /u01/app/oracle/ebsR122/fs1/EBSapps/10.1.2/bin/unzip.old
-   ln -s  /bin/unzip  /u01/app/oracle/ebsR122/fs1/EBSapps/10.1.2/bin/unzip
+	mv /u01/app/oracle/ebsR122/fs1/EBSapps/10.1.2/bin/unzip /u01/app/oracle/ebsR122/fs1/EBSapps/10.1.2/bin/unzip.old
+	ln -s  /bin/unzip  /u01/app/oracle/ebsR122/fs1/EBSapps/10.1.2/bin/unzip
 
-   mkdir -p /u01/app/oracle/fs_ne/EBSapps/patch/etpat-at/oraebsdb_etpat_at/log/temp
+	mkdir -p /u01/app/oracle/fs_ne/EBSapps/patch/etpat-at/oraebsdb_etpat_at/log/temp
 
-```
+	```
 
-```bash
+	```bash
   
-   mkdir -p /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch
+	mkdir -p /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch
    
-   cp /media/sf_doracle/software/ebs/p17537119_R12_GENERIC.zip /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch
+	cp /media/sf_doracle/software/ebs/p17537119_R12_GENERIC.zip /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch
+	
+	unzip /media/sf_doracle/software/ebs/p32208510_R12_GENERIC.zip -d /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch
    
-   unzip /media/sf_doracle/software/ebs/p32208510_R12_GENERIC.zip -d /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch
+	cd /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/stage
    
-   cd /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/stage
+	# Stop all app processes
    
-   # Stop all app processes
+	/u01/app/oracle/ebsR122/fs1/inst/apps/ebsappdb_orappsserv01/admin/scripts/adstpall.sh
    
-   /u01/app/oracle/ebsR122/fs1/inst/apps/ebsappdb_orappsserv01/admin/scripts/adstpall.sh
-   
-   perl  etpat_at.pl
+	perl  etpat_at.pl
  
-```
+	```
 
-   ![Step 1: Executing etpat_at](screenshots/executing_etpat_at_app_tier1.png)
-
-```bash
+	```bash
  
-   # Have the following information ready:
-   # 
-   # Run edition file system context file: /u01/app/oracle/ebsR122/fs1/inst/apps/ebsappdb_orappsserv01/appl/admin/ebsappdb_orappsserv01.xml
-   # APPS schema name: APPS
-   # Enter password for APPS schema: XXXXXXXXXX
-   # Enter directory where you downloaded ETCC Patch 17537119: /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/stage
-   # Enter patch stage area: /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/stage
+	# Have the following information ready:
+	# 
+	# Run edition file system context file: /u01/app/oracle/ebsR122/fs1/inst/apps/ebsappdb_orappsserv01/appl/admin/ebsappdb_orappsserv01.xml
+	# APPS schema name: APPS
+	# Enter password for APPS schema: XXXXXXXXXX
+	# Enter directory where you downloaded ETCC Patch 17537119: /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/stage
+	# Enter patch stage area: /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/stage
 
 		 
-```
+	```
 
-	![Step 1: Executing etpat_at](screenshots/executing_etpat_at_app_tier2.png)
+   ![Step 1: Executing etpat_at](screenshots/exec_etpat_at_app_tier1.png)
+
+
+   ![Step 1: Executing etpat_at](screenshots/exec_etpat_at_app_tier2.png)
 	
 	
-	![Step 1: Executing etpat_at](screenshots/executing_etpat_at_success4.png)
+   ![Step 1: Executing etpat_at](screenshots/exec_etpat_at_success4.png)
 	
-	
-	![Step 1: Executing etpat_at](screenshots/executing_etpat_at_success5.png)
+   
+   HTML log file showing a successful completion:
+   
+   ![Step 1: Executing etpat_at](screenshots/exec_etpat_at_success5.png)
 	
 	
 
