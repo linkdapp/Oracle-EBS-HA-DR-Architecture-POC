@@ -95,4 +95,4 @@ Detailed step-by-step guide:
 
 ## TASK 3: Maintenance
 
-- [Applying AD and TXK Release Update Packs Using the ETPAT-AT](Maintenance/Applying the Latest AD and TXK Release Update Packs to Oracle E-Business Suite Release 12.2.README.md)
+- [Applying AD & TXK Release Update Packs Using the ETPAT-AT](Maintenance/Applying_AD_TXK_Rel_Packs_to_EBS_README.md) -  
