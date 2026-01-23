@@ -1,7 +1,8 @@
-# Oracle-EBS-HA-DR-Architecture-POC
-A VirtualBox-based POC showcasing Oracle EBS 12.2 with HA (Data Guard FSFO &amp; GoldenGate), DR, OEM monitoring, patching automation, performance tuning, security, and integrations with MongoDB/SQL Server
+## Oracle-EBS-HA-DR-Architecture-POC
 
-# Oracle EBS 12.2 High Availability and Disaster Recovery POC
+A VirtualBox-based POC showcasing Oracle EBS 12.2 with HA (Data Guard FSFO & GoldenGate), DR, OEM monitoring, patching automation, performance tuning, security, and integrations with MongoDB/SQL Server
+
+# Oracle EBS 12.2 Monitoring, Maintenance, Backup, and High Availability and Disaster Recovery POC
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Oracle DBA Showcase](https://img.shields.io/badge/Expertise-Oracle%20DBA%20(15%2B%20Years)-blue)](https://github.com/yourusername/Oracle-EBS-HA-DR-POC)
@@ -90,4 +91,8 @@ Detailed step-by-step guide:
 
 ## TASK 2: Upgrades Showcase
 - [OMR Database Upgrade (12c to 19c)](database_upgrade/Upgrading_OEM_OMR_Database.README.md) – Using AutoUpgrade for best practices.  
-- [OMS Upgrade (13.3 to 13.5)](oem_upgrade/README.md) – Security-focused upgrade.
+- [OMS Upgrade (13.3 to 13.5)](oem_upgrade/OMS_upgrade_13.3_to_13.5.README.md) – Security-focused upgrade.
+
+## TASK 3: Maintenance
+
+- [Applying AD and TXK Release Update Packs Using the ETPAT-AT](Maintenance/Applying the Latest AD and TXK Release Update Packs to Oracle E-Business Suite Release 12.2.README.md)
