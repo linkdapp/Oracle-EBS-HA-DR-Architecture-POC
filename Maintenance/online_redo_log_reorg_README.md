@@ -177,8 +177,7 @@
 
 ### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1
 
-	```bash
-	
+		
 	SQL> alter system switch logfile;
 
 	System altered.
@@ -203,21 +202,19 @@
 	
 	Database altered.
 
-	```
-
-
-### Phase 6: Final verification and 
-           Also use OS commands to check the file system to make sure the files have been dropped.
-
-	```bash
 	
+
+### Phase 6: Final verification 
+           
+	Also use OS commands to check the file system to make sure the files have been dropped.
+
+		
 	SQL> col member for a60
 	SQL> select group#, status, member from v$logfile;
 	
 	SQL> select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
 
-	```
-
+	
 
 ## Result After Reorganization:
 
