@@ -40,9 +40,7 @@
 
 ### Phase 1: Add New temporal thread#
 
-	```base
-	
-	
+
 	sqlplus / as sysdba
 	
 	
@@ -81,8 +79,6 @@
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 5 '/u01/oradata/OEMCDB/onlinelog/oemcdb_redo15.log' SIZE 200M;
 											 
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 6 '/u01/oradata/OEMCDB/onlinelog/oemcdb_redo16.log' SIZE 200M;
-	
- 	```
 
 
 ### Phase 2: Verify & Switch
@@ -119,8 +115,6 @@
 ### Phase 3: Remove Old INACTIVE Members
 
 
-	```bash
-	
 	SQL> alter database drop logfile group 1;
 	
 	Database altered.
@@ -132,8 +126,6 @@
 	SQL> alter database drop logfile group 3;
 	
 	Database altered.
-	
-	```
 
 
 ### Phase 4: Add New properly sized and multiplexed Redo logs
