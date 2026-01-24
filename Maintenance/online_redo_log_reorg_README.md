@@ -138,8 +138,7 @@
 
 ### Phase 4: Add New properly sized and multiplexed Redo logs
 
-	```bash
-	
+
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 1 ('/u02/oradata/OEMCDB/onlinelog/oemcdb_redo1a.log',
 											'/u02/oradata/OEMCDB/onlinelog/oemcdb_redo1b.log',
 											'/u03/oradata/OEMCDB/onlinelog/oemcdb_redo1c.log') SIZE 384M;  
@@ -171,8 +170,6 @@
 	SQL> select group#, status, member from v$logfile;
 	
 	SQL> select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
-	
-	```
 
 
 ### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1
