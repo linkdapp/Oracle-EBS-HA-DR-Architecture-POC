@@ -38,7 +38,7 @@
 ## Solution: Reorganize Redo Logs
 
 
-# Phase 1: Add New temporal thread#
+### Phase 1: Add New temporal thread#
 
 	```base
 	
@@ -85,7 +85,7 @@
  	```
 
 
-# Phase 2: Verify & Switch
+### Phase 2: Verify & Switch
 
 
  - Confirm new members are active:
@@ -116,7 +116,7 @@
 	```
 
 
-# Phase 3: Remove Old INACTIVE Members
+### Phase 3: Remove Old INACTIVE Members
 
 
 	```bash
@@ -136,7 +136,7 @@
 	```
 
 
-# Phase 4: Add New properly sized and multiplexed Redo logs
+### Phase 4: Add New properly sized and multiplexed Redo logs
 
 	```bash
 	
@@ -175,7 +175,7 @@
 	```
 
 
-# Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 that was added in phase 1
+### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1
 
 	```bash
 	
@@ -206,7 +206,7 @@
 	```
 
 
-# Phase 6: Final verification and 
+### Phase 6: Final verification and 
            Also use OS commands to check the file system to make sure the files have been dropped.
 
 	```bash
@@ -219,7 +219,7 @@
 	```
 
 
-# Result After Reorganization:
+## Result After Reorganization:
 
  - Improved Performance: Redo writes now use faster SSD storage (latency reduced to 2ms)
 
@@ -230,7 +230,7 @@
  - Compliance: Meets regulatory requirements for data redundancy
 
 
-# Key Reasons for Redo Log Reorganization:
+## Key Reasons for Redo Log Reorganization:
 
  - Performance Optimization - Moving to faster storage
 

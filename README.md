@@ -94,3 +94,5 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 ## TASK 3: Maintenance
 
 - [Applying AD & TXK Release Update Packs Using the ETPAT-AT](Maintenance/Applying_AD_TXK_Rel_Packs_to_EBS_README.md) - Patch Automation  
+
+- [Reorganizing Online Redo Logs](Maintenance/online_redo_log_reorg_README.md) - Performance Optimization and HA 
