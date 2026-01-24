@@ -1,6 +1,8 @@
 ## Scenario Overview
 
-In your Oracle E-Business Suite HA/DR proof-of-concept (running on VirtualBox VMs with 32 CPUs / 128 GB RAM host), I have:
+Demonstrating both **Agent Push** (console) and **Agent Pull** (`AgentPull.sh`) methods for monitoring DB/App servers in EBS HA/DR POC.
+
+Current setup:
 
 - **OEM Server** (Oracle Enterprise Manager Cloud Control 13c or later)
 - **DB Server** (single-instance Oracle 19c backend for EBS)

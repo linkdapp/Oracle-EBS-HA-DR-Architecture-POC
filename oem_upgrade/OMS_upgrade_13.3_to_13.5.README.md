@@ -64,7 +64,7 @@ Prerequisites:
 
 	```bash
 
-	# Sample outputxczxc
+	# Sample log output
 	
 	Launcher log file is /tmp/OraInstall2026-01-19_04-46-09PM/launcher2026-01-19_04-46-09PM.log.
 	Extracting the installer . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Done
