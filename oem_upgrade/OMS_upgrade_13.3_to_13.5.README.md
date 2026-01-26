@@ -578,33 +578,49 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	
 	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_datamigration_formold3.png)
 	
-		
+	
+	It didn't like my 13.5 directory so I created a 13_5
+
+	Rules for creating the OMA *Directory path*
+	
+	```bash
 	Error: Wrong Input
 	Check for the following reasons.. 
 	1.Directory path length should not exceed 50 characters . 
 	2.Base Directory value should not contain special characters other than slashes,minus,underscore and colon. 
 	3.Base Directory first word character should not be a number.
 	Specify the new agent base directory for upgrade. Example: /u01/app/agent or c:/john/agent
+	```
 	
 	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_datamigration_formold4.png)
 	
 
+	*Agent Upgrade Notification*
+	
 	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root5.png)
 	
-	Monitor job
+	
+	Monitor job *Agent Upgrade Console*
 	
 	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root6.png)
+	
 	
 	Monitor job progress details: You can click on the *Agent Upgrade Summary* to view more indept details about the job.
 	
 	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root7.png)
 	
+	
+	
 	Agent Upgrade Summary job completion details
 	
-	![Step 9: OMS_Upgrade_13.5](screenshots/step9_oms_upgrade_successful_rootsh.png)
+	
 
-    
+    ![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_details.png) 
+	
+	
   - Execute root.sh script
+	
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_oms_upgrade_successful_rootsh.png)
 	
 	```bash
 	sudo /u01/app/oracle/Middleware/agent/13_5/agent_13.5.0.0.0/root.sh
