@@ -7,7 +7,15 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 (Reference: Oracle EM Upgrade Guide; MOS for RUs.)
 
 
-Prerequisites:
+## Best Practices & Security
+
+ - Downtime: Software-only minimizes (upgrade binaries offline).
+ - Automation: Silent responses; script backups/pre-checks.
+ - Security: Apply latest CPU via Holistic Patching (13.5+); enable IDCS OAuth for secure auth.
+ - Tuning: Monitor post-upgrade AWR; tune dirty_ratio for disk caching.
+ - Testing: Rediscover EBS targets; simulate monitoring.
+
+## Prerequisites:
 
  - Certified DB: Upgraded to 19c (certified).
  - Agents: Upgrade to 13.5-compatible (use Agent Upgrade Console).
@@ -107,7 +115,7 @@ Prerequisites:
   
 	```bash
 	cd /media/sf_eoracle/oem/13.5
-	- ./em13500_linux64.bin -getResponseFileTemplates -outputLoc /media/sf_eoracle/oem/13.5/responsefile
+	./em13500_linux64.bin -getResponseFileTemplates -outputLoc /media/sf_eoracle/oem/13.5/responsefile
   
 	```
 	
@@ -146,6 +154,7 @@ Prerequisites:
   - Execute the software-only installation. 
 	
 	```bash		
+	cd /media/sf_eoracle/oem/13.5
 	./em13500_linux64.bin -silent -responseFile /media/sf_eoracle/oem/13.5/responsefile/softwareOnlyWithPlugins_upgrade.rsp \
 	-J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/log
 		
@@ -172,6 +181,7 @@ Prerequisites:
 	
 	# -1- Verify
 	
+	# We need omspatcher 13.9.5.26.0. p38100300_135000_Generic.zip
 	
 	/u01/app/oracle/Middleware/oms/13.5/OMSPatcher/omspatcher version
 	
@@ -183,49 +193,150 @@ Prerequisites:
 	
 	# -2- Backup
 	
-	mv /u01/app/oracle/Middleware/13.5/OMSPatcher /u01/app/oracle/Middleware/13.5/OMSPatcher.old
+	 mv /u01/app/oracle/Middleware/oms/13.5/OMSPatcher /u01/app/oracle/Middleware/oms/13.5/OMSPatcher_old
 	
 	# -3- Update
 	
-	unzip OMSPatcher_patch_of_version_13.9.24.9.0_p19999993_241000_Generic.zip \ 
-	-d /u01/app/oracle/Middleware/oms/13.5
+	cd /media/sf_foracle/oem/13.5
+	
+	unzip /media/sf_foracle/oem/13.5/p19999993_135000_Generic_v13.9.5.26.zip -d \
+	/u01/app/oracle/Middleware/oms/13.5
 	
 	# -4- Post Update verification
 	
-	/u01/app/oracle/Middleware/13.5/OMSPatcher/omspatcher version
+	/u01/app/oracle/Middleware/oms/13.5/OMSPatcher/omspatcher version
 	
-	# OMSPatcher Version: 13.9.24.9.0
+	# OMSPatcher Version: 13.9.5.26.0
 	# OPlan Version: 12.2.0.1.16
 	# OsysModel build: Tue Apr 28 18:16:31 PDT 2020
 	# 
 	# OMSPatcher succeeded.
+
 	
 	# -5- Apply new Patch to the installed OEM 13.5 Software.
+	
+	
+	cd /media/sf_eoracle/Patch/oem/oms/holistic_Patch_5_Update_28/
+	
+	unzip p38100300_135000_Generic.zip
+	
 	
 	cd 38100300/
 	
 	$ORACLE_HOME/OMSPatcher/omspatcher apply -analyze -bitonly
 	
-	```	
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-7. Execute PrereqChecks for Upgrades: Each database environment is very unique. Therefore you as the DBA is responsible for making sure that all prerequisite checks are successfully met for the environment.
+	
+	$ORACLE_HOME/OMSPatcher/omspatcher apply -bitonly
+	
+	```
+	
+	Sample output
+	
+	![Step 5: OMS_Upgrade_13.5](screenshots/step5_omspatcher_apply_bitonly5.png)
+	
+	
+	![Step 5: OMS_Upgrade_13.5](screenshots/step5_omspatcher_apply_holistic_patch6.png)
+	
+	```bash
+	$ORACLE_HOME/OMSPatcher/omspatcher apply -bitonly
+	OMSPatcher Automation Tool
+	Copyright (c) 2017, Oracle Corporation.  All rights reserved.
+	
+	
+	OMSPatcher version : 13.9.5.26.0
+	OUI version        : 13.9.4.0.0
+	Running from       : /u01/app/oracle/Middleware/oms/13.5
+	Log file location  : /u01/app/oracle/Middleware/oms/13.5/cfgtoollogs/omspatcher/opatch2026-01-24_18-27-00PM_1.log
+	
+	WARNING:Apply the 12.2.1.4.0 version of the following JDBC Patch(es) on OMS Home before proceeding with patching.
+	1.MLR patch 35430934(or its superset),which includes bugs 32720458 and 33607709
+	2.Patch 31657681
+	3.Patch 34153238
+	
+	OMSPatcher log file: /u01/app/oracle/Middleware/oms/13.5/cfgtoollogs/omspatcher/38100300/omspatcher_2026-01-24_18-27-04PM_apply.log
+	
+	WARNING: OMSPatcher has been invoked with bitonly option but the System patch provided has deployment metadata.
+	Invocation in bitonly mode will prevent OMSPatcher from deploying artifacts.
+	
+	Do you want to proceed? [y|n]
+	y
+	User Responded with: Y
+	
+	
+	Prereq "checkComponents" for patch 38100323 passed.
+	
+	Prereq "checkComponents" for patch 38100422 passed.
+	
+	Prereq "checkComponents" for patch 37736852 passed.
+	
+	Prereq "checkComponents" for patch 37437875 passed.
+	
+	Prereq "checkComponents" for patch 38100329 passed.
+	
+	Prereq "checkComponents" for patch 38100334 passed.
+	
+	Prereq "checkComponents" for patch 38100391 passed.
+	
+	Running apply prerequisite checks for sub-patch(es) "37437875,37736852,38100334,38100391,38100329,38100323,38100422" and Oracle Home "/u01/app/oracle/Middleware/oms/13.5"...
+	Sub-patch(es) "37437875,37736852,38100334,38100391,38100329,38100323,38100422" are successfully analyzed for Oracle Home "/u01/app/oracle/Middleware/oms/13.5"
+	
+	To continue, OMSPatcher will do the following:
+	[Patch and deploy artifacts]   :
+	
+	
+	Do you want to proceed? [y|n]
+	y
+	User Responded with: Y
+	
+	Applying sub-patch(es) "37437875,37736852,38100323,38100329,38100334,38100391,38100422"
+	Please monitor log file: /u01/app/oracle/Middleware/oms/13.5/cfgtoollogs/opatch/opatch2026-01-24_18-27-05PM_1.log
+	
+	
+	Complete Summary
+	================
+	
+	
+	All log file names referenced below can be accessed from the directory "/u01/app/oracle/Middleware/oms/13.5/cfgtoollogs/omspatcher/2026-01-24_18-27-00PM_SystemPatch_38100300_1"
+	
+	Patching summary:
+	-----------------
+	
+	Binaries of the following sub-patch(es) have been applied successfully:
+	
+							Featureset                                                      Sub-patches                                                                                           Log file
+							----------                                                      -----------                                                                                           --------
+	oracle.sysman.top.oms_13.5.0.0.0   37437875,37736852,38100323,38100329,38100334,38100391,38100422   37437875,37736852,38100323,38100329,38100334,38100391,38100422_opatch2026-01-24_18-27-05PM_1.log
+	
+	
+	The following sub-patches are not needed by any component installed in the OMS system:
+	38100387,34430509,36752930,35854914,38100376,36329046,38100397,36752891
+	
+	
+	
+	--------------------------------------------------------------------------------
+	The following warnings have occurred during OPatch execution:
+	1) Apply the 12.2.1.4.0 version of the following JDBC Patch(es) on OMS Home before proceeding with patching.
+	1.MLR patch 35430934(or its superset),which includes bugs 32720458 and 33607709
+	2.Patch 31657681
+	3.Patch 34153238
+	
+	2)  OMSPatcher has been invoked with bitonly option but the System patch provided has deployment metadata.
+	Invocation in bitonly mode will prevent OMSPatcher from deploying artifacts.
+	--------------------------------------------------------------------------------
+	Log file location: /u01/app/oracle/Middleware/oms/13.5/cfgtoollogs/omspatcher/38100300/omspatcher_2026-01-24_18-27-04PM_apply.log
+	
+	OMSPatcher succeeded.
+	```
+	
+	Perform verification
+	
+	```bash
+	
+	omspatcher lspatches
+	
+	```
+	
+6. Execute PrereqChecks for Upgrades: Each database environment is very unique. Therefore you as the DBA is responsible for making sure that all prerequisite checks are successfully met for the environment.
 
  - I found these documents very helpful is performing my Prerequisite checks before Configuring OMS.
   
@@ -237,7 +348,7 @@ Prerequisites:
 
 	
  - For Upgrades: Using EMPREREQ_KIT=true
-	 This is the modern method for OEM 13.5 and 24c. It triggers a specific logic that validates the existing repository database and the middleware environment.
+   This is the modern method for OEM 13.5 and 24c. It triggers a specific logic that validates the existing repository database and the middleware environment.
 
 
  - Executing the *em13500_linux64.bin EMPREREQ_KIT=true* file 
@@ -249,7 +360,7 @@ Prerequisites:
 	 -responseFile /media/sf_eoracle/oem/13.5/responsefile/emprereqkit_upgrade.rsp
 	```  
  
-	![Step 3: OMS_Upgrade_13.5](screenshots/step5_prereq_results_failed1.png)
+	![Step 6: OMS_Upgrade_13.5](screenshots/step5_prereq_results_failed1.png)
 	
 	```bash
 	
@@ -298,126 +409,226 @@ Prerequisites:
 	
 	SQL> create pfile='init.ora_20260120.bak' from spfile;
 	
-	SQL> alter system set parallel_min_servers=0 scope=both sid='*';
+	
+	# --- Make the necessary changes
+	
+	
 	SQL> alter system set "job_queue_processes"=0 scope=both sid='*';
 	SQL> grant execute on DBMS_RANDOM to DBSNMP;
 	SQL> alter system set "_allow_insert_with_update_check"=TRUE scope=both sid='*';
-	SQL> alter system set parallel_max_servers=0 scope=both  sid='*';
+	SQL> alter system set parallel_max_servers=30 scope=both  sid='*';
 	
+	
+		
+	For improved SQL performance all the adaptive features parameters should be unsetprior to the upgrade:
+	Connect to the database as SYSDBA and run the following commands:
+	
+	alter system reset "_optimizer_nlj_hj_adaptive_join" scope=both sid='*';
+	alter system reset "_optimizer_strans_adaptive_pruning" scope=both sid='*';
+	alter system reset "_px_adaptive_dist_method" scope=both sid='*';
+	alter system reset "_sql_plan_directive_mgmt_control" scope=both sid='*';
+	alter system reset "_optimizer_dsdir_usage_control" scope=both sid='*';
+	alter system reset "_optimizer_use_feedback" scope=both sid='*';
+	alter system reset "_optimizer_gather_feedback" scope=both sid='*';
+	alter system reset "_optimizer_performance_feedback" scope=both sid='*';
+
+	```
+
+7.	Prior to upgrade, the EM KEY must be copied into the repository: 
+	EMKEY Copy Requirements
+ 
+ 
+	```bash
+	
+	/u01/app/oracle/Middleware/13.3/oms/bin/emctl config emkey -copy_to_repos -sysman_pwd xxxxxxxx
+	
+	
+	/u01/app/oracle/Middleware/13.3/oms/bin/emctl status emkey
+	
+	```
+	
+	![Step 7: OMS_Upgrade_13.5](screenshots/step7_copy_emkey_to_repo.png)
+
+
+8. upgrading: Configuring the Software Only with Plug-ins in Silent Mode.
+
+ - Edit the *upgrade.rsp*
+
+	```bash
+	
+	# --- Sample upgrade.rsp entries
+	
+	UNIX_GROUP_NAME=oinstall
+	INVENTORY_LOCATION=/app/oracle/oraInventory
+	INSTALL_UPDATES_SELECTION=skip
+	STAGE_LOCATION=/media/sf_eoracle/oem/13.5
+	ORACLE_MIDDLEWARE_HOME_LOCATION=/u01/app/oracle/Middleware/oms/13.5
+	ORACLE_INSTANCE_HOME_LOCATION=/u01/app/oracle/product/19.3.0/db_1
+	OLD_BASE_DIR=/u01/app/oracle/Middleware/13.3/oms
+	ORACLE_HOSTNAME=oemserver01.usat.com
+	ONE_SYSTEM=true
+	AGENT_BASE_DIR=/u01/app/oracle/Middleware/agent/13.5
+	logLoc=/media/sf_eoracle/oem/13.5/log
+	OLD_DATABASE_SYSMAN_PASSWORD=sysman12
+	WLS_ADMIN_SERVER_USERNAME=weblogic
+	WLS_ADMIN_SERVER_PASSWORD=weblogic1
+	WLS_ADMIN_SERVER_CONFIRM_PASSWORD=weblogic1
+	NODE_MANAGER_PASSWORD=nodemanager1
+	NODE_MANAGER_CONFIRM_PASSWORD=nodemanager1
+	WLS_ADMIN_SERVER_PASSWORD=weblogic1
+	DATABASE_HOSTNAME=oemserver01.usat.com
+	LISTENER_PORT=1521
+	SERVICENAME_OR_SID=oemcdb
+	SYS_PASSWORD=sys
+	SYSMAN_PASSWORD=sysman12
+	EMPREREQ_AUTO_CORRECTION=true
+	REPOSITORY_BACKUP_DONE=true
+	b_upgrade=true
+	EM_INSTALL_TYPE=NOSEED
+	```
+
+ - Stop the OMS, and AGENT
+   Make sure you have a SUCCESSFUL Backup in place.
+    
+ 
+	```bash
+		
+	# --- Shut down the 13.3 OMS you are about to upgrade
+	
+	/u01/app/oracle/Middleware/13.3/oms/bin/emctl stop oms -all
+	
+	3 --- Stop the Agent
+	
+	/u01/app/oracle/agent/agent_13.3.0.0.0/bin/emctl stop agent 
+	
+
+	```
+
+	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_status_details1.png)
+	
+	
+	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_status_details2.png)
+	
+
+ - Execute the *ConfigureGC.sh* script to start the upgrade and configure the OMS
+ 
+ 
+	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_start1.png)
+	
+	
+	```bash
+	
+	cd /media/sf_eoracle/oem/13.5
+	
+	export ORACLE_HOME=/u01/app/oracle/Middleware/oms/13.5
+	export OMS_HOME=$ORACLE_HOME
+	export PATH=$PATH:$ORACLE_HOME/bin:$ORACLE_HOME/OMSPatcher:$ORACLE_HOME/OPatch
+	export CLASSPATH=
+	echo $CLASSPATH
+
+	/u01/app/oracle/Middleware/oms/13.5/sysman/install/ConfigureGC.sh -silent -responseFile /media/sf_eoracle/oem/13.5/responsefile/upgrade.rsp \
+	-J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/log
+
+	```
+	
+	
+	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_successful_end1.png)
+	
+	
+	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_version_end2.png)
+	
+	
+	Console showing that we have a SUCCESSFUL UPGRADE!
+	
+	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_successful_console1.png)
+	
+	
+9.	Post Upgrade:
+	
+
+  - Upgradge Agents from the NEW 13.5 console
+
+	```bash
+	mkdir -p /u01/app/oracle/Middleware/agent/13_5
+	```
+	
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_agentupg1.png)
+	
+	
+	
+	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_datamigration_formold2.png)
+	
+	
+	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_datamigration_formold3.png)
+	
+		
+	Error: Wrong Input
+	Check for the following reasons.. 
+	1.Directory path length should not exceed 50 characters . 
+	2.Base Directory value should not contain special characters other than slashes,minus,underscore and colon. 
+	3.Base Directory first word character should not be a number.
+	Specify the new agent base directory for upgrade. Example: /u01/app/agent or c:/john/agent
+	
+	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_datamigration_formold4.png)
+	
+
+	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root5.png)
+	
+	Monitor job
+	
+	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root6.png)
+	
+	Monitor job progress details
+	
+	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root7.png)
+	
+	Monitor job completion details
+	
+	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root8.png)
+
+    
+  - Execute root.sh script
+	
+	```bash
+	sudo /u01/app/oracle/Middleware/agent/13_5/agent_13.5.0.0.0/root.sh
+	```
+
+  - Clean up
+
+
+	![Step 10: OMS_Upgrade_13.5](step10_post_upgrade_task_agent_clean1.png)
+	
+	
+	
+	
+  - Remove EMKEY from repos
+	
+	![Step 10: OMS_Upgrade_13.5](step9_post_upgrade_task_root8.png)
+	
+	```bash
+	"emctl config emkey -remove_from_repos".
+	```
+	
+  - Rest spfile values that you changed prior in the spfile 
+
+
+	```bash
+	
+	sqlplus / as sysdba
+	
+	alter system set "job_queue_processes"=80 scope=both sid='*';
+	revoke execute on DBMS_RANDOM to DBSNMP;
+	alter system set parallel_max_servers=120 scope=both  sid='*';
+	alter system set parallel_min_servers=2 scope=both  sid='*';
 	
 	# --- Before values:
 	
 	job_queue_processes                  integer     80
-	parallel_max_servers                 integer     80
+	parallel_max_servers                 integer     120
 	parallel_min_servers                 integer     2
 	
 	```
 
- Prior to upgrade, the EM KEY must be copied into the repository: 
- EMKEY Copy Requirements
-  
- $<ORACLE_HOME>/bin/emctl config emkey -copy_to_repos [-sysman_pwd <sysman_pwd>]
- 
- For example:
- 
- oemserver01.usat.com-/media/sf_e_oracle/oem/13.4
- >
- > $ORACLE_HOME/bin/emctl config emkey -copy_to_repos -sysman_pwd oracle4u
- 
-
-5: Configuring the Software Only with Plug-ins in Silent Mode.
 
 
 
-
-
-UNIX_GROUP_NAME=oinstall
-INVENTORY_LOCATION=/app/oracle/oraInventory
-STAGE_LOCATION=/media/sf_eoracle/oem/13.5
-ORACLE_MIDDLEWARE_HOME_LOCATION=/u01/app/oracle/Middleware/13.5
-ORACLE_INSTANCE_HOME_LOCATION=/u01/app/oracle/product/19.3.0/db_1
-OLD_BASE_DIR=/u01/app/oracle/Middleware/13.3
-ORACLE_HOSTNAME=oemserver01.usat.com
-AGENT_BASE_DIR=/u01/app/oracle/agent15
-OLD_DATABASE_SYSMAN_PASSWORD=xxxxxxxxx
-WLS_ADMIN_SERVER_USERNAME=weblogic
-WLS_ADMIN_SERVER_PASSWORD=xxxxxxxxx
-WLS_ADMIN_SERVER_CONFIRM_PASSWORD=
-NODE_MANAGER_PASSWORD=nodemanager
-NODE_MANAGER_CONFIRM_PASSWORD=xxxxxxxxxx
-WLS_ADMIN_SERVER_PASSWORD=xxxxxxx
-DATABASE_HOSTNAME=oemserver01.usat.com
-LISTENER_PORT=1521
-SERVICENAME_OR_SID=oemcdb
-SYS_PASSWORD=sys
-REPOSITORY_BACKUP_DONE=true
-
-$<ORACLE_HOME>/sysman/install/ConfigureGC.sh
-
-$<ORACLE_HOME>/sysman/install/ConfigureGC.sh -silent -responseFile <absolute_path_to_the_directory_where_the_generated_and_updated_response_file_is_stored>/upgrade.rsp ENABLE_SSL=true [-invPtrLoc <absolute_path_to_oraInst.loc>]
-
-
-Step 1: Stop all the OMS and Agents.
-
-When stopping the OMS, ensure to use the command: emctl stop oms -all
-
-Step 2: Start the repository and OMS upgrade
-
-
-Agent Upgrade Console or EM CLI
-
-Use the Agent Upgrade Console or EM CLI to upgrade the central agent of only 13 c Release 3 or 13 c Release 4.
-
-1 From the Setup menu, select Manage Cloud Control, then select Upgrade Agents.
-2 For Job Name, accept the default job name, or enter a unique job name.
-A unique job name enables you to identify the upgrade job, know details of its execution, and track its progress on the Agent Upgrade Status page.
-
-The job name can have a maximum length of 64 characters. It can consist of alphanumeric and special characters, and can begin with either of these.
-
-3. Click Add to select the Management Agents you want to upgrade.
-In the Upgradable Agents window, search for the Management Agents you want to upgrade, using the Agent, Installed Version, Platform, and Group fields.
-
-Select the Management Agents you want to upgrade. Click OK.
-
-4. Click Submit.
-
-5. To view a summary from the Setup menu, select Manage Cloud Control, then select Upgrade Agents. Click Agent Upgrade Results.
-
-6. run the root.sh 
-
-
-Upgrade software only with plug-ins and Configure Later
-
-Install software only with plug-ins", this option splits the Upgrade into Software Install and Configuration. This upgrade approach is best suited for most environments, as it minimizes the downtime of the OMS instances. You can install the software binaries on all the OMS hosts in parallel without shutting down the OMS instances. This not only saves time but also enables the earlier release of the OMS instances to remain up and running at this point. Once the software binaries are copied, you can shut down all the OMS instances, and configure the software binaries to upgrade the OMS instances, one after the other. Therefore, the downtime begins only when you start configuring the OMS instances, and not while copying the software binaries to the host.
-
-This option also provides the ability to apply a Release Update on the OMS at the time of the upgrade, thereby saving the OMS downtime that is needed later during patching. During the Software install phase, you can select the OMS Home, Agent Home and required plugins. The binaries of the OEM along with the selected plugins are installed in the OMS Home provided. After a successful installation of the OMS binaries, you can apply the Release Updates on it using the "bitonly" method.
-
-Generate  the Response File to Upgrade Software Only with Plug-ins in Silent Mode
-
-Install 13.5 Software (Silent): Unzip to stage; run: ./em13500_linux64.bin -silent -responseFile /path/to/softwareOnlyWithPlugins_upgrade.rsp.Step 1: Software Install
-Run Root Script: $<NEW_OMS_HOME>/allroot.sh (UNIX).Step 2: Root Script
-Apply Patches/RU: Use OMSPatcher: omspatcher apply -analyze /path/to/ru_patch.zip; then apply.Step 3: RU Apply
-Configure (Silent): Edit upgrade.rsp; run: $<NEW_OMS_HOME>/sysman/install/ConfigureGC.sh -silent -responseFile /path/to/upgrade.rsp.Step 4: Configure
-Upgrade Additional OMS (if multi): Parallel on others.
-Upgrade Agents: Via OEM Agent Upgrade Console; apply JDK 1.8u261+ if needed.Step 6: Agent Upgrade
-Post-Upgrade: Run DDMP jobs if disabled; validate targets.Step 7: Validation
-
-Best Practices & Security
-
-Downtime: Software-only minimizes (upgrade binaries offline).
-Automation: Silent responses; script backups/pre-checks.
-Security: Apply latest CPU via Holistic Patching (13.5+); enable IDCS OAuth for secure auth.
-Tuning: Monitor post-upgrade AWR; tune dirty_ratio for disk caching.
-Testing: Rediscover EBS targets; simulate monitoring.
-
-Add screenshots to /screenshots/ and commit.
-Commit all: git add .; git commit -m "Added OEM/DB upgrade guides with best practices"; git push.
-From Baltimore, MD (@iam_dat_iam_iam on X), share: "Showcased OEM 13.5 upgrade for security in my Oracle EBS POC! #OracleDBA #OEMUpgrade"
-
-
-
-Applying Release Update in Bit Only Mode
-
-export ORACLE_HOME=/u01/software/em135
-cd <Release_Update_Directory>
-$ORACLE_HOME/OMSPatcher/omspatcher apply -bitonly

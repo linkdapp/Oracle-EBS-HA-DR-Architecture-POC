@@ -181,10 +181,45 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
     ```
 	
 	```bash
-	Patch verification:
+	
+	# --- Patch verification:
 
 	opatch lsinventory | grep "Patch  "
 	
+	
+	# --- sample output:
+	
+	~]$ opatch lsinventory | grep "Patch  "
+	Patch  29213893     : applied on Fri Jan 16 11:23:39 EST 2026
+	Patch  34832725     : applied on Fri Jan 16 11:22:54 EST 2026
+	Patch  34340632     : applied on Fri Jan 16 11:22:08 EST 2026
+	Patch  35074478     : applied on Fri Jan 16 11:21:23 EST 2026
+	Patch  35037877     : applied on Fri Jan 16 11:20:39 EST 2026
+	Patch  35042068     : applied on Fri Jan 16 11:15:51 EST 2026
+	Patch  29585399     : applied on Thu Apr 18 03:21:33 EDT 2019
+
+	
+	
+	opatch lspatches
+	
+	# --- sample output:
+	
+	~]$ opatch lspatches
+	29213893;DBMS_STATS FAILING WITH ERROR ORA-01422 WHEN GATHERING STATS FOR USER$ TABLE
+	34832725;ORA-4031 KSU STATS_FREELIST AND KGLSESHTTABLE ERRORS IN 19C
+	34340632;AQAH  SMART MONITORING &amp; RESILIENCY IN QUEUE KGL MEMORY USAGE
+	35074478;MERGE ON DATABASE RU 19.19.0.0.0 OF 34932268
+	35037877;EM CODE IS BROKEN IN 19.18
+	35042068;Database Release Update : 19.19.0.0.230418 (35042068)
+	29585399;OCW RELEASE UPDATE 19.3.0.0.0 (29585399)
+
+	
+	```
+	
+	![Step 4: AutoUpgrade Config](screenshots/step4_patch_results.png)
+	
+	
+	```bash
 	sqlplus / as sysdba
 	
 	select owner, object_name, object_type from dba_invalid_objects order by owner, object_type, object_name;
