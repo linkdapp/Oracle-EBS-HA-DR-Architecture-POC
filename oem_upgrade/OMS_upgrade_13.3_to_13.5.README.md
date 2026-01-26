@@ -595,11 +595,11 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	
 	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root6.png)
 	
-	Monitor job progress details
+	Monitor job progress details: You can click on the *Agent Upgrade Summary* to view more indept details about the job.
 	
 	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root7.png)
 	
-	Monitor job completion details
+	Agent Upgrade Summary job completion details
 	
 	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root8.png)
 
@@ -647,5 +647,8 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	```
 
 
+
+
+Enjoy your new OEM 13.5!
 
 
