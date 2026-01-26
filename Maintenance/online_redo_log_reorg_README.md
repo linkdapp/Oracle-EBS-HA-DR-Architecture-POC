@@ -115,7 +115,10 @@
 	select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
 
 	```
+	
+### Phase 3: Remove Old (under sized) INACTIVE Members
 
+	
 	![Step 3: Online_Redo_reorg](screenshots/Step3_online_redo_dropold1.png)
 
 
@@ -131,9 +134,10 @@
 	SQL> alter database drop logfile group 3;
 	
 	Database altered.
-	```
-
-### Phase 4: Add New properly sized and multiplexed Redo logs 
+	``` 
+	
+	
+	### Phase 4: Add New properly sized and multiplexed Redo logs
 
 
 	![Step 4: Online_Redo_reorg](screenshots/Step4_online_redo_addnew1.png)
@@ -176,10 +180,9 @@
 	
 	SQL> select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
 	```
-
-### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1
-
-
+	
+	
+	
 	![Step 5: Online_Redo_reorg](screenshots/Step5_online_redo_droptemp.png)
 
 
@@ -209,12 +212,11 @@
 	Database altered.
 	```
 	
-
-### Phase 6: Final verification 
-
 	Also use OS commands to check the file system to make sure the files have been dropped.
 
 
+	
+	
 	![Step 6: Online_Redo_reorg](screenshots/Step6_online_redo_finalverify.png)
 
 	```bash
