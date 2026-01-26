@@ -63,7 +63,7 @@
 	9 rows selected.
 	
 	SQL>
-	SQL> select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
+	SQL> select group#, thread#, bytes/1024/1024 SIZE_MB, members, status from v$log;
 	
 		GROUP#    THREAD#    SIZE MB    MEMBERS STATUS
 	---------- ---------- ---------- ---------- ----------------
@@ -73,6 +73,8 @@
 	
 
 	# --- Adding temporal redologs
+	
+	![Step 1: Online_Redo_reorg](screenshots/Step1_online_redo_add_temp1.png)
 	
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 4 '/u01/oradata/OEMCDB/onlinelog/oemcdb_redo14.log' SIZE 200M;
 											 
@@ -84,19 +86,22 @@
 ### Phase 2: Verify & Switch
 
 
- - Confirm new members are active:
+ -  Confirm new members have been added:
  
-
+	![Step 2: Online_Redo_reorg](screenshots/Step1_online_redo_add_temp_verify1.png)
+	
 	```bash
 	
 	col member for a60
 	select group#, status, member from v$logfile;
 	
-	select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
+	select group#, thread#, bytes/1024/1024 SIZE_MB, members, status from v$log;
 
 	```
 	
  - Force log switches to ensure groups# 1, 2, and 3 become inactive:
+ 
+	![Step 2: Online_Redo_reorg](screenshots/Step2_online_redo_switch1.png)
 
 	```bash
 	
@@ -114,7 +119,8 @@
 
 ### Phase 3: Remove Old INACTIVE Members
 
-
+	![Step 3: Online_Redo_reorg](screenshots/Step3_online_redo_dropold1.png)
+	
 	SQL> alter database drop logfile group 1;
 	
 	Database altered.
@@ -130,7 +136,9 @@
 
 ### Phase 4: Add New properly sized and multiplexed Redo logs
 
-
+	
+	![Step 4: Online_Redo_reorg](screenshots/Step4_online_redo_addnew1.png)
+	
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 1 ('/u02/oradata/OEMCDB/onlinelog/oemcdb_redo1a.log',
 											'/u02/oradata/OEMCDB/onlinelog/oemcdb_redo1b.log',
 											'/u03/oradata/OEMCDB/onlinelog/oemcdb_redo1c.log') SIZE 384M;  
@@ -157,6 +165,8 @@
 		
 	# --- And Verify
 		
+	![Step 4: Online_Redo_reorg](screenshots/Step4_online_redo_verifynew2.png)
+	
 	
 	SQL> col member for a60
 	SQL> select group#, status, member from v$logfile;
@@ -166,7 +176,8 @@
 
 ### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1
 
-		
+	![Step 5: Online_Redo_reorg](screenshots/Step5_online_redo_droptemp.png)
+	
 	SQL> alter system switch logfile;
 
 	System altered.
@@ -197,17 +208,20 @@
            
 	Also use OS commands to check the file system to make sure the files have been dropped.
 
-		
+	![Step 6: Online_Redo_reorg](screenshots/Step6_online_redo_finalverify.png)
+	
 	SQL> col member for a60
 	SQL> select group#, status, member from v$logfile;
 	
-	SQL> select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
+	SQL> select group#, thread#, bytes/1024/1024 SIZE_MB, members, status from v$log;
 
 	
 
 ## Result After Reorganization:
 
- - Improved Performance: Redo writes now use faster SSD storage (latency reduced to 2ms)
+ -
+
+ Improved Performance: Redo writes now use faster SSD storage (latency reduced to 2ms)
 
  - High Availability: Each redo log group has members on separate storage arrays
 
