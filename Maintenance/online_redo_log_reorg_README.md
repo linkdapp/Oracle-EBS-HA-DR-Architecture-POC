@@ -72,7 +72,7 @@
 			3          1        200          3 CURRENT
 	
 
-	# --- Adding temporal redologs
+# --- Adding temporal redologs
 	
 	![Step 1: Online_Redo_reorg](screenshots/Step1_online_redo_add_temp1.png)
 	
@@ -116,6 +116,7 @@
 
 	```
 	
+
 ### Phase 3: Remove Old (under sized) INACTIVE Members
 
 	
@@ -181,7 +182,9 @@
 	SQL> select group#, thread#, bytes/1024/1024 size MB, members, status from v$log;
 	```
 	
-	
+
+
+### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1	
 	
 	![Step 5: Online_Redo_reorg](screenshots/Step5_online_redo_droptemp.png)
 
@@ -216,8 +219,10 @@
 
 
 	
+### Phase 6: Final verification
 	
 	![Step 6: Online_Redo_reorg](screenshots/Step6_online_redo_finalverify.png)
+
 
 	```bash
 
