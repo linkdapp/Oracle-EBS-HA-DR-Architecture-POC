@@ -72,7 +72,7 @@
 			3          1        200          3 CURRENT
 	
 
-# --- Adding temporal redologs
+ -  Adding temporal redologs
 	
 	![Step 1: Online_Redo_reorg](screenshots/Step1_online_redo_add_temp1.png)
 	
