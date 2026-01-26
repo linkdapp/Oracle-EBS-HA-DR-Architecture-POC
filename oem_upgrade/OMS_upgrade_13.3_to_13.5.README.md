@@ -20,8 +20,7 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
  - Certified DB: Upgraded to 19c (certified).
  - Agents: Upgrade to 13.5-compatible (use Agent Upgrade Console).
  - Backup: emctl exportconfig oms; full file system backup.
- - Download: 13.5 software (p32646422_13500_Linux-x86-64.zip); latest RU (e.g., 13.5.0.23).
- - Space: 20 GB /tmp -J-Djava.io.tmpdir=/u01/tmp/; stop JVMD/ADP: emctl extended oms adp stop -all.
+ - Download: 13.5 software (p32646422_13500_Linux-x86-64.zip); latest RU (e.g., 13.5.0.28).
  - SSL: If enabled, use ENABLE_SSL=true.
  - Pre-Checks: Run EM Prerequisite Kit: *./em13500_linux64.bin EMPREREQ_KIT=true*.
  
@@ -168,7 +167,7 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	```
 
 
-5. Updating OMSPatcher and applying OMS patch to the new OMS_HOME
+5. Updating OMSPatcher and applying the latest OMS patch to the new OMS_HOME
 
 	```bash
     export ORACLE_HOME=/u01/app/oracle/Middleware/oms/13.5
@@ -235,7 +234,7 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	![Step 5: OMS_Upgrade_13.5](screenshots/step5_omspatcher_apply_bitonly5.png)
 	
 	
-	![Step 5: OMS_Upgrade_13.5](screenshots/step5_omspatcher_apply_holistic_patch6.png)
+	
 	
 	```bash
 	$ORACLE_HOME/OMSPatcher/omspatcher apply -bitonly
@@ -328,7 +327,12 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	OMSPatcher succeeded.
 	```
 	
-	Perform verification
+	![Step 5: OMS_Upgrade_13.5](screenshots/step5_omspatcher_apply_holistic_patch6.png)
+	
+	
+	Perform the verification
+	
+	![Step 5: OMS_Upgrade_13.5](screenshots/step5_omspatcher_apply_lspatches7.png)
 	
 	```bash
 	
@@ -359,6 +363,8 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	 ./em13500_linux64.bin EMPREREQ_KIT=true -silent -J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/log \
 	 -responseFile /media/sf_eoracle/oem/13.5/responsefile/emprereqkit_upgrade.rsp
 	```  
+	
+	1st run showed issues that needed fixing.
  
 	![Step 6: OMS_Upgrade_13.5](screenshots/step5_prereq_results_failed1.png)
 	
@@ -393,8 +399,7 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	-------------------       --------------
 	GSMADMIN_INTERNAL         GSMLOGOFF
 	
-	
-	
+		
 	SQL> alter trigger GSMADMIN_INTERNAL.GSMLOGOFF disable;
 	
 	Trigger altered.
@@ -450,9 +455,9 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	![Step 7: OMS_Upgrade_13.5](screenshots/step7_copy_emkey_to_repo.png)
 
 
-8. upgrading: Configuring the Software Only with Plug-ins in Silent Mode.
+8. Upgrade: Configuring the install 13.5 Software in Silent Mode.
 
- - Edit the *upgrade.rsp*
+ - Edit the *upgrade.rsp*. This file was generated in the beginning *getResponseFileTemplates*
 
 	```bash
 	
@@ -469,31 +474,31 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	ONE_SYSTEM=true
 	AGENT_BASE_DIR=/u01/app/oracle/Middleware/agent/13.5
 	logLoc=/media/sf_eoracle/oem/13.5/log
-	OLD_DATABASE_SYSMAN_PASSWORD=sysman12
+	OLD_DATABASE_SYSMAN_PASSWORD=xxxxx
 	WLS_ADMIN_SERVER_USERNAME=weblogic
-	WLS_ADMIN_SERVER_PASSWORD=weblogic1
-	WLS_ADMIN_SERVER_CONFIRM_PASSWORD=weblogic1
-	NODE_MANAGER_PASSWORD=nodemanager1
-	NODE_MANAGER_CONFIRM_PASSWORD=nodemanager1
-	WLS_ADMIN_SERVER_PASSWORD=weblogic1
+	WLS_ADMIN_SERVER_PASSWORD=xxxxxxxx
+	WLS_ADMIN_SERVER_CONFIRM_PASSWORD=xxxxxx
+	NODE_MANAGER_PASSWORD=xxxxxxxx
+	NODE_MANAGER_CONFIRM_PASSWORD=xxxxxx
+	WLS_ADMIN_SERVER_PASSWORD=xxxxxx
 	DATABASE_HOSTNAME=oemserver01.usat.com
 	LISTENER_PORT=1521
 	SERVICENAME_OR_SID=oemcdb
 	SYS_PASSWORD=sys
-	SYSMAN_PASSWORD=sysman12
+	SYSMAN_PASSWORD=xxxxxx
 	EMPREREQ_AUTO_CORRECTION=true
 	REPOSITORY_BACKUP_DONE=true
 	b_upgrade=true
 	EM_INSTALL_TYPE=NOSEED
 	```
 
- - Stop the OMS, and AGENT
-   Make sure you have a SUCCESSFUL Backup in place.
+  - Stop the OMS, and AGENT
+	Make sure you have a SUCCESSFUL Backup in place.
     
  
 	```bash
 		
-	# --- Shut down the 13.3 OMS you are about to upgrade
+	# --- Shut down the 13.3 OMS that you are about to upgrade
 	
 	/u01/app/oracle/Middleware/13.3/oms/bin/emctl stop oms -all
 	
@@ -503,9 +508,13 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	
 
 	```
-
+	
+	OMS Status prior to the upgrade showing a smoothly running 13.3 OMS.
+	
 	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_status_details1.png)
 	
+	
+	OMS Status confirming that the OMS and OMA 13.3 is stopped.
 	
 	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_status_details2.png)
 	
@@ -531,17 +540,25 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 
 	```
 	
+	End of the upgrade showing that it completed successfully.
 	
 	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_successful_end1.png)
 	
-	
-	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_version_end2.png)
-	
-	
+		
 	Console showing that we have a SUCCESSFUL UPGRADE!
 	
 	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_successful_console1.png)
 	
+	
+  - Execute the *root.sh* script
+  
+	![Step 8: OMS_Upgrade_13.5](screenshots/step8_oms_upgrade_successful_rootsh.png)
+	
+	```bash
+	
+	sudo /u01/app/oracle/Middleware/oms/13.5/root.sh
+	
+	```
 	
 9.	Post Upgrade:
 	
@@ -556,10 +573,10 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	
 	
 	
-	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_datamigration_formold2.png)
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_datamigration_formold2.png)
 	
 	
-	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_datamigration_formold3.png)
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_datamigration_formold3.png)
 	
 		
 	Error: Wrong Input
@@ -569,18 +586,18 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	3.Base Directory first word character should not be a number.
 	Specify the new agent base directory for upgrade. Example: /u01/app/agent or c:/john/agent
 	
-	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_datamigration_formold4.png)
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_datamigration_formold4.png)
 	
 
-	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root5.png)
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root5.png)
 	
 	Monitor job
 	
-	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root6.png)
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root6.png)
 	
 	Monitor job progress details
 	
-	![Step 9: OMS_Upgrade_13.5](step9_post_upgrade_task_root7.png)
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root7.png)
 	
 	Monitor job completion details
 	
