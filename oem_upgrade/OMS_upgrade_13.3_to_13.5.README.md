@@ -601,7 +601,7 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	
 	Agent Upgrade Summary job completion details
 	
-	![Step 9: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root8.png)
+	![Step 9: OMS_Upgrade_13.5](screenshots/step9_oms_upgrade_successful_rootsh.png)
 
     
   - Execute root.sh script
@@ -620,7 +620,7 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	
   - Remove EMKEY from repos
 	
-	![Step 10: OMS_Upgrade_13.5](screenshots/step9_post_upgrade_task_root8.png)
+	![Step 10: OMS_Upgrade_13.5](screenshots/step10_post_upgrade_task_emkey1.png)
 	
 	```bash
 	"emctl config emkey -remove_from_repos".
