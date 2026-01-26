@@ -116,10 +116,6 @@
 
 	```
 
-
-### Phase 3: Remove Old (under sized) INACTIVE Members 
-
-
 	![Step 3: Online_Redo_reorg](screenshots/Step3_online_redo_dropold1.png)
 
 
