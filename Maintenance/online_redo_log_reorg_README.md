@@ -38,11 +38,10 @@
 ## Solution: Reorganize Redo Logs
 
 
+
 ### Phase 1: Add New temporal thread#
 
-
 	sqlplus / as sysdba
-	
 	
 	SQL>
 	SQL> col member for a60
@@ -75,12 +74,15 @@
  -  Adding temporal redologs
 	
 	![Step 1: Online_Redo_reorg](screenshots/Step1_online_redo_add_temp1.png)
-	
+
+```bash
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 4 '/u01/oradata/OEMCDB/onlinelog/oemcdb_redo14.log' SIZE 200M;
 											 
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 5 '/u01/oradata/OEMCDB/onlinelog/oemcdb_redo15.log' SIZE 200M;
 											 
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 6 '/u01/oradata/OEMCDB/onlinelog/oemcdb_redo16.log' SIZE 200M;
+```
+
 
 
 ### Phase 2: Verify & Switch
@@ -117,13 +119,11 @@
 	```
 	
 
+
 ### Phase 3: Remove Old (under sized) INACTIVE Members
-
-	
-	![Step 3: Online_Redo_reorg](screenshots/Step3_online_redo_dropold1.png)
+![Step 3: Online_Redo_reorg](screenshots/Step3_online_redo_dropold1.png)
 
 
-	```bash
 	SQL> alter database drop logfile group 1;
 	
 	Database altered.
@@ -135,15 +135,11 @@
 	SQL> alter database drop logfile group 3;
 	
 	Database altered.
-	``` 
 	
 	
-	### Phase 4: Add New properly sized and multiplexed Redo logs
 
-
-	![Step 4: Online_Redo_reorg](screenshots/Step4_online_redo_addnew1.png)
-
-	```bash
+### Phase 4: Add New properly sized and multiplexed Redo logs						
+![Step 4: Online_Redo_reorg](screenshots/Step4_online_redo_addnew1.png)
 
 	SQL> ALTER DATABASE ADD LOGFILE GROUP 1 ('/u02/oradata/OEMCDB/onlinelog/oemcdb_redo1a.log',
 											'/u02/oradata/OEMCDB/onlinelog/oemcdb_redo1b.log',
@@ -168,8 +164,6 @@
 	
 	SQL> alter system switch logfile;
 	
-	```
-	
  -  And Verify
 	
 	
@@ -184,12 +178,10 @@
 	
 
 
-### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1	
-	
-	![Step 5: Online_Redo_reorg](screenshots/Step5_online_redo_droptemp.png)
+### Phase 5: Clean up. Drop the temporal group# 4, 5, and 6 added in phase 1
+![Step 5: Online_Redo_reorg](screenshots/Step5_online_redo_droptemp.png)
 
 
-	```bash
 	SQL> alter system switch logfile;
 
 	System altered.
@@ -220,17 +212,14 @@
 
 	
 ### Phase 6: Final verification
-	
-	![Step 6: Online_Redo_reorg](screenshots/Step6_online_redo_finalverify.png)
+![Step 6: Online_Redo_reorg](screenshots/Step6_online_redo_finalverify.png)
 
-
-	```bash
 
 	SQL> col member for a60
 	SQL> select group#, status, member from v$logfile;
 	
 	SQL> select group#, thread#, bytes/1024/1024 SIZE_MB, members, status from v$log;
-	```
+
 	
 
 ## Result After Reorganization:
@@ -242,6 +231,7 @@
  - Disaster Recovery: No single storage failure can destroy all copies of redo logs
 
  - Compliance: Meets regulatory requirements for data redundancy
+
 
 
 ## Key Reasons for Redo Log Reorganization:
