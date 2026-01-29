@@ -363,18 +363,30 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 2. 	Use the OEM Console Login > Step Up > Manage Cloud Control > upgrade Agents.
     (it should work after fixing Perl)
 
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_OEM_agent_upgrade.png)	
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_OEM_agent_upgrade.png)
+
+-  Agent Upgrade Console page:
+
 ![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual1_agentadd1.png)
+
+-  Upgradable Agents:
+
 ![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual2_agentselect2.png)
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual5_jobstok3.png)
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual5_jobstatus4.png)
+
+-  Agent Upgrade Notifications
+  
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual3_jobstok3.png)
+
+-  Agent Upgrade Console : Agent Upgrade Tasks page
+  
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual4_jobstatus4.png)
 
 
 3.	 After success: Run root.sh on each target (as root) and Verify:
 
-![Step2: Deploy Agent Screenshot](screenshots/agup_step3_runroot.sh1_agentup.png)
+![Step3: Deploy Agent Screenshot](screenshots/agup_step3_runroot.sh1_agentup.png)
 
-agup_step3_runroot.sh2_agentup.png)
+![Step3: Deploy Agent Screenshot](screenshots/agup_step3_runroot.sh2_agentup.png)
 
 
 	```bash
@@ -394,3 +406,10 @@ agup_step3_runroot.sh2_agentup.png)
 
 
 !!!!!!!!!!!!!!!!!!!! THE END !!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+
+
