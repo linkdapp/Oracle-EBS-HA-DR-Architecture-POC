@@ -19,11 +19,11 @@ Current setup:
 
 
 
-Step1_showing_error_failed_job1.png
+![Step4: Deploy Agent Screenshot](screenshots/Step1_showing_error_failed_job1.png)
 
-Step1_showing_error_failed_job2.png
+![Step4: Deploy Agent Screenshot](screenshots/Step1_showing_error_failed_job2.png)
 
-Step1_showing_error_failed_job3.png
+![Step4: Deploy Agent Screenshot](screenshots/Step1_showing_error_failed_job3.png)
 
 ```bash
 
@@ -93,10 +93,7 @@ I could also use *agentDeploy.sh*
 
 ## Method II: Agent Pull to get the Software and then use Agent Deploy to complete. 
 
-
-screenshot
-
-
+![Step4: Deploy Agent Screenshot](screenshots/med2_Step1-4_creating_agent_dir.png)
 
 
 1. Create a staging directory
@@ -135,9 +132,6 @@ screenshot
 4. Create the response file. DO NOT name the response file agent.rsp.
 
 
-![Step2: Deploy Agent Screenshot](screenshots/med2_Step1-4_creating_agent_dir.png
-
-
 	```bash
 
 	cd $ORACLE_BASE/staging/agent13.5
@@ -165,7 +159,7 @@ screenshot
 5. Deploy the OMA onto the server by executing *AgentPull.sh* script
 
 
-![Step2: Deploy Agent Screenshot](screenshots/med2_Step5_download_agent_softwareonly.png
+![Step2: Deploy Agent Screenshot](screenshots/med2_Step5_download_agent_softwareonly.png)
 
 	
 	```bash
@@ -183,7 +177,7 @@ screenshot
 	Edit the *agent.rsp* accordingly
 	
 	
-![Step2: Deploy Agent Screenshot](screenshots/med2_Step6_unzip_agent_edit_rspfile.png
+![Step2: Deploy Agent Screenshot](screenshots/med2_Step6_unzip_agent_edit_rspfile.png)
 
 	
 	```bash
@@ -216,9 +210,9 @@ screenshot
 	Firstly, STOP the OLD 13.3 OMA to avoid Port= 3872 is busy error.
 
 
-![Step2: Deploy Agent Screenshot](screenshots/med2_step7_stop_agent_deploy_softwareonly1.png
+![Step2: Deploy Agent Screenshot](screenshots/med2_step7_stop_agent_deploy_softwareonly1.png)
 
-![Step2: Deploy Agent Screenshot](screenshots/med2_step7_stop_agent_deploy_softwareonly2.png
+![Step2: Deploy Agent Screenshot](screenshots/med2_step7_stop_agent_deploy_softwareonly2.png)
 
  -  Stop agent
 	
@@ -284,7 +278,7 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 ### Problem: Agent Upgrade via OEM Console is failing due to Perl versions are mismatched. The 13.5 agent Perl (5.14.1) conflicts with 12.2.0 DB Perl. 
 
 
-![Step2: Deploy Agent Screenshot](screenshots/agup_step1_perlissue_agentup.png
+![Step2: Deploy Agent Screenshot](screenshots/agup_step1_perlissue_agentup.png)
 
 
  cat /u01/app/oracle/Middleware/agent/13_5/agent_13.5.0.0.0/cfgtoollogs/agentDeploy/applypatchesonapplicablehome2026-01-29_10_34_25.log
@@ -312,7 +306,7 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 	Like so:
 	
 
-![Step2: Deploy Agent Screenshot](screenshots/agup_step1_perlfix1_agentup.png
+![Step2: Deploy Agent Screenshot](screenshots/agup_step1_perlfix1_agentup.png)
 	
 	```bash
 	
@@ -369,18 +363,18 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 2. 	Use the OEM Console Login > Step Up > Manage Cloud Control > upgrade Agents.
     (it should work after fixing Perl)
 
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_OEM_agent_upgrade.png	
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual1_agentadd1.png
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual2_agentselect2.png
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual5_jobstok3.png
-![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual5_jobstatus4.png
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_OEM_agent_upgrade.png)	
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual1_agentadd1.png)
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual2_agentselect2.png)
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual5_jobstok3.png)
+![Step2: Deploy Agent Screenshot](screenshots/agup_step2_actual5_jobstatus4.png)
 
 
 3.	 After success: Run root.sh on each target (as root) and Verify:
 
-![Step2: Deploy Agent Screenshot](screenshots/agup_step3_runroot.sh1_agentup.png
+![Step2: Deploy Agent Screenshot](screenshots/agup_step3_runroot.sh1_agentup.png)
 
-agup_step3_runroot.sh2_agentup.png
+agup_step3_runroot.sh2_agentup.png)
 
 
 	```bash
@@ -392,7 +386,7 @@ agup_step3_runroot.sh2_agentup.png
 		
 	```
 	
-![Step2: Deploy Agent Screenshot](screenshots/agup_step3_console_verify.png
+![Step2: Deploy Agent Screenshot](screenshots/agup_step3_console_verify.png)
 
 
 
