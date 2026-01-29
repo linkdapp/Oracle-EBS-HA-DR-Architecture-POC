@@ -1,6 +1,6 @@
 ## Scenario Overview
 
-Demonstrating both **Agent Push** (console) and **Agent Pull** (`AgentPull.sh`) methods for monitoring DB/App servers in EBS HA/DR POC.
+Demonstrating **Agent Push** (console) method for monitoring DB/App servers in EBS HA/DR POC.
 
 Current setup:
 
@@ -9,15 +9,16 @@ Current setup:
 - **App Server** (single-instance EBS 12.2 application tier)
 
 This guide demonstrates deploying **Oracle Management Agents (OMA)** to the DB and App servers for centralized monitoring (performance tuning, alerts, patching, Data Guard/GoldenGate visibility via OEM plugins).
-Oracle recommends two main methods:
+Oracle recommends **Agent Push** method. However, there are three methods.
 
 - **Agent Push** (preferred): OMS "pushes" the agent remotely from the console (Add Host Targets Wizard) — automated, secure, and scalable.
 - **Agent Pull** (manual): Basic Management Agent install Target host "pulls" the agent software (using *'AgentPull.sh'*) — useful when push fails (firewall, SSH issues) or for air-gapped environments.
 - **Agent Deploy** (manual): Ideal for a customized Management Agent install. Use EM CLI to download the Management Agent software onto the remote destination host before executing the script to install the Management Agent.  
 
-Both methods are showcased here for completeness in this GitHub POC. (Reference: Oracle Enterprise Manager 13c Advanced Installation Guide and MOS Note 1596348.1)
+All three methods are showcased here for completeness in this GitHub POC. 
+(Reference: Oracle Enterprise Manager 13c Advanced Installation Guide and MOS Note 1596348.1)
 
-## Prerequisites (Common to Both Methods)
+## Prerequisites (Common to all Methods)
 
   1. Configure *'/etc/hosts'* on OEM server to include IP addresses of target servers.
   2. OMS host can resolve target hostnames (or use IP).

@@ -85,7 +85,8 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 ## TASK 1: Deployment Showcase
 
-- [Deploying OEM Agents - Push vs Pull](monitoring/Deploy-OEM-Agents-Push-Pull.md)
+- [Deploying OEM Agents - Push](monitoring/Deploy-OEM-Agents-Push-Pull.md) - Fresh Installation.
+- [Deploying OEM Agents - Pull & Deploy](monitoring/Deploy_OEM_Agent_AgentPull.md) - Upgrade surprise!
 
 ## TASK 2: Upgrades Showcase
 - [OMR Database Upgrade (12c to 19c)](database_upgrade/Upgrading_OEM_OMR_Database.README.md) – Using AutoUpgrade for best practices.  

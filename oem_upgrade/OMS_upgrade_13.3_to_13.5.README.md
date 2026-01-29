@@ -63,9 +63,10 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 
 
 	```bash
-
-	./em13500_linux64.bin -silent -prereqchecker -entryPoint oracle.sysman.top.oms_Core \ 
-	-J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/prerequisites/log
+	
+	cd /media/sf_eoracle/oem/13.5
+	
+	./em13500_linux64.bin -silent -prereqchecker -entryPoint oracle.sysman.top.oms_Core -J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/prerequisites/log
 	
 	```
 
@@ -113,7 +114,9 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
   - Extract and edit the Response file.
   
 	```bash
+	
 	cd /media/sf_eoracle/oem/13.5
+	
 	./em13500_linux64.bin -getResponseFileTemplates -outputLoc /media/sf_eoracle/oem/13.5/responsefile
   
 	```
@@ -152,8 +155,10 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 	
   - Execute the software-only installation. 
 	
-	```bash		
+	```bash
+		
 	cd /media/sf_eoracle/oem/13.5
+	
 	./em13500_linux64.bin -silent -responseFile /media/sf_eoracle/oem/13.5/responsefile/softwareOnlyWithPlugins_upgrade.rsp \
 	-J-Djava.io.tmpdir=/media/sf_eoracle/oem/13.5/log
 		
@@ -161,9 +166,9 @@ Security Reason: Oracle recommends 13.5 for Holistic Patching (streamlined CPU a
 
 	```bash
 	
-		Run the allroot.sh Script
-		
-		/u01/app/oracle/Middleware/oms/13.5/allroot.sh
+	Run the allroot.sh Script
+	
+	sudo /u01/app/oracle/Middleware/oms/13.5/allroot.sh
 	```
 
 
