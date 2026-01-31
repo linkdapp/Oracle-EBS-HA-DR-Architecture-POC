@@ -110,13 +110,14 @@ I am using ~450 GB shared disk for DB files.
 	sudo fdisk -l                    #  List disks 
 	
 	sudo fdisk /dev/sdd              #  Format disks.
-	
+	```
 
 
-Network DNS Configuration
+###	Network DNS Configuration
 
- - Edit */etc/hosts* file with the new IP addresses
+ -  Edit */etc/hosts* file with the new IP addresses
  
+```bash
 	Server names and IP addresses.
 	
 	# OEM Suite Server
@@ -151,420 +152,401 @@ Network DNS Configuration
 	
 	192.168.56.130 oradbserv04.usat.com   oradbserv04
 	
+```
 
 
-=====> Disable SELinux. Open the config file and change the SELINUX variable from enforcing to disabled.
+ -  Disable SELinux. Open the config file and change the SELINUX variable from enforcing to disabled.
 
 
-sudo vi /etc/selinux/config
-
-======> Turn off and disable the firewall IPTables. If exists.
+	sudo vi /etc/selinux/config
 
 
-sudo chkconfig --list iptables
+ -  Turn off and disable the firewall IPTables. If exists.
 
 
-
-=====>  Make life easier, just turn off  firewalld.
-
-sudo service firewalld stop
-
-
-systemctl disable firewalld
+	sudo chkconfig --list iptables
 
 
 
-=====> Verify that all the network interfaces are up.
+ -  Make life easier, just turn off  firewalld.
+
+	sudo service firewalld stop
 
 
-sudo ip l
+	systemctl disable firewalld
 
 
-=====>  Install BIND on ALL RAC NODES in the cluster. if you do not have it
-
-sudo yum install bind-libs bind bind-utils -y
+ -  Verify that all the network interfaces are up.
 
 
-=====> Enable BIND DNS to start at boot time.
+	sudo ip l
+
+
+= -  Install BIND on ALL RAC NODES in the cluster. if you do not have it
+
+	sudo yum install bind-libs bind bind-utils -y
+
+
+ -  Enable BIND DNS to start at boot time.
  
 
-sudo chkconfig named on
-
-
-=====> Change named directory permissions
-
-sudo ls -ltr /var/named
-
-sudo touch /var/named/usat.com
-
-sudo chmod 664 /var/named/usat.com
-
-sudo chgrp named /var/named/usat.com
-
-sudo chmod g+w /var/named
-
-
-
-
-=====> Backup the BIND configuration file.
-
-
-ls -ltr /etc/named.conf*
-
-
-
-sudo cp /etc/named.conf /etc/named.conf.bak
-
-
-
-=====> Change /etc/named.conf permissions.
-       Otherwise, the original protection may cause trouble in the restarting named step with write-protection 
-	   errors in /var/log/messages. 
-
-sudo chmod 664 /etc/named.conf
-
-
-
-=====> Replace or edit the /etc/named.conf file to change the named configuration manually
-       RAC NODE1 (oradbserv01) will serve as the MASTER while RAC NODE2 (oradbserv02) the slave.
-
-vi  /etc/named.conf file
-//
-// named.conf
-//
-// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS
-// server as a caching only nameserver (as a localhost DNS resolver only).
-//
-// See /usr/share/doc/bind*/sample/ for example named configuration files.
-//
-// See the BIND Administrator's Reference Manual (ARM) for details about the
-// configuration located in /usr/share/doc/bind-{version}/Bv9ARM.html
-
-options {
-        listen-on port 53 { 192.168.56.126; };
-        listen-on-v6 port 53 { ::1; };
-        directory       "/var/named";
-        dump-file       "/var/named/data/cache_dump.db";
-        statistics-file "/var/named/data/named_stats.txt";
-        memstatistics-file "/var/named/data/named_mem_stats.txt";
-        recursing-file  "/var/named/data/named.recursing";
-        secroots-file   "/var/named/data/named.secroots";
-        allow-query     { 192.168.56.0/24; localhost; };
-        allow-transfer  { 192.168.56.0/24; };
-
-        /*
-         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
-         - If you are building a RECURSIVE (caching) DNS server, you need to enable
-           recursion.
-         - If your recursive DNS server has a public IP address, you MUST enable access
-           control to limit queries to your legitimate users. Failing to do so will
-           cause your server to become part of large scale DNS amplification
-           attacks. Implementing BCP38 within your network would greatly
-           reduce such attack surface
-        */
-        recursion yes;
-        forward first;
-        forwarders {
-        10.0.2.3;
-        };
-
-        dnssec-enable yes;
-        dnssec-validation yes;
-
-        /* Path to ISC DLV key */
-        bindkeys-file "/etc/named.root.key";
-
-        managed-keys-directory "/var/named/dynamic";
-
-        pid-file "/run/named/named.pid";
-        session-keyfile "/run/named/session.key";
-};
-
-logging {
-        channel default_debug {
-                file "data/named.run";
-                severity dynamic;
-        };
-};
-
-zone "." IN {
-        type hint;
-        file "named.ca";
-};
-
-include "/etc/named.rfc1912.zones";
-include "/etc/named.root.key";
-
-zone "usat.com" {
-  type master;
-  file "usat.com";
-};
-
-zone "in-addr.arpa" {
-  type master;
-  file "in-addr.arpa";
-};
-
-
-=====> Create the zone file for the usat.com domain on oradbserv01 by running the 
-       following command:
-
-
-sudo vi /var/named/usat.com
-
-(Paste this into the file)
-
-$TTL 3H
-@       IN SOA  oradbserv01        hostmaster      (
-                                        101   ; serial
-                                        1D      ; refresh
-                                        1H      ; retry
-                                        1W      ; expire
-                                        3H )    ; minimum
-                NS      oradbserv01
-                NS      oradbserv02
-localhost       A       127.0.0.1
-oradbserv01        A       192.168.56.126
-oradbserv01-vip    A       192.168.56.131
-oradbserv01-priv   A       192.168.2.126
-oradbserv02        A       192.168.56.127
-oradbserv02-vip    A       192.168.56.132
-oradbserv02-priv   A       192.168.2.127
-scan-oradbserv     A       192.168.56.151
-scan-oradbserv     A       192.168.56.161
-scan-oradbserv     A       192.168.56.171
-
-
-sudo sudo cat /var/named/usat.com
-
-
-=====> Create the reverse zone file oradbserv01.
-
-sudo vi /var/named/in-addr.arpa
-Copy and paste below command as root:
-
-$TTL 3H
-@       IN SOA  oradbserv01.usat.com.      hostmaster.usat.com. (
-                                        101   ; serial
-                                        1D      ; refresh
-                                        1H      ; retry
-                                        1W      ; expire
-                                        3H )    ; minimum
-                NS      oradbserv01.usat.com.
-                NS      oradbserv02.usat.com.
-
-126.56.168.192  PTR     oradbserv01.usat.com.
-131.56.168.192  PTR     oradbserv01-vip.usat.com.
-126.2.168.192   PTR     oradbserv01-priv.usat.com.
-127.56.168.192  PTR     oradbserv02.usat.com.
-132.56.168.192  PTR     oradbserv02-vip.usat.com.
-127.2.168.192   PTR     oradbserv02-priv.usat.com.
-151.56.168.192  PTR     scan-oradbserv.usat.com.
-161.56.168.192  PTR     scan-oradbserv.usat.com.
-171.56.168.192  PTR     scan-oradbserv.usat.com.
-
-
-sudo cat /var/named/in-addr.arpa
-
-
-
-=====> Generate the rndc.key file.
-
-sudo rndc-confgen -a -r /dev/urandom
-
-sudo chgrp named /etc/rndc.key
-
-sudo chmod g+r /etc/rndc.key
-
-sudo ls -lrta /etc/rndc.key
-
-
-
-
-=====> Check that the parameter PEERDNS is set to no in /etc/sysconfig/network-scripts/ifcfg-enp0s3 to prevent the resolv.conf 
-       from being overwritten by the dhcp client.
-
-
-sudo cp /etc/sysconfig/network-scripts/ifcfg-enp0s3	vi /etc/sysconfig/network-scripts/ifcfg-enp0s3.bak  
- 
-
-sudo vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
-	   
-
-sudo cat /etc/sysconfig/network-scripts/ifcfg-enp0s3
-
-===> Before
-
-TYPE="Ethernet"
-PROXY_METHOD="none"
-BROWSER_ONLY="no"
-BOOTPROTO="dhcp"
-DEFROUTE="yes"
-IPV4_FAILURE_FATAL="no"
-IPV6INIT="yes"
-IPV6_AUTOCONF="yes"
-IPV6_DEFROUTE="yes"
-IPV6_FAILURE_FATAL="no"
-IPV6_ADDR_GEN_MODE="stable-privacy"
-NAME="enp0s3"
-UUID="608fff3b-9ee3-4661-8652-0ded1bfb7ef4"
-DEVICE="enp0s3"
-ONBOOT="yes"
-
-
-===> After
-
-TYPE="Ethernet"
-PROXY_METHOD="none"
-BROWSER_ONLY="no"
-BOOTPROTO="dhcp"
-DEFROUTE="yes"
-IPV4_FAILURE_FATAL="no"
-IPV6INIT="yes"
-IPV6_AUTOCONF="yes"
-IPV6_DEFROUTE="yes"
-IPV6_FAILURE_FATAL="no"
-IPV6_ADDR_GEN_MODE="stable-privacy"
-NAME="enp0s3"
-UUID="608fff3b-9ee3-4661-8652-0ded1bfb7ef4"
-DEVICE="enp0s3"
-ONBOOT="yes"
-PEERDNS="no"
-
-
-
-
-=====> Restart the named service.
+	sudo chkconfig named on
+
+
+ -  Change named directory permissions
+
+	sudo ls -ltr /var/named
+	
+	sudo touch /var/named/usat.com
+	
+	sudo chmod 664 /var/named/usat.com
+	
+	sudo chgrp named /var/named/usat.com
+	
+	sudo chmod g+w /var/named
+
+
+
+ -  Backup the BIND configuration file.
+
+
+	ls -ltr /etc/named.conf*
+
+
+
+	sudo cp /etc/named.conf /etc/named.conf.bak
+
+
+
+ -  Change /etc/named.conf permissions.
+	Otherwise, the original protection may cause trouble in the restarting named step with write-protection errors in /var/log/messages. 
+
+	sudo chmod 664 /etc/named.conf
+
+
+ -  Replace or edit the /etc/named.conf file to change the named configuration manually RAC NODE1 (oradbserv01) will serve as the MASTER while RAC NODE2 (oradbserv02) the slave.
+
+	vi  /etc/named.conf file
+	//
+	// named.conf
+	//
+	// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS
+	// server as a caching only nameserver (as a localhost DNS resolver only).
+	//
+	// See /usr/share/doc/bind*/sample/ for example named configuration files.
+	//
+	// See the BIND Administrator's Reference Manual (ARM) for details about the
+	// configuration located in /usr/share/doc/bind-{version}/Bv9ARM.html
+	
+	options {
+			listen-on port 53 { 192.168.56.126; };
+			listen-on-v6 port 53 { ::1; };
+			directory       "/var/named";
+			dump-file       "/var/named/data/cache_dump.db";
+			statistics-file "/var/named/data/named_stats.txt";
+			memstatistics-file "/var/named/data/named_mem_stats.txt";
+			recursing-file  "/var/named/data/named.recursing";
+			secroots-file   "/var/named/data/named.secroots";
+			allow-query     { 192.168.56.0/24; localhost; };
+			allow-transfer  { 192.168.56.0/24; };
+	
+			/*
+			- If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+			- If you are building a RECURSIVE (caching) DNS server, you need to enable
+			recursion.
+			- If your recursive DNS server has a public IP address, you MUST enable access
+			control to limit queries to your legitimate users. Failing to do so will
+			cause your server to become part of large scale DNS amplification
+			attacks. Implementing BCP38 within your network would greatly
+			reduce such attack surface
+			*/
+			recursion yes;
+			forward first;
+			forwarders {
+			10.0.2.3;
+			};
+	
+			dnssec-enable yes;
+			dnssec-validation yes;
+	
+			/* Path to ISC DLV key */
+			bindkeys-file "/etc/named.root.key";
+	
+			managed-keys-directory "/var/named/dynamic";
+	
+			pid-file "/run/named/named.pid";
+			session-keyfile "/run/named/session.key";
+	};
+	
+	logging {
+			channel default_debug {
+					file "data/named.run";
+					severity dynamic;
+			};
+	};
+	
+	zone "." IN {
+			type hint;
+			file "named.ca";
+	};
+	
+	include "/etc/named.rfc1912.zones";
+	include "/etc/named.root.key";
+	
+	zone "usat.com" {
+	type master;
+	file "usat.com";
+	};
+	
+	zone "in-addr.arpa" {
+	type master;
+	file "in-addr.arpa";
+	};
+	
+
+ -  Create the zone file for the usat.com domain on oradbserv01 by running the following command:
+
+
+	sudo vi /var/named/usat.com
+	
+	(Paste this into the file)
+	
+	$TTL 3H
+	@       IN SOA  oradbserv01        hostmaster      (
+											101   ; serial
+											1D      ; refresh
+											1H      ; retry
+											1W      ; expire
+											3H )    ; minimum
+					NS      oradbserv01
+					NS      oradbserv02
+	localhost       A       127.0.0.1
+	oradbserv01        A       192.168.56.126
+	oradbserv01-vip    A       192.168.56.131
+	oradbserv01-priv   A       192.168.2.126
+	oradbserv02        A       192.168.56.127
+	oradbserv02-vip    A       192.168.56.132
+	oradbserv02-priv   A       192.168.2.127
+	scan-oradbserv     A       192.168.56.151
+	scan-oradbserv     A       192.168.56.161
+	scan-oradbserv     A       192.168.56.171
+	
+	
+	sudo sudo cat /var/named/usat.com
+	
+
+ -  Create the reverse zone file oradbserv01.
+
+	sudo vi /var/named/in-addr.arpa
+	Copy and paste below command as root:
+	
+	$TTL 3H
+	@       IN SOA  oradbserv01.usat.com.      hostmaster.usat.com. (
+											101   ; serial
+											1D      ; refresh
+											1H      ; retry
+											1W      ; expire
+											3H )    ; minimum
+					NS      oradbserv01.usat.com.
+					NS      oradbserv02.usat.com.
+	
+	126.56.168.192  PTR     oradbserv01.usat.com.
+	131.56.168.192  PTR     oradbserv01-vip.usat.com.
+	126.2.168.192   PTR     oradbserv01-priv.usat.com.
+	127.56.168.192  PTR     oradbserv02.usat.com.
+	132.56.168.192  PTR     oradbserv02-vip.usat.com.
+	127.2.168.192   PTR     oradbserv02-priv.usat.com.
+	151.56.168.192  PTR     scan-oradbserv.usat.com.
+	161.56.168.192  PTR     scan-oradbserv.usat.com.
+	171.56.168.192  PTR     scan-oradbserv.usat.com.
+	
+	
+	sudo cat /var/named/in-addr.arpa
+	
+	
+
+ -  Generate the rndc.key file.
+
+	sudo rndc-confgen -a -r /dev/urandom
+	
+	sudo chgrp named /etc/rndc.key
+	
+	sudo chmod g+r /etc/rndc.key
+	
+	sudo ls -lrta /etc/rndc.key
+	
+
+
+
+ -  Check that the parameter PEERDNS is set to no in /etc/sysconfig/network-scripts/ifcfg-enp0s3 to prevent the resolv.conf from being overwritten by the dhcp client.
+
+	
+	sudo cp /etc/sysconfig/network-scripts/ifcfg-enp0s3	vi /etc/sysconfig/network-scripts/ifcfg-enp0s3.bak  
+	
+	
+	sudo vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
+		
+	
+	sudo cat /etc/sysconfig/network-scripts/ifcfg-enp0s3
+	
+	===> Before
+	
+	TYPE="Ethernet"
+	PROXY_METHOD="none"
+	BROWSER_ONLY="no"
+	BOOTPROTO="dhcp"
+	DEFROUTE="yes"
+	IPV4_FAILURE_FATAL="no"
+	IPV6INIT="yes"
+	IPV6_AUTOCONF="yes"
+	IPV6_DEFROUTE="yes"
+	IPV6_FAILURE_FATAL="no"
+	IPV6_ADDR_GEN_MODE="stable-privacy"
+	NAME="enp0s3"
+	UUID="608fff3b-9ee3-4661-8652-0ded1bfb7ef4"
+	DEVICE="enp0s3"
+	ONBOOT="yes"
+	
+	
+	===> After
+	
+	TYPE="Ethernet"
+	PROXY_METHOD="none"
+	BROWSER_ONLY="no"
+	BOOTPROTO="dhcp"
+	DEFROUTE="yes"
+	IPV4_FAILURE_FATAL="no"
+	IPV6INIT="yes"
+	IPV6_AUTOCONF="yes"
+	IPV6_DEFROUTE="yes"
+	IPV6_FAILURE_FATAL="no"
+	IPV6_ADDR_GEN_MODE="stable-privacy"
+	NAME="enp0s3"
+	UUID="608fff3b-9ee3-4661-8652-0ded1bfb7ef4"
+	DEVICE="enp0s3"
+	ONBOOT="yes"
+	PEERDNS="no"
+	
+
+
+
+ -  Restart the named service.
 
 sudo service named restart
 
 
 
 
-=====> Restart network service.
+ -  Restart network service.
 
 sudo  service network restart
 
 
-=====> Change /etc/resolv.conf and check nslookup nodes and SCAN ips working fine.
+ -  Change /etc/resolv.conf and check nslookup nodes and SCAN ips working fine.
 
-============ BEFORE Change ========
+	============ BEFORE Change ========
+	
+	
+	sudo cat  /etc/resolv.conf
+	# Generated by NetworkManager
+	search lan usat.com
+	nameserver 10.0.2.3
+	
+	vi /etc/resolv.conf
+	
+	============ AFTER Change ========
+	cat /etc/resolv.conf
+	# Generated by NetworkManager
+	search usat.com lan
+	nameserver 192.168.56.126
+	nameserver 192.168.56.127
+	nameserver 10.0.2.3
+	
 
-	  
-sudo cat  /etc/resolv.conf
-# Generated by NetworkManager
-search lan usat.com
-nameserver 10.0.2.3
+ -  Make it immutable to prevent future overwrites:
 
-vi /etc/resolv.conf
-
-============ AFTER Change ========
-cat /etc/resolv.conf
-# Generated by NetworkManager
-search usat.com lan
-nameserver 192.168.56.126
-nameserver 192.168.56.127
-nameserver 10.0.2.3
-
-
-Make it immutable to prevent future overwrites:
-
-chattr +i /etc/resolv.conf
-
-
-To edit later if needed: 
-
-chattr -i /etc/resolv.conf
+	chattr +i /etc/resolv.conf
 
 
-=====> Restart the named service.
+ -  To edit later if needed: 
 
-sudo service named restart
-
-
+	chattr -i /etc/resolv.conf
 
 
-=====> Restart network service.
+ -  Restart the named service.
 
-sudo  service network restart
-
-nslookup oradbserv01.usat.com
-Server:         ::1
-Address:        ::1#53
-
-Name:   oradbserv01.usat.com
-Address: 192.168.56.126
-
-[oracle@oradbserv01 ~]$
-[oracle@oradbserv01 ~]$ nslookup oradbserv01
-Server:         ::1
-Address:        ::1#53
-
-Name:   oradbserv01.usat.com
-Address: 192.168.56.126
-
-[oracle@oradbserv01 ~]$
-[oracle@oradbserv01 ~]$ nslookup scan-oradbserv
-Server:         ::1
-Address:        ::1#53
-
-Name:   scan-oradbserv.usat.com
-Address: 192.168.56.171
-Name:   scan-oradbserv.usat.com
-Address: 192.168.56.161
-Name:   scan-oradbserv.usat.com
-Address: 192.168.56.151
-
-[oracle@oradbserv01 ~]$
-[oracle@oradbserv01 ~]$ ping 8.8.8.8
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=255 time=25.6 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=255 time=27.6 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=255 time=27.8 ms
-^C
---- 8.8.8.8 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2003ms
-rtt min/avg/max/mdev = 25.649/27.065/27.878/1.023 ms
-[oracle@oradbserv01 ~]$
+	sudo service named restart
 
 
+ -  Restart network service.
+
+	sudo  service network restart
+
+	[oracle@oradbserv01 ~]$ nslookup oradbserv01.usat.com
+	Server:         ::1
+	Address:        ::1#53
+	
+	Name:   oradbserv01.usat.com
+	Address: 192.168.56.126
+	
+	[oracle@oradbserv01 ~]$
+	[oracle@oradbserv01 ~]$ nslookup oradbserv01
+	Server:         ::1
+	Address:        ::1#53
+	
+	Name:   oradbserv01.usat.com
+	Address: 192.168.56.126
+	
+	[oracle@oradbserv01 ~]$
+	[oracle@oradbserv01 ~]$ nslookup scan-oradbserv
+	Server:         ::1
+	Address:        ::1#53
+	
+	Name:   scan-oradbserv.usat.com
+	Address: 192.168.56.171
+	Name:   scan-oradbserv.usat.com
+	Address: 192.168.56.161
+	Name:   scan-oradbserv.usat.com
+	Address: 192.168.56.151
+	
+	[oracle@oradbserv01 ~]$
+	[oracle@oradbserv01 ~]$ ping 8.8.8.8
+	PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+	64 bytes from 8.8.8.8: icmp_seq=1 ttl=255 time=25.6 ms
+	64 bytes from 8.8.8.8: icmp_seq=2 ttl=255 time=27.6 ms
+	64 bytes from 8.8.8.8: icmp_seq=3 ttl=255 time=27.8 ms
+	^C
+	--- 8.8.8.8 ping statistics ---
+	3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+	rtt min/avg/max/mdev = 25.649/27.065/27.878/1.023 ms
+	[oracle@oradbserv01 ~]$
+	
+	
+ -  Configuration DNS RAC NODE2 (oradbserv02) as the SLAVE
+	Stop the DNS service.
+
+	sudo service named stop
 
 
-=======> Configuration DNS RAC NODE2 (oradbserv02) as the SLAVE
-	----	Stop the DNS service.
+ -  As root, create the zone files for the usat.com domain on RAC NODE2 slave (oradbserv02)  by running the following command:
+    Modify the file /etc/named.conf by using the following command:
 
-sudo service named stop
+	Copy from oradbserv01 to oradbserv02
 
-
-=====> As root, create the zone files for the usat.com domain on RAC NODE2 slave (oradbserv02)  
-      by running the following command:
-
-=======> 
-
-
-		Modify the file /etc/named.conf by using the following command:
-
-From oradbserv01 to oradbserv02
-
-scp /etc/named.conf root@oradbserv02:/etc
+	scp /etc/named.conf root@oradbserv02:/etc
  
-sed -i -e 's/listen-on .*/listen-on port 53 { 192.168.56.127; };/' \
--e 's/type master;/type slave;\n masters {192.168.56.126; };/' \
-/etc/named.conf
+	sed -i -e 's/listen-on .*/listen-on port 53 { 192.168.56.127; };/' \
+	-e 's/type master;/type slave;\n masters {192.168.56.126; };/' \
+	/etc/named.conf
 
 
-=======>  
+ -  Start the named service.
 
-		Start the named service.
-
-[root@oradbserv02 named]# service named start
-
+	[root@oradbserv02 named]# service named start
 
 
 
-=======> 
-
-		Check that both the master on oradbserv01 and slave on oradbserv02 DNS servers are working
+ -  Check that both the master on oradbserv01 and slave on oradbserv02 DNS servers are working
 
 [root@oradbserv02 ~]# dig @oradbserv01 oradbserv01.usat.com
 [root@oradbserv02 ~]# dig @oradbserv01 oradbserv02.usat.com

@@ -182,7 +182,7 @@ I could also use *agentDeploy.sh*
 	
 	cd  /u01/app/oracle/staging/agent13.5
 	
-	
+	```bash
 	unzip agent.zip
 	
 	
@@ -200,16 +200,17 @@ I could also use *agentDeploy.sh*
 	ORACLE_HOSTNAME=orappsserv01.usat.com
 	EM_INSTALL_TYPE="AGENT"
 	
-
+	```
 	
 	
 	
 7.  Execute *agentDeploy.sh* to actually deploy the NEW agent into it NEW home.
 	Firstly, STOP the OLD 13.3 OMA to avoid Port= 3872 is busy error.
 
-
+	Start
 	![Step2: Deploy Agent Screenshot](screenshots/med2_step7_stop_agent_deploy_softwareonly1.png)
 
+	End
 	![Step2: Deploy Agent Screenshot](screenshots/med2_step7_stop_agent_deploy_softwareonly2.png)
 
  -  Stop agent
@@ -278,15 +279,15 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 
 	![Step2: Deploy Agent Screenshot](screenshots/agup_step1_perlissue_agentup.png)
 
-
+	```bash
  cat /u01/app/oracle/Middleware/agent/13_5/agent_13.5.0.0.0/cfgtoollogs/agentDeploy/applypatchesonapplicablehome2026-01-29_10_34_25.log
 /u01/app/oracle/Middleware/agent/13_5/agent_13.5.0.0.0/perl/bin/perl: symbol lookup error: /u01/app/oracle/product/12.2.0/db_1/perl/lib/5.14.1/x86_64-linux-thread-multi/auto/Cwd/Cwd.so: undefined symbol: Perl_xs_apiversion_bootcheck
 
-
+	```
 
 ### Oracle Documentation:
 
-	These didn't help!
+These didn't help!
 	
  -  Oracle MOS Note 1073165.1 - "Agent Silent Upgrade Response File Parameters"
 	
@@ -307,7 +308,7 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 	![Step2: Deploy Agent Screenshot](screenshots/agup_step1_perlfix1_agentup.png)
 	
 	
-	
+```bash
 	env | grep -E "PERL"
 	
 	cd ~
@@ -354,7 +355,7 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 
 	env | grep PERL
 
-
+```
 	
 
 
@@ -387,14 +388,14 @@ Why the "Blocked Agent" error happens. The AgentPull.sh method generates a new G
 	![Step3: Deploy Agent Screenshot](screenshots/agup_step3_runroot.sh2_agentup.png)
 
 
-	```bash
+```bash
 	
 	sudo /u01/app/oracle/Middleware/agent/13_5/agent_13.5.0.0.0/root.sh
 	
 	/u01/app/oracle/Middleware/agent/13_5/agent_13.5.0.0.0/bin/emctl status agent
 	
 		
-	```
+```
 	
 ![Step2: Deploy Agent Screenshot](screenshots/agup_step3_console_verify.png)
 
