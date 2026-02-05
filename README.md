@@ -92,19 +92,19 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 - [OMR Database Upgrade (12c to 19c)](Database_Upgrade/Upgrading_OEM_OMR_Database.README.md) – Using AutoUpgrade for best practices.  
 - [OMS Upgrade (13.3 to 13.5)](OEM_Upgrade/OMS_upgrade_13.3_to_13.5.README.md) – Security-focused upgrade.
 
-## TASK 3: Maintenance
+## TASK 2: Maintenance
 
 - [Applying AD & TXK Release Update Packs Using the ETPAT-AT](Maintenance/Applying_AD_TXK_Rel_Packs_to_EBS_README.md) - Patch Automation  
 
 - [Reorganizing Online Redo Logs](Maintenance/online_redo_log_reorg_README.md) - Performance Optimization and HA 
 
-## TASK 3: Migration
+## TASK 4: Migration
 
 - [EBSR12.2 Migration to Oracle_RAC](Migration/Migrating_EBS_Single_node_to_RAC_README.md)
 
 - [Non RAC to RAC DB Binaries](Migration/Migrate_Oracle_DB_Binary_to_RAC_README.md)
 
-## TASK 3: High_Availability
+## TASK 5: High_Availability
 
 - [EBSR12.2_Single_Instance_to_2-NODE_RAC](High_Availability/Migrating_EBS_Single_node_to_RAC_README.md)
 
