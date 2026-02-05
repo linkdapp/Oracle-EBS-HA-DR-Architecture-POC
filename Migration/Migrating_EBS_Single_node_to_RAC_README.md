@@ -2,7 +2,7 @@
 
 ## Overview: Why Migrate to Oracle RAC?
 
-This procedure guides the migration of an Oracle E-Business Suite database from a single-instance architecture to a Real Application Clusters (RAC) configuration. 
+This procedure guides the migration of an Oracle E-Business Suite database from a single-instance architecture to a Real Application Clusters (RAC) configuration.
 While RAC is renowned for high availability, this migration aims to achieve more strategic objectives: 
 - **Operational agility** through rolling maintenance.
 - **Predictable performance** via workload isolation.
