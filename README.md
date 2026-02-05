@@ -102,7 +102,7 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 - [EBSR12.2 Migration to Oracle_RAC](Migration/Migrating_EBS_Single_node_to_RAC_README.md)
 
-- [Non RAC to RAC DB Binaries](Migration/Move to Oracle RAC Binaries from Non-RAC Binaries_README.md)
+- [Non RAC to RAC DB Binaries](Migration/Move_to_Oracle_RAC_Binaries_from_Non-RAC_Binaries_README.md)
 
 ## TASK 5: High_Availability Showcase
 
