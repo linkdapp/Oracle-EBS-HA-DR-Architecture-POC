@@ -22,38 +22,30 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
 
 # Assumption: 
 
-	a. Single RDBMS has been installed and an existing single Instance database has been created.
+ - Single RDBMS has been installed and an existing single Instance database has been created.
 
-	b. Grid Infrastructure is already installed, configured, and running successfully on all Nodes 
-	   in the cluster. If you are interested in seeing how I added a converted this single node into
-	   a RAC cluster node the refer to my article : <insert_article_link_here>
-
+ - Grid Infrastructure is already installed, configured, and running successfully on all Nodes  in the cluster. If you are interested in seeing how I added a converted this single node into a RAC cluster node the refer to my article : <insert_article_link_here>
 			
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-showing_that_rac_option_is_off_in_binaries.png
+/showing_that_rac_option_is_off_in_binaries1.png)
 
 
 1. Find out if Oracle binary is RAC enabled: (Linux and Unix) Will not work on AIX.
 
-	```bash
-	
+```bash
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
-	
-	```
-	
-	If above command does not return anything, RAC option is not linked in. 
-	A RAC enabled oracle binary should return "kcsm.o".
+```
 
+If above command does not return anything, RAC option is not linked in. 
+A RAC enabled oracle binary should return "kcsm.o".
 
 2. To check whether a running instance is a RAC instance :
 
-	```bash
-	
+```bash
 	ps -ef| grep lmon | grep <ORACLE_SID>
-	
-	```
+```	
 	
 showing_database_status2.png
 
@@ -62,20 +54,18 @@ showing_database_status2.png
 	
 3. Check cluster_database parameter
 	
-	```bash
-	
+```bash	
 	sqlplus / as sysdba
 	
 	show parameter cluster_database
+```
 	
-	```
-
 showing_that_rac_option3.png
 
 	Output "true" means it's RAC instance but this is not reliable as a RAC instance may have cluster_database set to false during
 	maintenance period.
 	
-	```bash
+	
 	
 	col comp_name for a40
 	col status for a12
@@ -84,10 +74,6 @@ showing_that_rac_option3.png
 	select substr(comp_name,1,40) comp_name, substr(comp_id,1,10)  
 	comp_id,substr(version,1,12) version,status from dba_registry ;
 	
-	```
-	
-    
-
 
 *****************************************************************
 
@@ -98,7 +84,6 @@ BACKUP the SERVER: TAKE A SNAPSHOT.
 
 4. Execute the following on the ORACLE_HOME:
 
-
   - As ORACLE_HOME owner, stop all resources (database, listener, ASM etc) that's running from the 
     home. When stopping database, use NORMAL or IMMEDIATE option.
 
@@ -106,32 +91,30 @@ BACKUP the SERVER: TAKE A SNAPSHOT.
 
 takiing_a_backup_of_oracle_home_b4_relink4a.png
 
-	```bash
-	
+```bash
 	cd /u01/app/oracle/product/
 	
 	sudo tar -czvf 12.2.0.tar.gz 12.2.0/
+```
 	
-	``` 
-	
-  - As ORACLE_HOME owner, execute the following to relink:
+ - As ORACLE_HOME owner, execute the following to relink:
 
 executing_make_rac_on4b.png
 
-	```bash 
-	
+```bash
 	cd $ORACLE_HOME/rdbms/lib/
 
 	make -f ins_rdbms.mk rac_on ioracle
+```
 	
-	```
-	
-  - Verify successfully completed:
-  
+- Verify successfully completed:
+
+```bash
 	make_rac_on_completed_binaries_RAC_enabled4b.png
 
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
 	kcsm.o    <--------- The kcsm.o file indicates ORACLE RDBMS is RAC enabled.
+```
 	
 
 ### As a side note:
@@ -146,48 +129,40 @@ executing_make_rac_on4b.png
 	Note: If you are changing more than 1 home, repeat the make command for all homes.
 
 
-                                 Clonning the
-                        ┌─┤ Oracle RAC enabled RDBMS HOME  ├──┐
+  #                               Clonning the
+  #                      ┌─┤ Oracle RAC enabled RDBMS HOME  ├──┐
 
 
 5.  On the source server (Node1) Installation Node.
 
 	Tar the Oracle RAC enabled ORACLE_HOME 
 	
-	```bash 
-	
+```bash
 	cd /u01/app/oracle/product/
 	
 	sudo tar -czvf RAC12.2.0.tar.gz 12.2.0
-	
-
-	```
-	
+```	
 	
 6. 	Copy the tar file to the target server (Node2) destination:/u01/app/oracle/product
 
-	```bash
-	
+```bash
 	scp RAC12.2.0.tar.gz oracle@oradbserv02:/u01/app/oracle/product
-	
-	```
+```	
 	
 7. 	Log into the target server and untar the New Oracle RAC enabled home.
 
-	```bash 
-	
+```bash
 	cd /u01/app/oracle/product/
 	
 	sudo tar -xzvf RAC12.2.0.tar.gz
 	
 	ls -lrt
-	```
+```	
 	
 8. 	Clone RAC home as ORACLE_HOME owner ( oracle user here ) on each node by specifying right 
     LOCAL_NODE for each node:
 
-	```bash
-	
+```bash
 	export ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1
 	
 	export PATH=$PATH:$ORACLE_HOME/bin:/usr/bin
@@ -195,9 +170,9 @@ executing_make_rac_on4b.png
 	perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 \
 	ORACLE_BASE=/u01/app/oracle OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall \ 
 	"CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com"
+```	
 	
-	```
-
+### Sample output
 
 ```bash   
 oradbserv02.usat.com-oraebs-/u01/app/oracle/product
@@ -267,21 +242,18 @@ Execute /u01/app/oracle/product/12.2.0/db_1/root.sh on the following nodes:
 
 9. As a root user, execute the *root.sh* script
 
-	```bash
-	
+```bash
 	/u01/app/oracle/product/12.2.0/db_1/root.sh
-
-	```
+```
+	
 
 10. Verify the NEW Node2 and Node1 oraInventory contents and RAC is enabled.
 
 enabling_rac_option_10.png
 	
-	```bash
-	
+```bash
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
 	kcsm.o
-	
 	
 	cat /u01/app/oraInventory/ContentsXML/inventory.xml
 	
@@ -306,12 +278,10 @@ enabling_rac_option_10.png
 	<COMPOSITEHOME_LIST>
 	</COMPOSITEHOME_LIST>
 	</INVENTORY>
+```	
 	
-	```
 
-
-
-# Notes:
+### Notes:
 
 
 How to Check Whether Oracle Binary/Instance is RAC Enabled and Relink Oracle Binary in RAC
