@@ -100,15 +100,15 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 ## TASK 4: Migration Showcase
 
-- [EBSR12.2 Migration to Oracle_RAC](Migration/Migrating_EBS_Single_node_to_RAC_README.md)
+- [EBSR12.2 Migration to Oracle_RAC](Migration/Migrating_EBS_Single_node_to_RAC_README.md) - Move tp a service-oriented foundation
 
-- [Non RAC to RAC DB Binaries](Migration/Move_to_Oracle_RAC_Binaries_from_Non-RAC_Binaries_README.md)
+- [Non RAC to RAC DB Binaries](Migration/Move_to_Oracle_RAC_Binaries_from_Non-RAC_Binaries_README.md) - Quickly replicate existing Oracle software
 
 ## TASK 5: High_Availability Showcase
 
-- [EBSR12.2_Single_Instance_to_2-NODE_RAC](High_Availability/Migrating_EBS_Single_node_to_RAC_README.md)
+- [EBSR12.2_Single_Instance_to_2-NODE_RAC](High_Availability/Migrating_EBS_Single_node_to_RAC_README.md) - Ensure your ystem remains operational
 
-- [Non RAC to RAC DB Binaries](High_Availability/Convert_Oracle_DB_Binary_to_RAC_README.md)
+- [Non RAC to RAC DB Binaries](High_Availability/Convert_Oracle_DB_Binary_to_RAC_README.md) - Stay consistent with across RAC nodes
 
 
 
