@@ -102,13 +102,13 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 - [EBSR12.2 Migration to ASM](Migration/Migrating_EBS_Single_node_to_RAC_README.md)
 
-- [EBSR12.2 Migration to ASM](Migration/Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
+- [EBSR12.2 Migration to ASM](Migration/Convert_Oracle_DB_Binary_to_RAC_README.md)
 
 ## TASK 3: High_Availability
 
 - [EBSR12.2 Migration to ASM](High_Availability/Migrating_EBS_Single_node_to_RAC_README.md)
 
-- [EBSR12.2 Migration to ASM](High_Availability/Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
+- [EBSR12.2 Migration to ASM](High_Availability/Convert_Oracle_DB_Binary_to_RAC_README.md)
 
 
 
