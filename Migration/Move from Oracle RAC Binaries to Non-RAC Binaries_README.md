@@ -9,7 +9,7 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
  
    Quickly replicates existing Oracle software (binaries, patches) across RAC nodes without full OUI 
    re-installation on each.
-   
+      
  - Consistency: 
    Ensures identical configurations, versions, and patches on all nodes, reducing compatibility issues.
    
