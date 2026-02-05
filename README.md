@@ -85,12 +85,12 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 ## TASK 1: Deployment Showcase
 
-- [Deploying OEM Agents - Push](monitoring/Deploy-OEM-Agents-Push-Pull.md) - Fresh Installation.
-- [Deploying OEM Agents - Pull & Deploy](monitoring/Deploy_OEM_Agent_AgentPull.md) - Upgrade surprise!
+- [Deploying OEM Agents - Push](Monitoring/Deploy-OEM-Agents-Push-Pull.md) - Fresh Installation.
+- [Deploying OEM Agents - Pull & Deploy](Monitoring/Deploy_OEM_Agent_AgentPull.md) - Upgrade surprise!
 
 ## TASK 2: Upgrades Showcase
-- [OMR Database Upgrade (12c to 19c)](database_upgrade/Upgrading_OEM_OMR_Database.README.md) – Using AutoUpgrade for best practices.  
-- [OMS Upgrade (13.3 to 13.5)](oem_upgrade/OMS_upgrade_13.3_to_13.5.README.md) – Security-focused upgrade.
+- [OMR Database Upgrade (12c to 19c)](Database_Upgrade/Upgrading_OEM_OMR_Database.README.md) – Using AutoUpgrade for best practices.  
+- [OMS Upgrade (13.3 to 13.5)](OEM_Upgrade/OMS_upgrade_13.3_to_13.5.README.md) – Security-focused upgrade.
 
 ## TASK 3: Maintenance
 
@@ -102,13 +102,13 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 - [EBSR12.2 Migration to ASM](Migration/Migrating_EBS_Single_node_to_RAC_README.md)
 
-- [Convert a non RAC to RAC DB Binaries](Migration/Convert_Oracle_DB_Binary_to_RAC_README.md)
+- [Non RAC to RAC DB Binaries](Migration/Migrate_Oracle_DB_Binary_to_RAC_README.md)
 
 ## TASK 3: High_Availability
 
 - [EBSR12.2 Migration to ASM](High_Availability/Migrating_EBS_Single_node_to_RAC_README.md)
 
-- [Convert a non RAC to RAC DB Binaries](High_Availability/Convert_Oracle_DB_Binary_to_RAC_README.md)
+- [Non RAC to RAC DB Binaries](High_Availability/Convert_Oracle_DB_Binary_to_RAC_README.md)
 
 
 
