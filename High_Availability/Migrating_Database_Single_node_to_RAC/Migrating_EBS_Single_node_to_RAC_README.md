@@ -503,13 +503,14 @@ I am using ~450 GB shared disk for DB files.
 	```
 
  -  Restart network service.
+ ![Step1: Migration](screenshots/step1_network_nslookup_ping_node1.png)
 
 	```bash
 	
 	sudo  service network restart
 	```
 
-![Step1: Migration](screenshots/step1_network_nslookup_ping_node1.png)
+
 
 	```bash
 	
@@ -572,9 +573,10 @@ I am using ~450 GB shared disk for DB files.
 	sudo service named start
 	```
 	
-![Step2: Migration](screenshots/step1_network_nslookup_ping_node2.png)
+
 
  -  Check that both the master on oradbserv01 and slave on oradbserv02 DNS servers are working
+![Step2: Migration](screenshots/step1_network_nslookup_ping_node2.png)
 
 	```bash
 	
@@ -608,7 +610,7 @@ I am using ~450 GB shared disk for DB files.
 	dig @oradbserv02 scan-oradbserv.usat.com
 	```
 
-## Configure Local Chrony Server/Client on for RAC (I will be using the APP Server)
+### Configure Local Chrony Server/Client on for RAC (I will be using the APP Server)
 
 	-Chrony Server-
 	
@@ -764,7 +766,6 @@ I am using ~450 GB shared disk for DB files.
 
 
 ### Configure Oracleasm on both RAC NODE1 (oradbserv01) and RAC NODE2 (oradbserv02)
-
 ![Step3: Migration](screenshots/step1_configure_oraasm1_node1.png)
 
 	```bash
@@ -797,7 +798,6 @@ I am using ~450 GB shared disk for DB files.
 
 
 ### Create ASM disks. Do this on RAC Node1 only. (oradbserv01)
-
 ![Step4: Migration](screenshots/step1_configure_oraasm1_createdisk.png)
 
 	``` bash	
@@ -832,8 +832,7 @@ I am using ~450 GB shared disk for DB files.
  -  The RSA public key is written to the ~/.ssh/id_rsa.pub file and the private key to the ~/.ssh/id_rsa file.
 	
  -  Log in as the "oracle" user on oradbserver01.usat.com, generate an "authorized_keys" file and copy it to oradbserver02.usat.comusing the following commands.
-
-![Step5: Migration](screenshots/step1_ssh_User_Equivalence_node1.png)
+ ![Step5: Migration](screenshots/step1_ssh_User_Equivalence_node1.png)
 
 	```bash
 	
@@ -858,8 +857,7 @@ I am using ~450 GB shared disk for DB files.
 	```
 	
  -  Next, log in as the "oracle" user on oradbserver02.usat.com and perform the following commands.
-
-![Step6: Migration](screenshots/step1_ssh_User_Equivalence_node2.png)
+ ![Step6: Migration](screenshots/step1_ssh_User_Equivalence_node2.png)
 
 	```bash
 	
@@ -926,8 +924,8 @@ I am using ~450 GB shared disk for DB files.
  
  
  -  Log into Node2 and verify
- 
-![Step8: Migration](screenshots/Step2_shared_storeage_attach_to_node1verify.png)  ![Step9: Migration](screenshots/Step2_shared_storeage_attach_to_node2verify.png)
+ ![Step8: Migration](screenshots/Step2_shared_storeage_attach_to_node1verify.png)  
+ ![Step9: Migration](screenshots/Step2_shared_storeage_attach_to_node2verify.png)
 
 	```bash
 	
@@ -1154,8 +1152,7 @@ Click **Next**
 
 
 ### I have a separate article here on how to do that
-
-	Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
+Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
 
 
 ### Put database in archive log mode.
@@ -1181,20 +1178,20 @@ Click **Next**
 
   - Unset by running the following command:
   
-  ```bash
+	```bash
   
 	alter system reset local_listener sid='*' scope=both;
 	
 	```
 	
 
-  - Make a copy of the *ORACLE_HOME/assistants/rconfig/sampleXMLs/ConvertToRAC_AdminManaged.xml*
+ -  Make a copy of the *ORACLE_HOME/assistants/rconfig/sampleXMLs/ConvertToRAC_AdminManaged.xml*
 	Edit your copy and make sure to remember the name.
 
 
  -  Execute rconfig using the convert option convert *verify="ONLY"*. Highly recommended to validate the environment. Fix all issues.
-	Here below are all the parameters that need modifying.
-	
+	Here below are all the parameters that need modifying.	
+
 ![Step34: Migration](screenshots/rconfig_to_convert_the_db_only_to_RAC.png)
 	
 	```bash
@@ -1288,8 +1285,7 @@ Click **Next**
 	```
 	
 
-### Verify 
- 
+### Verify
 ![Step36: Migration](screenshots/verify_host2.png)
 
 ![Step37: Migration](screenshots/verify_host1.png)
@@ -1312,7 +1308,6 @@ Click **Next**
 
 #### RCONFIG enable block change tracking but stores the file on the local node.
      It's recommended to move the block chain tracking file into the ASM shared storage.
-
 ![Post1: rconfig](screenshots/block_change_tracking_relocate.png)
 	 
 	 ```bash
@@ -1434,9 +1429,7 @@ Click **Next**
 
 
  - Repeat on **NODE 2**
-
-
-![Post2: Migration](screenshots/running_autoconfig_NODE2.png)
+ ![Post2: Migration](screenshots/running_autoconfig_NODE2.png)
 
 	```bash
 	
@@ -1540,7 +1533,6 @@ Set up PCP to distribute concurrent managers across RAC instances for load balan
 
 
 #### Test and Validate
-
 ![Post3: Migration](screenshots/crsstat_output_test.png)
 
  -  In DB you can verify both the nodes 
@@ -1555,8 +1547,7 @@ Set up PCP to distribute concurrent managers across RAC instances for load balan
 	ORADBSERV01
 	ORADBSERV02
 	ORAPPSSERV01
-	```
-
+```
 
 ![Post4: Migration](screenshots/appstarted_verify.png)
 
