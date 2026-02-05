@@ -1070,7 +1070,7 @@ Click **Next**
 
 ### I have a separate article here on how to do that
 
-Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
+Checkout: [Migration](Convert_Oracle_DB_Binary_to_RAC_README.md)
 
 
 ### Put database in archive log mode.
