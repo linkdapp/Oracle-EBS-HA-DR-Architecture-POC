@@ -1,23 +1,18 @@
-# Converting Single Instance Oracle E-Business Suite (EBS) Release 12.2 to a 2-Node Oracle RAC for High Availability
+# Migrating Single Instance Oracle E-Business Suite (EBS) Release 12.2 to a 2-Node Oracle RAC
 
-## Overview: Why High Availability (HA) with Oracle RAC?
+## Overview: Why Migrate to Oracle RAC?
 
-High Availability ensures your EBS system remains operational despite hardware failures, maintenance, or spikes in load. Oracle RAC provides:
+This procedure guides the migration of an Oracle E-Business Suite database from a single-instance architecture to a Real Application Clusters (RAC) configuration. 
+While RAC is renowned for high availability, this migration aims to achieve more strategic objectives: 
+- **Operational agility** through rolling maintenance.
+- **Predictable performance** via workload isolation.
+- **Strategic scalability** for future growth.
 
- - Redundancy and Failover: Multiple nodes share the database workload; if one node fails, others take over seamlessly.
- 
- - Scalability: Load balancing across nodes improves performance for concurrent users and batch jobs.
- 
- - Zero Downtime Maintenance: Patch one node while others handle traffic.
- 
- - Business Continuity: Reduces unplanned downtime (e.g., from node crashes) and supports features like Parallel Concurrent Processing (PCP) in EBS.
- 
- - Integration with Other Tools: Complements Data Guard (for DR) and GoldenGate (for replication), and monitoring via OEM.
+It shifts the database from a static, monolithic resource to a dynamic, service-oriented foundation.
 
-Without HA, a single-instance setup risks extended outages. RAC achieves 99.99%+ uptime in production, but requires proper setup for interconnect (private network) and shared storage.
+## Scenario:
 
-Estimated Time: 4-8 hours for setup, plus testing. Downtime during conversion: ~1-2 hours (can be minimized with careful planning).
-
+Your organization relies on a mission-critical EBS environment but is constrained by ever-shrinking maintenance windows. Performance suffers as batch processing contends with online users, and the cost of scaling up single servers is unsustainable. This migration is triggered by the need to eliminate planned downtime, cleanly separate workloads (OLTP vs. Reporting vs. Batch), and establish a scale-out architecture that supports both current demands and future expansion on-premises or in the cloud.
 
 ## Prerequisites
 
