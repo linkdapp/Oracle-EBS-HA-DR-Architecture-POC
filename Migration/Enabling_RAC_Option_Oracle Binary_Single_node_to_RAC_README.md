@@ -8,7 +8,7 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
  - Speed & Efficiency: 
  
    Quickly replicates existing Oracle software (binaries, patches) across RAC nodes without full OUI 
-   reinstallation on each.
+   re-installation on each.
    
  - Consistency: 
    Ensures identical configurations, versions, and patches on all nodes, reducing compatibility issues.
@@ -32,6 +32,8 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+showing_that_rac_option_is_off_in_binaries.png
+
 
 1. Find out if Oracle binary is RAC enabled: (Linux and Unix) Will not work on AIX.
 
@@ -53,6 +55,8 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
 	
 	```
 	
+showing_database_status2.png
+
 	Only RAC instances have lmon background process.
 	
 	
@@ -65,7 +69,9 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
 	show parameter cluster_database
 	
 	```
-	
+
+showing_that_rac_option3.png
+
 	Output "true" means it's RAC instance but this is not reliable as a RAC instance may have cluster_database set to false during
 	maintenance period.
 	
@@ -98,15 +104,19 @@ BACKUP the SERVER: TAKE A SNAPSHOT.
 
   - BACKUP ORACLE_HOME:
 
+takiing_a_backup_of_oracle_home_b4_relink4a.png
+
 	```bash
 	
 	cd /u01/app/oracle/product/
 	
-	sudo tar -czvf 12.1.0.2.tar.gz 12.1.0.2/
+	sudo tar -czvf 12.2.0.tar.gz 12.2.0/
 	
 	``` 
 	
   - As ORACLE_HOME owner, execute the following to relink:
+
+executing_make_rac_on4b.png
 
 	```bash 
 	
@@ -117,12 +127,14 @@ BACKUP the SERVER: TAKE A SNAPSHOT.
 	```
 	
   - Verify successfully completed:
+  
+	make_rac_on_completed_binaries_RAC_enabled4b.png
 
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
 	kcsm.o    <--------- The kcsm.o file indicates ORACLE RDBMS is RAC enabled.
 	
 
-As a side note:
+### As a side note:
 
 	If interconnect is infiniband and RDS protocol is being used instead of UDP:
 	9/28/2019 Document 284785.1
@@ -146,7 +158,7 @@ As a side note:
 	
 	cd /u01/app/oracle/product/
 	
-	sudo tar -czvf RAC12.1.0.2.tar.gz 12.1.0.2
+	sudo tar -czvf RAC12.2.0.tar.gz 12.2.0
 	
 
 	```
@@ -156,7 +168,7 @@ As a side note:
 
 	```bash
 	
-	scp RAC12.1.0.2.tar.gz oracle@usat-racdb02:/u01/app/oracle/product
+	scp RAC12.2.0.tar.gz oracle@oradbserv02:/u01/app/oracle/product
 	
 	```
 	
@@ -166,7 +178,7 @@ As a side note:
 	
 	cd /u01/app/oracle/product/
 	
-	sudo tar -xzvf RAC12.1.0.2.tar.gz
+	sudo tar -xzvf RAC12.2.0.tar.gz
 	
 	ls -lrt
 	```
@@ -176,22 +188,22 @@ As a side note:
 
 	```bash
 	
-	export ORACLE_HOME=/u01/app/oracle/product/12.1.0.2/db_1
+	export ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1
 	
 	export PATH=$PATH:$ORACLE_HOME/bin:/usr/bin
 	
 	perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 \
 	ORACLE_BASE=/u01/app/oracle OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall \ 
-	"CLUSTER_NODES={usat-racdb01.usat.com,usat-racdb02.usat.com}" "LOCAL_NODE=usat-racdb02.usat.com"
+	"CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com"
 	
 	```
 
-   screenshot
-   
-usat-racdb02.usat.com-oraebs-/u01/app/oracle/product
+
+```bash   
+oradbserv02.usat.com-oraebs-/u01/app/oracle/product
 >
->perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 ORACLE_BASE=/u01/app/oracle OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall "CLUSTER_NODES={usat-racdb01.usat.com,usat-racdb02.usat.com}" "LOCAL_NODE=usat-racdb02.usat.com"
-./runInstaller -clone -waitForCompletion  "ORACLE_HOME=/u01/app/oracle/product/12.1.0.2/db_1" "ORACLE_HOME_NAME=OraDB12Home1" "ORACLE_BASE=/u01/app/oracle" "oracle_install_OSDBA=oinstall" "oracle_install_OSOPER=oinstall" "CLUSTER_NODES={usat-racdb01.usat.com,usat-racdb02.usat.com}" "LOCAL_NODE=usat-racdb02.usat.com" -silent -paramFile /u01/app/oracle/product/12.1.0.2/db_1/clone/clone_oraparam.ini
+>perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 ORACLE_BASE=/u01/app/oracle OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com"
+./runInstaller -clone -waitForCompletion  "ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1" "ORACLE_HOME_NAME=OraDB12Home1" "ORACLE_BASE=/u01/app/oracle" "oracle_install_OSDBA=oinstall" "oracle_install_OSOPER=oinstall" "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com" -silent -paramFile /u01/app/oracle/product/12.2.0/db_1/clone/clone_oraparam.ini
 Starting Oracle Universal Installer...
 
 Checking Temp space: must be greater than 500 MB.   Actual 16712 MB    Passed
@@ -243,110 +255,60 @@ Setup Oracle Base successful.
 
 As a root user, execute the following script(s):
         
-		1. /u01/app/oracle/product/12.1.0.2/db_1/root.sh
+		1. /u01/app/oracle/product/12.2.0/db_1/root.sh
 
-Execute /u01/app/oracle/product/12.1.0.2/db_1/root.sh on the following nodes:
-[usat-racdb02.usat.com]
+Execute /u01/app/oracle/product/12.2.0/db_1/root.sh on the following nodes:
+[oradbserv02.usat.com]
 
 
 ..................................................   100% Done.
-
+```
 
 
 9. As a root user, execute the *root.sh* script
 
 	```bash
 	
-	/u01/app/oracle/product/12.1.0.2/db_1/root.sh
+	/u01/app/oracle/product/12.2.0/db_1/root.sh
 
 	```
 
 10. Verify the NEW Node2 and Node1 oraInventory contents and RAC is enabled.
 
-ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
-kcsm.o
-
+enabling_rac_option_10.png
+	
 	```bash
+	
+	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
+	kcsm.o
+	
+	
 	cat /u01/app/oraInventory/ContentsXML/inventory.xml
+	
+	<?xml version="1.0" standalone="yes" ?>
+	<!-- Copyright (c) 1999, 2014, Oracle and/or its affiliates.
+	All rights reserved. -->
+	<!-- Do not modify the contents of this file by hand. -->
+	<INVENTORY>
+	<VERSION_INFO>
+	<SAVED_WITH>12.2.0.0</SAVED_WITH>
+	<MINIMUM_VER>2.1.0.6.0</MINIMUM_VER>
+	</VERSION_INFO>
+	<HOME_LIST>
+	<HOME NAME="OraGI12Home1" LOC="/u01/app/12.2.0.1/grid" TYPE="O" IDX="1" CRS="true"/>
+	<HOME NAME="OraDB12Home1" LOC="/u01/app/oracle/product/12.2.0/db_1" TYPE="O" IDX="2">
+	<NODE_LIST>
+		<NODE NAME="oradbserv02.usat.com"/>
+		<NODE NAME="oradbserv01.usat.com"/>
+	</NODE_LIST>
+	</HOME>
+	</HOME_LIST>
+	<COMPOSITEHOME_LIST>
+	</COMPOSITEHOME_LIST>
+	</INVENTORY>
+	
 	```
 
-screenshot
-
-<?xml version="1.0" standalone="yes" ?>
-<!-- Copyright (c) 1999, 2014, Oracle and/or its affiliates.
-All rights reserved. -->
-<!-- Do not modify the contents of this file by hand. -->
-<INVENTORY>
-<VERSION_INFO>
-   <SAVED_WITH>12.1.0.2.0</SAVED_WITH>
-   <MINIMUM_VER>2.1.0.6.0</MINIMUM_VER>
-</VERSION_INFO>
-<HOME_LIST>
-<HOME NAME="OraGI12Home1" LOC="/u01/app/12.2.0.1/grid" TYPE="O" IDX="1" CRS="true"/>
-<HOME NAME="OraDB12Home1" LOC="/u01/app/oracle/product/12.1.0.2/db_1" TYPE="O" IDX="2">
-   <NODE_LIST>
-      <NODE NAME="usat-racdb02.usat.com"/>
-      <NODE NAME="usat-racdb01.usat.com"/>
-   </NODE_LIST>
-</HOME>
-</HOME_LIST>
-<COMPOSITEHOME_LIST>
-</COMPOSITEHOME_LIST>
-</INVENTORY>
-
-usat-racdb02.usat.com-oraebs-/u01/app/oraInventory/ContentsXML
->
-
-
-11. Configure Password less SSH Connectivity if not yet configured.
-
-On All the RAC Nodes:
- 
-	su - oracle
-	mkdir ~/.ssh
-	chmod 700 ~/.ssh
- 
-Generate the RSA and DSA keys:
- 
-	/usr/bin/ssh-keygen -t rsa
-	/usr/bin/ssh-keygen -t dsa
- 
-On usat-racdb01:
- 
-	touch ~/.ssh/authorized_keys
-	cd ~/.ssh
- 
-(a)    Add these Keys to the Authorized_keys file.
- 
-	cat id_rsa.pub >> authorized_keys
-	cat id_dsa.pub >> authorized_keys
- 
-(b)   Send this file to usat-racdb02.
- 
-	scp authorized_keys usat-racdb02:.ssh/
- 
-On usat-racdb02:
- 
-(a)    Add these Keys to the Authorized_keys file.
- 
-	cd ~/.ssh
-	cat id_rsa.pub >> authorized_keys
-	cat id_dsa.pub >> authorized_keys
- 
-(b)   Send this file to usat-racdb01.
- 
-	scp authorized_keys usat-racdb01:.ssh/
- 
-On both the RAC Nodes:
- 
-	chmod 600 ~/.ssh/authorized_keys
- 
-ssh usat-racdb01 date
-ssh usat-racdb02 date
-ssh usat-racdb01.usat.com date
-ssh usat-racdb02.usat.com date
- 
-Entered 'yes' and continued when prompted
 
 
 # Notes:

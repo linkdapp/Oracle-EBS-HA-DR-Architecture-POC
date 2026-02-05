@@ -11,7 +11,7 @@ The process assumes:
 	- Software Library Path exists: *mkdir -p /u01/app/oracle/Middleware/oms/13.5/swlib*
 	- All plugins on the source agent either the same or supersede the plugins installed on the target agents. Applies only to upgrades!
 	  (ERROR:Agent is not compatible with the given Gold Image. Few deployed plug-ins on the Management Ag the Gold Image: Systems Infrastructure:Plugin,Oracle Database:Plugin)
-
+	  
 	  ![Step1: Deploy Gold Agent Screenshot](screenshots/plugin_check.png)
 	  
 	  
@@ -206,13 +206,13 @@ You need a standalone agent that means you cannot use the OMA on that is running
   
   Monitor
 
-  ![Step23: Deploy Gold Agent Screenshot](screenshots/step12_agent_gold_jobmonitor1.png
+  ![Step23: Deploy Gold Agent Screenshot](screenshots/step12_agent_gold_jobmonitor1.png)
 
-  ![Step23: Deploy Gold Agent Screenshot](screenshots/step12_agent_gold_jobmonitor2.png
+  ![Step23: Deploy Gold Agent Screenshot](screenshots/step12_agent_gold_jobmonitor2.png)
   
   Successful!
   
-  ![Step23: Deploy Gold Agent Screenshot](screenshots/step13_agent_gold_update_verify.png
+  ![Step23: Deploy Gold Agent Screenshot](screenshots/step13_agent_gold_update_verify.png)
 
 
 

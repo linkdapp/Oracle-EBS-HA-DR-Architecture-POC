@@ -97,3 +97,19 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 - [Applying AD & TXK Release Update Packs Using the ETPAT-AT](Maintenance/Applying_AD_TXK_Rel_Packs_to_EBS_README.md) - Patch Automation  
 
 - [Reorganizing Online Redo Logs](Maintenance/online_redo_log_reorg_README.md) - Performance Optimization and HA 
+
+## TASK 3: Migration
+
+- [EBSR12.2 Migration to ASM](Migration/Migrating_EBS_Single_node_to_RAC_README.md)
+
+- [EBSR12.2 Migration to ASM](Migration/Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
+
+## TASK 3: High_Availability
+
+- [EBSR12.2 Migration to ASM](High_Availability/Migrating_EBS_Single_node_to_RAC_README.md)
+
+- [EBSR12.2 Migration to ASM](High_Availability/Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
+
+
+
+
