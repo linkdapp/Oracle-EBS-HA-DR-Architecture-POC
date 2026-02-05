@@ -41,7 +41,7 @@ Network: 3 NICs per server
 Shared Storage: Use VirtualBox shared disks (VDI files) for ASM (Automatic Storage Management). 
 I am using ~450 GB shared disk for DB files.
 
-	```bash
+	
 	# Clone Golden Image Linux 7 VDI Disks
 	
 	"c:\Program Files\Oracle\VirtualBox\VBoxManage" clonehd "G:\virtualbox_vm\BackupLoc\Linux7server\bk_swapdisk01.vdi" "E:\virtualbox_vm\oradbserv02\Disks\oradbserv02_SWAPDISK.vdi"
@@ -93,9 +93,9 @@ I am using ~450 GB shared disk for DB files.
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 0 --device 0 --type hdd  --medium "G:\virtualbox_vm\ASMDISKS\FRA1_ASM01.vdi" 
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 1 --device 0 --type hdd  --medium "G:\virtualbox_vm\ASMDISKS\FRA2_ASM02.vdi" 
 
-	```
+	
 
-	```bash
+	
 
 	# On both oradbserv01 RAC Node1 and oradbserv02 RAC Node2
 	
@@ -110,14 +110,14 @@ I am using ~450 GB shared disk for DB files.
 	sudo fdisk -l                    #  List disks 
 	
 	sudo fdisk /dev/sdd              #  Format disks.
-	```
+	
 
 
 ###	Network DNS Configuration
 
  -  Edit */etc/hosts* file with the new IP addresses
  
-```bash
+
 	Server names and IP addresses.
 	
 	# OEM Suite Server
@@ -152,56 +152,56 @@ I am using ~450 GB shared disk for DB files.
 	
 	192.168.56.130 oradbserv04.usat.com   oradbserv04
 	
-```
+
 
 
  -  Disable SELinux. Open the config file and change the SELINUX variable from enforcing to disabled.
 
-	```bash
+	
 	
 	sudo vi /etc/selinux/config
-	```
+	
 
  -  Turn off and disable the firewall IPTables. If exists.
 
-	```bash
+	
 	
 	sudo chkconfig --list iptables
-	```
+	
 
  -  Make life easier, just turn off  firewalld.
 
-	```bash
+	
 	
 	sudo service firewalld stop
 	
 	sudo systemctl disable firewalld
-	```
+	
 
  -  Verify that all the network interfaces are up.
 
-	```bash
+	
 	
 	sudo ip l
-	```
+	
 
  -  Install BIND on ALL RAC NODES in the cluster. if you do not have it
 
-	```bash
+	
 	
 	sudo yum install bind-libs bind bind-utils -y
-	```
+	
 
  -  Enable BIND DNS to start at boot time.
  
-	```bash
+	
 	
 	sudo chkconfig named on
-	```
+	
 
  -  Change named directory permissions
 
-	```bash
+	
 	
 	sudo ls -ltr /var/named
 	
@@ -210,29 +210,29 @@ I am using ~450 GB shared disk for DB files.
 	sudo chgrp named /var/named/usat.com
 	
 	sudo chmod g+w /var/named
-	```
+	
 
  -  Backup the BIND configuration file.
 
-	```bash
+	
 	
 	ls -ltr /etc/named.conf*
 	
 	sudo cp /etc/named.conf /etc/named.conf.bak
-	```
+	
 
 
  -  Change /etc/named.conf permissions.
 	Otherwise, the original protection may cause trouble in the restarting named step with write-protection errors in /var/log/messages. 
 
-	```bash
+	
 	
 	sudo chmod 664 /etc/named.conf
-	```
+	
 
  -  Replace or edit the /etc/named.conf file to change the named configuration manually RAC NODE1 (oradbserv01) will serve as the MASTER while RAC NODE2 (oradbserv02) the slave.
 
-	```bash
+	
 	
 	vi  /etc/named.conf file #--- Sample
 	//
@@ -310,11 +310,11 @@ I am using ~450 GB shared disk for DB files.
 	type master;
 	file "in-addr.arpa";
 	};
-	```
+	
 
  -  Create the zone file for the usat.com domain on oradbserv01 by running the following command:
 
-	```bash
+	
 	
 	sudo vi /var/named/usat.com  #--- Sample
 	
@@ -342,11 +342,11 @@ I am using ~450 GB shared disk for DB files.
 	
 	
 	sudo sudo cat /var/named/usat.com
-	```
+	
 
  -  Create the reverse zone file oradbserv01.
 
-	```bash
+	
 	
 	sudo vi /var/named/in-addr.arpa #--- Sample
 	
@@ -374,12 +374,12 @@ I am using ~450 GB shared disk for DB files.
 	
 	
 	sudo cat /var/named/in-addr.arpa
-	```
+	
 	
 
  -  Generate the rndc.key file.
 
-	```bash
+	
 	
 	sudo rndc-confgen -a -r /dev/urandom
 	
@@ -388,12 +388,12 @@ I am using ~450 GB shared disk for DB files.
 	sudo chmod g+r /etc/rndc.key
 	
 	sudo ls -lrta /etc/rndc.key
-	```
+	
 
 
  -  Check that the parameter PEERDNS is set to no in /etc/sysconfig/network-scripts/ifcfg-enp0s3 to prevent the resolv.conf from being overwritten by the dhcp client.
 
-	```bash
+	
 	
 	sudo cp /etc/sysconfig/network-scripts/ifcfg-enp0s3	 /etc/sysconfig/network-scripts/ifcfg-enp0s3.bak  
 	
@@ -440,27 +440,27 @@ I am using ~450 GB shared disk for DB files.
 	DEVICE="enp0s3"
 	ONBOOT="yes"
 	PEERDNS="no"
-	```
+	
 
 
  -  Restart the named service.
 
 
-	```bash
+	
 	
 	sudo service named restart
-	```
+	
 
  -  Restart network service.
 
-	```bash
+	
 	
 	sudo  service network restart
-	```
+	
 
  -  Change /etc/resolv.conf and check nslookup nodes and SCAN ips working fine.
 
-	```bash
+	
 	
 	============ BEFORE Change Sample ========
 	
@@ -478,41 +478,41 @@ I am using ~450 GB shared disk for DB files.
 	search usat.com 
 	nameserver 192.168.56.126
 	nameserver 192.168.56.127
-	```
+	
 	
 
  -  Make it immutable to prevent future overwrites:
 
-	```bash
+	
 	
 	sudo chattr +i /etc/resolv.conf
-	```
+	
 
  -  To edit later if needed: 
 
-	```bash
+	
 	
 	sudo chattr -i /etc/resolv.conf
-	```
+	
 
  -  Restart the named service.
 
-	```bash
+	
 	
 	sudo service named restart
-	```
+	
 
  -  Restart network service.
  ![Step1: Migration](screenshots/step1_network_nslookup_ping_node1.png)
 
-	```bash
+	
 	
 	sudo  service network restart
-	```
+	
 
 
 
-	```bash
+	
 	
 	nslookup oradbserv01.usat.com
 	Server:         ::1
@@ -539,23 +539,23 @@ I am using ~450 GB shared disk for DB files.
 	Address: 192.168.56.161
 	Name:   scan-oradbserv.usat.com
 	Address: 192.168.56.151
-	```
+	
 		
 	
  -  Configuration DNS RAC NODE2 (oradbserv02) as the SLAVE
 	Stop the DNS service.
 
-	```bash
+	
 	
 	sudo service named stop
-	```
+	
 
  -  As root, create the zone files for the usat.com domain on RAC NODE2 slave (oradbserv02)  by running the following command:
     Modify the file /etc/named.conf by using the following command:
 
 	Copy from oradbserv01 to oradbserv02
 
-	```bash
+	
 	
 	sudo scp /etc/named.conf root@oradbserv02:/etc
 
@@ -564,21 +564,21 @@ I am using ~450 GB shared disk for DB files.
 	sudo sed -i -e 's/listen-on .*/listen-on port 53 { 192.168.56.127; };/' \
 	-e 's/type master;/type slave;\n masters {192.168.56.126; };/' \
 	/etc/named.conf
-	```
+	
 
  -  Start the named service.
 
-	```bash
+	
 	
 	sudo service named start
-	```
+	
 	
 
 
  -  Check that both the master on oradbserv01 and slave on oradbserv02 DNS servers are working
 ![Step2: Migration](screenshots/step1_network_nslookup_ping_node2.png)
 
-	```bash
+	
 	
 	dig @oradbserv01 oradbserv01.usat.com
 	dig @oradbserv01 oradbserv01.usat.com
@@ -608,7 +608,7 @@ I am using ~450 GB shared disk for DB files.
 	dig @oradbserv02 oradbserv02-priv.usat.com
 	dig @oradbserv02 oradbserv02-priv.usat.com
 	dig @oradbserv02 scan-oradbserv.usat.com
-	```
+	
 
 ### Configure Local Chrony Server/Client on for RAC (I will be using the APP Server)
 
@@ -618,27 +618,27 @@ I am using ~450 GB shared disk for DB files.
  
  -  Disable firewall for simplicity and set **SELINUX=disabled** in **/etc/selinux/config** file.
 
-	```bash
+	
 	
 	sudo vi /etc/selinux/config
 	sudo systemctl stop firewalld
     sudo systemctl disable firewalld
-	```
+	
 
 
  -  Install chrony and disable NTP
 
-	```bash
+	
 	
 	sudo yum install -y chrony
 	sudo service ntpd stop
 	sudo chkconfig ntpd off
 	sudo chkconfig --list ntpd
-	```
+	
 	
  -  Edit the Server Config file **/etc/chrony.conf** and make the following changes.
 
-	```bash
+	
 	
 	sudo vi  /etc/chrony.conf
 	
@@ -649,32 +649,32 @@ I am using ~450 GB shared disk for DB files.
 
     ---# Serve time even if not synchronized to a time source.
 	local stratum 10
-	```
+	
 	
  -  Start the chrony server and enable at boot time
 
-	```bash
+	
 	
 	sudo systemctl stop chronyd
 	sudo systemctl start chronyd
 	
 	sudo systemctl status chronyd.service
-	```
+	
 
  -  Verify Chrony tracking
 
-	```bash
+	
 	
 	sudo chronyc tracking
 	
 	sudo chronyc sources
 	
 	sudo ntpdate 23.186.168.132
-	```
+	
 
  -  Chrony Client. Edit on all NODES in the RAC cluster-
 	
-	```bash
+	
 	
 	sudo vi /etc/chrony.conf
 	
@@ -688,17 +688,17 @@ I am using ~450 GB shared disk for DB files.
 	
 	# Serve time even if not synchronized to a time source.
 	local stratum 10
-	```
+	
 
  -  Restart the network and check.
 	
-	```bash
+	
 	
 	sudo systemctl stop chronyd
 	sudo systemctl start chronyd
 	sudo chronyc sources
 	sudo ntpdate 192.168.56.60
-	```	
+		
 	
 
 	
@@ -712,7 +712,7 @@ I am using ~450 GB shared disk for DB files.
 
  -  Create the GRID User
  
-	```bash
+	
 	sudo groupadd -g 54327 asmdba
 	sudo groupadd -g 54328 asmadmin
 	sudo groupadd -g 54329 asmoper
@@ -761,14 +761,14 @@ I am using ~450 GB shared disk for DB files.
 	oracle  ALL=(ALL)       ALL
 	grid    ALL=(ALL)       ALL
 
-	```
+	
 
 
 
 ### Configure Oracleasm on both RAC NODE1 (oradbserv01) and RAC NODE2 (oradbserv02)
 ![Step3: Migration](screenshots/step1_configure_oraasm1_node1.png)
 
-	```bash
+	
 	df -ha |grep -i oracleasm
 	
 	sudo oracleasm configure -i
@@ -794,13 +794,13 @@ I am using ~450 GB shared disk for DB files.
 	
 	sudo lsmod | grep oracleasm
 	
-	```
+	
 
 
 ### Create ASM disks. Do this on RAC Node1 only. (oradbserv01)
 ![Step4: Migration](screenshots/step1_configure_oraasm1_createdisk.png)
 
-	``` bash	
+	 bash	
 	sudo oracleasm scandisks
 	
 	sudo oracleasm listdisks
@@ -821,7 +821,7 @@ I am using ~450 GB shared disk for DB files.
 	 
 	sudo oracleasm listdisks
 	
-	```
+	
 
 
 ###  Manual User Equivalence (Key-Based Authentication) Configuration (Oracle and Grid) Os users.
@@ -834,7 +834,7 @@ I am using ~450 GB shared disk for DB files.
  -  Log in as the "oracle" user on oradbserver01.usat.com, generate an "authorized_keys" file and copy it to oradbserver02.usat.comusing the following commands.
  ![Step5: Migration](screenshots/step1_ssh_User_Equivalence_node1.png)
 
-	```bash
+	
 	
 	su - oracle
 	
@@ -854,12 +854,12 @@ I am using ~450 GB shared disk for DB files.
 	
 		
 	scp authorized_keys oradbserver02.usat.com:/home/oracle/.ssh/
-	```
+	
 	
  -  Next, log in as the "oracle" user on oradbserver02.usat.com and perform the following commands.
  ![Step6: Migration](screenshots/step1_ssh_User_Equivalence_node2.png)
 
-	```bash
+	
 	
 	su - oracle
 	
@@ -888,7 +888,7 @@ I am using ~450 GB shared disk for DB files.
 	/usr/bin/ssh-add
 	
 	#- You should now be able to SSH and SCP between servers without entering passwords.
-	```
+	
 	
  -  Repeat the steps above to configure User Equivalence for the Grid user.
  
@@ -910,7 +910,7 @@ I am using ~450 GB shared disk for DB files.
 
 ### Here I am attaching the ASM Storage to NODE2.
  
-	```bash
+	
 	
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 5 --device 0 --type hdd  --medium "F:\virtualbox_vm\ASMDISKS\DATA1_ASM01.vdi"
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 6 --device 0 --type hdd  --medium "F:\virtualbox_vm\ASMDISKS\DATA2_ASM02.vdi"
@@ -918,7 +918,7 @@ I am using ~450 GB shared disk for DB files.
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 8 --device 0 --type hdd  --medium "G:\virtualbox_vm\ASMDISKS\DATA4_ASM04.vdi"
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 9 --device 0 --type hdd  --medium "G:\virtualbox_vm\ASMDISKS\FRA1_ASM01.vdi" 
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 10 --device 0 --type hdd  --medium "G:\virtualbox_vm\ASMDISKS\FRA2_ASM02.vdi" 
-	```
+	
  
  ![Step7: Migration](screenshots/Step2_shared_storeage_attach_to_node21.png)  
  
@@ -927,7 +927,7 @@ I am using ~450 GB shared disk for DB files.
  ![Step8: Migration](screenshots/Step2_shared_storeage_attach_to_node1verify.png)  
  ![Step9: Migration](screenshots/Step2_shared_storeage_attach_to_node2verify.png)
 
-	```bash
+	
 	
 	sudo oracleasm listdisks
 	ASMDISK1
@@ -936,13 +936,13 @@ I am using ~450 GB shared disk for DB files.
 	ASMDISK4
 	ASMDISK5
 	ASMDISK6
-	```
+	
 
 ### Install the Grid Infrastructure software
 
  -  create the GI $ORACLE_HOME directory
  
-	```bash
+	
 	su - grid
 	
 	sudo mkdir -p /u01/app/oracle/product/12.2.0/db_1
@@ -951,22 +951,22 @@ I am using ~450 GB shared disk for DB files.
 	sudo chmod -R 775 /u01
 	
 	ls -lrt /u01/app/
-	```
+	
 	
  -  Unzip the GI *linuxx64_12201_grid_home.zip* binaries to the */u01/app/12.2.0/grid* 
  
 ![Step10: Migration](screenshots/unzipping_GI_binaries_to_OH.png)
 
-	```bash
+	
 	
 	unzip linuxx64_12201_grid_home.zip -d /u01/app/12.2.0/grid/
-	```
+	
 	
  -  As root: Install Cluster Verification Utility **cvudisk** on both nodes. As root copy it to Nodes in the RAC Cluster.
  
 ![Step11: Migration](screenshots/installing_cvudisk_on_node1.png)
  
-	```bash
+	
     scp  /u01/app/12.2.0/grid/cv/rpm/cvuqdisk-1.0.10-1.rpm grid@oradbserv02:/u01/app/oracle/staging
 
 	sudo rpm -qi cvuqdisk
@@ -976,13 +976,13 @@ I am using ~450 GB shared disk for DB files.
 	sudo rpm -ivh /u01/app/12.2.0/grid/cv/rpm/cvuqdisk-1.0.10-1.rpm
 	
 	sudo rpm -qi cvuqdisk
-	```
+	
 	
  -  Run CLUVFY Utility to verify the cluster. Address any issues identified.
 
 ![Step12: Migration](screenshots/run_cluvfy_results_showing_resolve_issue.png)
 
-	```bash
+	
 	export ORATAB=/etc/oratab
 	export ORACLE_BASE=/u01/app/oracle
 	export PATH=$PATH:$ORACLE_HOME/bin
@@ -991,16 +991,17 @@ I am using ~450 GB shared disk for DB files.
 	
 	
 	/u01/app/12.2.0/grid/runcluvfy.sh stage -pre crsinst -n oradbserv01,oradbserv02 -verbose -logdir /media/sf_eoracle/pgmlogs
-	```
+	
 
 ### Do a Software only installation of the GI software:
 
-	```bash
+	
 	
 	nohup /u01/app/12.2.0/grid/gridSetup.sh &
-	```
 	
- -  Select **Set Up Software Only**
+
+
+-  Select **Set Up Software Only**
 
 ![Step13: Migration](screenshots/gi_installer_step1.png)
 
@@ -1048,10 +1049,10 @@ Click **Close**
 
 ### Configure the installation
 
-	```bash
+	
 	
 	nohup /u01/app/12.2.0/grid/gridSetup.sh &
-	```
+	
 
 ![Step21: Migration](screenshots/gi_installer_step9_configure.png)
 
@@ -1127,7 +1128,7 @@ Click **Next**
 
 ![Step30: Migration](screenshots/asmca_step2_configuring_asmdisk2.png)
  
-	```bash
+	
 	
 	asmca
 			ASM Compatibility      12.1.0.1   ----> Min ASM RDBMS to mount diskgroup.
@@ -1136,7 +1137,7 @@ Click **Next**
 	su - grid
 	
 	nohup asmca &
-	```
+	
 	
 
 
@@ -1178,11 +1179,11 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 
   - Unset by running the following command:
   
-	```bash
+	
   
 	alter system reset local_listener sid='*' scope=both;
 	
-	```
+	
 	
 
  -  Make a copy of the *ORACLE_HOME/assistants/rconfig/sampleXMLs/ConvertToRAC_AdminManaged.xml*
@@ -1194,7 +1195,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 
 ![Step34: Migration](screenshots/rconfig_to_convert_the_db_only_to_RAC.png)
 	
-	```bash
+	
 	
 	# ------- Sample ConvertToRAC_AdminManaged.xml
 	
@@ -1232,14 +1233,14 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 		</Convert>
 	</ConvertToRAC></RConfig>
 
-	```
+	
 	
  -  After successfully validating the environment. Navigate to the database *$ORACLE_HOME/bin* and execute *rconfig*.
     Set *Convert verify="YES"*
  
 ![Step35: Migration](screenshots/rconfig_to_convert_the_database_to_RAC.png)
 
-	```bash
+	
 	
 	cd $ORACLE_HOME/bin
 	
@@ -1282,7 +1283,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 		</Convert>
 	</ConvertToRAC></RConfig>
 	
-	```
+	
 	
 
 ### Verify
@@ -1292,7 +1293,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 
 ![Step38: Migration](screenshots/verify_srvctl_cmds.png)
 	
-	```bash
+	
 	
 	srvctl status server -servers "oradbserv01,oradbserv02" -detail
 
@@ -1302,7 +1303,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 	
 	srvctl status asm -node oradbserv02 -detail -verbose
 	
-	```
+	
 
 ### Post-Migration Steps 
 
@@ -1310,7 +1311,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
      It's recommended to move the block chain tracking file into the ASM shared storage.
 ![Post1: rconfig](screenshots/block_change_tracking_relocate.png)
 	 
-	 ```bash
+	 
 	 
 	alter database disable block change tracking;
 	 
@@ -1320,7 +1321,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 	
 	alter system set remote_listener='scan-oradbserv:1521' scope=both sid='*' 
 
-	```
+	
 
 
 ### Listener Configuration
@@ -1329,7 +1330,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
  -  On each node, add as an *ifile* the AutoConfig **listener.ora**, **tnsnames.ora**, and **sqlnet.ora**.
 	*ifile* acts as a pionter to the actual files.
 	
-	```bash
+	
 	# ----------------------  Example NODE1
 	
 	#-- Edit the Listener.ora file. ONLY include the IFILE. Example for NODE2
@@ -1371,13 +1372,13 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 	vi $ORACLE_HOME/network/admin/sqlnet.ora
 	
 	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb2_oradbserv02/sqlnet.ora
-	```
+	
 
 ### EBS App Service Configuration	
 	
  -  Create the Service for EBS and add ORA_NLS10 to the database using the following command:
  
-	```bash
+	
 	
 	export ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1
 	export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.0/db_1/lib:/u01/app/oracle/product/12.2.0/db_1/ctx/lib
@@ -1393,7 +1394,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 
 	srvctl status service -db ebsappdb -service ebsapp_serv
 
-	```
+	
 
 
 
@@ -1402,14 +1403,14 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 
  -  Source the RDBMS environment on **Node 1** (Here I choose a simplicity).
 
-	```bash
+	
 
 	export ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1
 	export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.0/db_1/lib:/u01/app/oracle/product/12.2.0/db_1/ctx/lib
 	export ORACLE_SID=ebsappdb1
 	export PATH=$PATH:$ORACLE_HOME/bin
 	export TNS_ADMIN=$ORACLE_HOME/network/admin/ebsappdb1_oradbserv01
-	```
+	
 	
  -  Run **adbldxml.pl** to regenerate the DB context file with SCAN enabled:text
 	When prompted:
@@ -1421,17 +1422,17 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
     This generates a new context file: $ORACLE_HOME/appsutil/ebsappdb1_oradbserv01.xml (new $CONTEXT_NAME is something like ebsappdb_scan-oradbserv).
 
 	
-	```bash
+	
 	
 	cd $ORACLE_HOME/appsutil/bin
 	perl adbldxml.pl appsuser=apps appspass=apps
-	```
+	
 
 
  - Repeat on **NODE 2**
  ![Post2: Migration](screenshots/running_autoconfig_NODE2.png)
 
-	```bash
+	
 	
 	# ------------------------ Example NODE 2 ------------
 	
@@ -1495,7 +1496,7 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
 	
 	AutoConfig completed successfully.
 	[oracle@oradbserv02 bin]$
-	```
+	
 
 
 ### Configure Application Tier for RAC (Enable SCAN)
@@ -1509,17 +1510,17 @@ Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_READM
  -  Set **s_dbSid** to DB name (**ebsappdb**).
  -  Search for the jdbc connection to the database **<jdbc_url oa_var="s_apps_jdbc_connect_descriptor">** and replace with:
     
-	```bash
+	
 	jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=YES)(FAILOVER=YES)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=scan-oradbserv)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=ebsapp_serv)))
-	```
+	
 	
  -  Run AutoConfig on app tier:
  -  This updates app tier tnsnames.ora in $TNS_ADMIN to use SCAN and service name.
  
  
-  ```bash
+  
     ./adautocfg.sh appspass=apps
- ```
+ 
  
  -  Restart app services: *adstrtal.sh apps/apps*.
     
@@ -1537,7 +1538,7 @@ Set up PCP to distribute concurrent managers across RAC instances for load balan
 
  -  In DB you can verify both the nodes 
 
-```bash
+
 
 	SQL> select node_name from apps.fnd_nodes;
 	
@@ -1547,7 +1548,7 @@ Set up PCP to distribute concurrent managers across RAC instances for load balan
 	ORADBSERV01
 	ORADBSERV02
 	ORAPPSSERV01
-```
+
 
 ![Post4: Migration](screenshots/appstarted_verify.png)
 
