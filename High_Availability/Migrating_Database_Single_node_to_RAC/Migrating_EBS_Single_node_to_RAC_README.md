@@ -1,4 +1,4 @@
-# Converting Single Instance Oracle E-Business Suite (EBS) Release 12.2 to a 2-Node Oracle RAC for High Availability
+# High Availability: Single Instance Oracle E-Business Suite (EBS) Release 12.2 to a 2-Node Oracle RAC.
 
 ## Overview: Why High Availability (HA) with Oracle RAC?
 
@@ -1153,7 +1153,7 @@ Click **Next**
 
 
 ### I have a separate article here on how to do that
-Checkout: [Migration](Enabling_RAC_Option_Oracle Binary_Single_node_to_RAC_README.md)
+Checkout: [High_Availability](RAC/Convert_Oracle_DB_Binary_to_RAC_README.md)
 
 
 ### Put database in archive log mode.
