@@ -512,7 +512,7 @@ I am using ~450 GB shared disk for DB files.
 	Copy from oradbserv01 to oradbserv02
 
 ```bash
-	sudo scp /etc/named.conf root@oradbserv02:/etc
+	sudo scp /etc/named.conf root@oradbserv02:/etc/named.conf.bak
 
 	# Execute this script to edit the named.conf file on the 2 NODE. This is the SLAVE.
 	
@@ -616,7 +616,7 @@ I am using ~450 GB shared disk for DB files.
 	sudo ntpdate 23.186.168.132
 ```
 
- -  Chrony Client. Edit on all NODES in the RAC cluster-
+ -  Chrony Client. Edit on all NODES in the RAC cluster. Comment out all the **server**
 	
 ```bash
 	sudo vi /etc/chrony.conf
@@ -701,7 +701,8 @@ I am using ~450 GB shared disk for DB files.
 
 
 ### Configure Oracleasm on both RAC NODE1 (oradbserv01) and RAC NODE2 (oradbserv02)
-	![Step3: Migration](screenshots/step1_configure_oraasm1_node1.png)
+
+![Step3: Migration](screenshots/step1_configure_oraasm1_node1.png)
 
 ```bash
 	df -ha |grep -i oracleasm
@@ -728,7 +729,8 @@ I am using ~450 GB shared disk for DB files.
 ```
 
 ### Create ASM disks. Do this on RAC Node1 only. (oradbserv01)
-	![Step4: Migration](screenshots/step1_configure_oraasm1_createdisk.png)
+
+![Step4: Migration](screenshots/step1_configure_oraasm1_createdisk.png)
 
 ```bash
 	sudo oracleasm scandisks
@@ -783,7 +785,8 @@ I am using ~450 GB shared disk for DB files.
 ```
 	
  -  Next, log in as the "oracle" user on oradbserver02.usat.com and perform the following commands.
- 	![Step6: Migration](screenshots/step1_ssh_User_Equivalence_node2.png)
+ 
+ ![Step6: Migration](screenshots/step1_ssh_User_Equivalence_node2.png)
 
 ```bash
 	su - oracle
@@ -1000,7 +1003,7 @@ Click **Next**
 
  -  Select Storage Option Information
 
-![Step26: Migration](screenshots/gi_installer_step15_configure_storage.png
+![Step26: Migration](screenshots/gi_installer_step15_configure_storage.png)
 
 Click **Next**
 
@@ -1065,7 +1068,7 @@ Click **Next**
 
 ### I have a separate article here on how to do that
 
-Checkout: [Migration](Convert_Oracle_DB_Binary_to_RAC_README.md)
+Checkout: [Migration](Move to Oracle RAC Binaries from Non-RAC Binaries_README.md)
 
 
 ### Put database in archive log mode.
@@ -1444,7 +1447,7 @@ Set up PCP to distribute concurrent managers across RAC instances for load balan
 ![Post4: Migration](screenshots/appstarted_verify.png)
 
 
-#Notes:
-	
-	Add multi-node config if app tier is multi-node (per Doc ID 387709.1).
+# Notes:
+
+Add multi-node config if app tier is multi-node (per Doc ID 387709.1).
 	
