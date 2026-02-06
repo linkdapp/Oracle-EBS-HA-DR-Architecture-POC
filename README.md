@@ -106,9 +106,9 @@ For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 ## TASK 5: High_Availability Showcase
 
-- [EBSR12.2_Single_Instance_to_2-NODE_RAC](High_Availabilit/RAC/Switch_Oracle_DB_Binary_to_RAC_enable_README.md) - Ensure your ystem remains operational
+- [EBSR12.2_Single_Instance_to_2-NODE_RAC](High_Availability/RAC/Switch_Oracle_DB_Binary_to_RAC_enable_README.md) - Ensure your ystem remains operational
 
-- [Non RAC to RAC DB Binaries](High_Availabilit/RAC/Oracle_EBS_DB_Single_Node_to_RAC_README.md) - Stay consistent with across RAC nodes
+- [Non RAC to RAC DB Binaries](High_Availability/RAC/Oracle_EBS_DB_Single_Node_to_RAC_README.md) - Stay consistent with across RAC nodes
 
 
 
