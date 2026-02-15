@@ -611,7 +611,7 @@ I am using ~450 GB shared disk for DB files.
 ```bash
 	sudo chronyc tracking
 	
-	sudo chronyc sources
+	sudo chronyc sources -v
 	
 	sudo ntpdate 23.186.168.132
 ```
@@ -705,6 +705,9 @@ I am using ~450 GB shared disk for DB files.
 ![Step3: Migration](screenshots/step1_configure_oraasm1_node1.png)
 
 ```bash
+
+	sudo yum install -y oracleasm-support
+
 	df -ha |grep -i oracleasm
 	
 	sudo oracleasm configure -i
