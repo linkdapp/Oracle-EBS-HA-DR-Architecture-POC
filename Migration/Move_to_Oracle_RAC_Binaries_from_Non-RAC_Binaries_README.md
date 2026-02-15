@@ -132,8 +132,8 @@ executing_make_rac_on4b.png
 	Note: If you are changing more than 1 home, repeat the make command for all homes.
 
 
-  #                               Clonning the
-  #                      ┌─┤ Oracle RAC enabled RDBMS HOME  ├──┐
+  #                               
+  #                      ┌─┤  Clonning the Oracle RAC enabled RDBMS HOME  ├──┐
 
 
 5.  On the source server (Node1) Installation Node.
