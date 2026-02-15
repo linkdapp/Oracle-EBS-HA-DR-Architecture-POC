@@ -975,17 +975,17 @@ Click **Close**
 
 - Backup and upgrade OPatch
 
-```bash
-opatch version
+	```bash
+	opatch version
 
-mv /u01/app/12.2.0/grid/OPatch /u01/app/12.2.0/grid/OPatch.old
+	mv /u01/app/12.2.0/grid/OPatch /u01/app/12.2.0/grid/OPatch.old
 
-opatch version
-```
+	opatch version
+	```
 
 - Check for Conflicts
 
-  ```bash
+  	```bash
 	# -- GI
 	sudo /u01/app/12.2.0/grid/OPatch/opatchauto apply -analyze /media/sf_eoracle/Patch/12c/33559966/33583921 -oh /u01/app/12.2.0/grid  -logLevel FINEST
 
