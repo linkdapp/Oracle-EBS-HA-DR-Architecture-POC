@@ -29,7 +29,7 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-/showing_that_rac_option_is_off_in_binaries1.png)
+[Migration](screenshots/showing_that_rac_option_is_off_in_binaries1.png)
 
 
 1. Find out if Oracle binary is RAC enabled: (Linux and Unix) Will not work on AIX.
@@ -47,7 +47,7 @@ A RAC enabled oracle binary should return "kcsm.o".
 	ps -ef| grep lmon | grep <ORACLE_SID>
 	```	
 	
-showing_database_status2.png
+[Migration](screenshots/showing_database_status2.png)
 
 	Only RAC instances have lmon background process.
 	
@@ -60,7 +60,7 @@ showing_database_status2.png
 	show parameter cluster_database
 	```
 	
-showing_that_rac_option3.png
+[Migration](screenshots/showing_that_rac_option3.png)
 
 	Output "true" means it's RAC instance but this is not reliable as a RAC instance may have cluster_database set to false during
 	maintenance period.
@@ -89,7 +89,7 @@ showing_that_rac_option3.png
 
   - BACKUP ORACLE_HOME:
 
-taking_a_backup_of_oracle_home_b4_relink4a.png
+[Migration](screenshots/taking_a_backup_of_oracle_home_b4_relink4a.png)
 
 	sqlplus / as sysdba
 
@@ -106,13 +106,13 @@ taking_a_backup_of_oracle_home_b4_relink4a.png
 	
  - As ORACLE_HOME owner, execute the following to relink:
 
-executing_make_rac_on4b.png
+[Migration](screenshots/executing_make_rac_on4b.png)
 
 	cd $ORACLE_HOME/rdbms/lib/
 	
 - Verify successfully completed:
 
-make_rac_on_completed_binaries_RAC_enabled4b.png
+[Migration](screenshots/make_rac_on_completed_binaries_RAC_enabled4b.png)
 
 	
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
@@ -252,7 +252,7 @@ make_rac_on_completed_binaries_RAC_enabled4b.png
 
 10. Verify the NEW Node2 and Node1 oraInventory contents and RAC is enabled.
 
-enabling_rac_option_10.png
+[Migration](screenshots/enabling_rac_option_10.png)
 	
 	
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
