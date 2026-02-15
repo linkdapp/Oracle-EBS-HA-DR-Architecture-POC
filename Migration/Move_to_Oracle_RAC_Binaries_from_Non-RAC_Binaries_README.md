@@ -178,71 +178,70 @@ make_rac_on_completed_binaries_RAC_enabled4b.png
 	
 ### Sample output
 
-	```bash   
+	  
 	oradbserv02.usat.com-oraebs-/u01/app/oracle/product
 	>
 	>perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 ORACLE_BASE=/u01/app/oracle 		OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" 	"LOCAL_NODE=oradbserv02.usat.com"
 	./runInstaller -clone -waitForCompletion  "ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1" "ORACLE_HOME_NAME=OraDB12Home1" "ORACLE_BASE=/u01/app/oracle" "oracle_install_OSDBA=oinstall" "oracle_install_OSOPER=oinstall" "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com" -silent -paramFile /u01/app/oracle/product/12.2.0/db_1/clone/clone_oraparam.ini
-Starting Oracle Universal Installer...
+	Starting Oracle Universal Installer...
 
-Checking Temp space: must be greater than 500 MB.   Actual 16712 MB    Passed
-Checking swap space: must be greater than 500 MB.   Actual 16382 MB    Passed
-Preparing to launch Oracle Universal Installer from /tmp/OraInstall2019-10-29_10-00-51PM. Please wait ...You can find the log of this install session at:
- /u01/app/oraInventory/logs/cloneActions2019-10-29_10-00-51PM.log
-..................................................   5% Done.
-..................................................   10% Done.
-..................................................   15% Done.
-..................................................   20% Done.
-..................................................   25% Done.
-..................................................   30% Done.
-..................................................   35% Done.
-..................................................   40% Done.
-..................................................   45% Done.
-..................................................   50% Done.
-..................................................   55% Done.
-..................................................   60% Done.
-..................................................   65% Done.
-..................................................   70% Done.
-..................................................   75% Done.
-..................................................   80% Done.
-..................................................   85% Done.
-..........
-Copy files in progress.
+	Checking Temp space: must be greater than 500 MB.   Actual 16712 MB    Passed
+	Checking swap space: must be greater than 500 MB.   Actual 16382 MB    Passed
+	Preparing to launch Oracle Universal Installer from /tmp/OraInstall2019-10-29_10-00-51PM. Please wait ...You can find the log of 	this install session at:
+ 	/u01/app/oraInventory/logs/cloneActions2019-10-29_10-00-51PM.log
+	..................................................   5% Done.
+	..................................................   10% Done.
+	..................................................   15% Done.
+	..................................................   20% Done.
+	..................................................   25% Done.
+	..................................................   30% Done.
+	..................................................   35% Done.
+	..................................................   40% Done.
+	..................................................   45% Done.
+	..................................................   50% Done.
+	..................................................   55% Done.
+	..................................................   60% Done.
+	..................................................   65% Done.
+	..................................................   70% Done.
+	..................................................   75% Done.
+	..................................................   80% Done.
+	..................................................   85% Done.
+	..........
+	Copy files in progress.
 
-Copy files successful.
+	Copy files successful.
 
-Link binaries in progress.
+	Link binaries in progress.
 
-Link binaries successful.
+	Link binaries successful.
 
-Setup files in progress.
+	Setup files in progress.
 
-Setup files successful.
+	Setup files successful.
 
-Setup Inventory in progress.
+	Setup Inventory in progress.
 
-Setup Inventory successful.
+	Setup Inventory successful.
 
-Finish Setup successful.
-The cloning of OraDB12Home1 was successful.
-Please check '/u01/app/oraInventory/logs/cloneActions2019-10-29_10-00-51PM.log' for more details.
+	Finish Setup successful.
+	The cloning of OraDB12Home1 was successful.
+	Please check '/u01/app/oraInventory/logs/cloneActions2019-10-29_10-00-51PM.log' for more details.
 
-Setup Oracle Base in progress.
+	Setup Oracle Base in progress.
 
-Setup Oracle Base successful.
-..................................................   95% Done.
+	Setup Oracle Base successful.
+	..................................................   95% Done.
 
-As a root user, execute the following script(s):
+	As a root user, execute the following script(s):
         
 		1. /u01/app/oracle/product/12.2.0/db_1/root.sh
 
-Execute /u01/app/oracle/product/12.2.0/db_1/root.sh on the following nodes:
-[oradbserv02.usat.com]
+	Execute /u01/app/oracle/product/12.2.0/db_1/root.sh on the following nodes:
+	[oradbserv02.usat.com]
 
 
-..................................................   100% Done.
-```
-
+	..................................................   100% Done.
+	
 
 9. As a root user, execute the *root.sh* script
 
