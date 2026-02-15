@@ -759,11 +759,11 @@ I am using ~450 GB shared disk for DB files.
 
 ###  Manual User Equivalence (Key-Based Authentication) Configuration (Oracle and Grid) Os users.
 
- -  Assuming we have a two node cluster (oradbserver01.usat.com, oradbserver02.usat.com), log in as the "oracle" user and perform the following tasks on each node.
+ -  Assuming we have a two node cluster (oradbserv01.usat.com, oradbserv02.usat.com), log in as the "oracle" user and perform the following tasks on each node.
 
  -  The RSA public key is written to the ~/.ssh/id_rsa.pub file and the private key to the ~/.ssh/id_rsa file.
 	
- -  Log in as the "oracle" user on oradbserver01.usat.com, generate an "authorized_keys" file and copy it to oradbserver02.usat.comusing the following commands.
+ -  Log in as the "oracle" user on oradbserv01.usat.com, generate an "authorized_keys" file and copy it to oradbserv02.usat.comusing the following commands.
 
 	![Step5: Migration](screenshots/step1_ssh_User_Equivalence_node1.png)
 
@@ -784,10 +784,10 @@ I am using ~450 GB shared disk for DB files.
 	chmod 600 id_rsa
 	chmod 644 id_rsa.pub      # This one can be more permissive, but 644 is standard
 	
-	scp authorized_keys oradbserver02.usat.com:/home/oracle/.ssh/
+	scp authorized_keys oradbserv02.usat.com:~/.ssh/
 ```
 	
- -  Next, log in as the "oracle" user on oradbserver02.usat.com and perform the following commands.
+ -  Next, log in as the "oracle" user on oradbserv02.usat.com and perform the following commands.
  
  ![Step6: Migration](screenshots/step1_ssh_User_Equivalence_node2.png)
 
@@ -804,7 +804,7 @@ I am using ~450 GB shared disk for DB files.
 	
 	cat id_rsa.pub >> authorized_keys
 	
-	scp authorized_keys oradbserver01.usat.com:/home/oracle/.ssh/
+	scp authorized_keys oradbserv01.usat.com:~/.ssh/
 	
 	
 	#- The "authorized_keys" file on both servers now contains the public keys generated on all nodes.
@@ -885,7 +885,7 @@ I am using ~450 GB shared disk for DB files.
 ![Step10: Migration](screenshots/unzipping_GI_binaries_to_OH.png)
 
 ```bash
-	unzip linuxx64_12201_grid_home.zip -d /u01/app/12.2.0/grid/
+	unzip -q linuxx64_12201_grid_home.zip -d /u01/app/12.2.0/grid/
 ```
 	
  -  As root: Install Cluster Verification Utility **cvudisk** on both nodes. As root copy it to Nodes in the RAC Cluster.
@@ -894,6 +894,7 @@ I am using ~450 GB shared disk for DB files.
  
 ```bash
    scp  /u01/app/12.2.0/grid/cv/rpm/cvuqdisk-1.0.10-1.rpm grid@oradbserv02:/u01/app/oracle/staging
+	
 
 	sudo rpm -qi cvuqdisk
 	
