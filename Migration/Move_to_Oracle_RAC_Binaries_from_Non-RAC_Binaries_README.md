@@ -34,18 +34,18 @@ Advantages of Cloning Oracle Home in RAC Implementation (Without New Server Inst
 
 1. Find out if Oracle binary is RAC enabled: (Linux and Unix) Will not work on AIX.
 
-```bash
+	```bash
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
-```
+	```
 
 If above command does not return anything, RAC option is not linked in. 
 A RAC enabled oracle binary should return "kcsm.o".
 
 2. To check whether a running instance is a RAC instance :
 
-```bash
+	```bash
 	ps -ef| grep lmon | grep <ORACLE_SID>
-```	
+	```	
 	
 showing_database_status2.png
 
@@ -54,11 +54,11 @@ showing_database_status2.png
 	
 3. Check cluster_database parameter
 	
-```bash	
+	```bash	
 	sqlplus / as sysdba
 	
 	show parameter cluster_database
-```
+	```
 	
 showing_that_rac_option3.png
 
@@ -77,7 +77,7 @@ showing_that_rac_option3.png
 
 *****************************************************************
 
-BACKUP the SERVER: TAKE A SNAPSHOT.
+	BACKUP the SERVER: TAKE A SNAPSHOT.
 
 *************************************************************************/
 
