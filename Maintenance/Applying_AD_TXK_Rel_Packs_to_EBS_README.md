@@ -99,7 +99,6 @@ Available for all platforms on which Oracle E-Business Suite is supported, the n
    
 	perl  etpat_at.pl
  
-	```
 
    ![Step 1: Executing etpat_at](screenshots/exec_etpat_at_app_tier2.png)
 
