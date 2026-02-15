@@ -254,7 +254,7 @@ make_rac_on_completed_binaries_RAC_enabled4b.png
 
 enabling_rac_option_10.png
 	
-	```bash
+	
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
 	kcsm.o
 	
@@ -281,7 +281,7 @@ enabling_rac_option_10.png
 	<COMPOSITEHOME_LIST>
 	</COMPOSITEHOME_LIST>
 	</INVENTORY>
-	```
+	
 
 ### Notes:
 
