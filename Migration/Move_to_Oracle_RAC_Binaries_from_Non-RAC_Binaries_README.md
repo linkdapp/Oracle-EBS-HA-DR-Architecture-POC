@@ -91,30 +91,33 @@ BACKUP the SERVER: TAKE A SNAPSHOT.
 
 taking_a_backup_of_oracle_home_b4_relink4a.png
 
-	```bash
+	sqlplus / as sysdba
+
+	shutdown immediate
+
+	quit
+
+	lsnrctl stop LISTENER
+	
 	cd /u01/app/oracle/product/
 	
 	sudo tar -czvf 12.2.0.tar.gz 12.2.0/
-	```
+	
 	
  - As ORACLE_HOME owner, execute the following to relink:
 
 executing_make_rac_on4b.png
 
-	```bash
 	cd $ORACLE_HOME/rdbms/lib/
-
-	make -f ins_rdbms.mk rac_on ioracle
-	```
 	
 - Verify successfully completed:
 
   make_rac_on_completed_binaries_RAC_enabled4b.png
 
-	```bash
+	
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
 	kcsm.o    <--------- The kcsm.o file indicates ORACLE RDBMS is RAC enabled.
-	```
+	
 	
 
 ### As a side note:
@@ -137,11 +140,11 @@ executing_make_rac_on4b.png
 
  - Tar the Oracle RAC enabled ORACLE_HOME 
 	
-	```bash
+	
 	cd /u01/app/oracle/product/
 	
 	sudo tar -czvf RAC12.2.0.tar.gz 12.2.0
-	```	
+	
 	
 6. 	Copy the tar file to the target server (Node2) destination:/u01/app/oracle/product
 
