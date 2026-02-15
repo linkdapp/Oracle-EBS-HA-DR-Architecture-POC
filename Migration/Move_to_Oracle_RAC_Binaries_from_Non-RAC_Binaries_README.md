@@ -112,10 +112,11 @@ executing_make_rac_on4b.png
 	
 - Verify successfully completed:
 
-  make_rac_on_completed_binaries_RAC_enabled4b.png
+make_rac_on_completed_binaries_RAC_enabled4b.png
 
 	
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
+
 	kcsm.o    <--------- The kcsm.o file indicates ORACLE RDBMS is RAC enabled.
 	
 	
