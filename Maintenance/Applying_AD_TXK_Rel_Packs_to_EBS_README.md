@@ -68,7 +68,6 @@ Available for all platforms on which Oracle E-Business Suite is supported, the n
 		
    ![Step 1: Executing etpat_at](screenshots/executing_etpat_at_error3.png)
 	
-	```bash
 
 	# --- Fix
    
@@ -76,11 +75,7 @@ Available for all platforms on which Oracle E-Business Suite is supported, the n
  
 	ln -s  /bin/unzip  /u01/app/oracle/ebsR122/fs1/EBSapps/10.1.2/bin/unzip
 
-	```
-
-	```bash
-
-  
+	  
    ![Step 2: Executing etpat_at](screenshots/exec_etpat_at_app_tier1.png)
    
 	mkdir -p /u01/app/oracle/ebsR122/fs_ne/EBSapps/patch/ETPAT
