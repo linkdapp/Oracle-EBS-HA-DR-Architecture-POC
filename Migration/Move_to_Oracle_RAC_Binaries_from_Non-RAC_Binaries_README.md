@@ -140,11 +140,11 @@ executing_make_rac_on4b.png
 
  - Tar the Oracle RAC enabled ORACLE_HOME 
 	
-	
+	```bash
 	cd /u01/app/oracle/product/
 	
 	sudo tar -czvf RAC12.2.0.tar.gz 12.2.0
-	
+	```
 	
 6. 	Copy the tar file to the target server (Node2) destination:/u01/app/oracle/product
 
