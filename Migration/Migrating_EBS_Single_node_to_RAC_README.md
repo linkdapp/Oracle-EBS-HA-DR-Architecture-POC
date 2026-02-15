@@ -969,6 +969,46 @@ Click **OK**
 
 Click **Close**
 
+### Patch the Software Installation
+
+![Step21: Migration](screenshots/pre_grid_patch_analyze.png)
+
+- Backup and upgrade OPatch
+
+```bash
+opatch version
+
+mv /u01/app/12.2.0/grid/OPatch /u01/app/12.2.0/grid/OPatch.old
+
+opatch version
+```
+
+- Check for Conflicts
+
+  ```bash
+	# -- GI
+	sudo /u01/app/12.2.0/grid/OPatch/opatchauto apply -analyze /media/sf_eoracle/Patch/12c/33559966/33583921 -oh /u01/app/12.2.0/grid  -logLevel FINEST
+
+	# -- JVM
+
+	sudo /u01/app/12.2.0/grid/OPatch/opatchauto apply -analyze -nonrolling  /media/sf_eoracle/Patch/12c/33559966/33561275 -oh /u01/app/12.2.0/grid  -logLevel FINEST
+
+
+	```
+
+- Apply the Patches on BOTH RAC nodes
+
+	```bash
+
+	# -- GI
+  	sudo /u01/app/12.2.0/grid/OPatch/opatchauto apply  /media/sf_eoracle/Patch/12c/33559966/33583921 -oh /u01/app/12.2.0/grid  -logLevel FINEST
+
+	# -- JVM
+
+	sudo /u01/app/12.2.0/grid/OPatch/opatchauto apply -nonrolling  /media/sf_eoracle/Patch/12c/33559966/33561275 -oh /u01/app/12.2.0/grid  -logLevel FINEST
+
+
+  ```
 
 ### Configure the installation
 
