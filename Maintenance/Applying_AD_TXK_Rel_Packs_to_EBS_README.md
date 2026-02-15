@@ -108,8 +108,6 @@ Available for all platforms on which Oracle E-Business Suite is supported, the n
 
    ![Step 1: Executing etpat_at](screenshots/exec_etpat_at_app_tier2.png)
 
-   
-	```bash
  
 	# Have the following information ready:
 	# 
@@ -158,13 +156,12 @@ Available for all platforms on which Oracle E-Business Suite is supported, the n
 
 	Download above patches under patch stage area and Enter 'Yes' to Continue (Yes/No):
 
-		 
-	```
+
 	
    ![Step 2: Executing etpat_at](screenshots/exec_etpat_copying_files2.png)
 
 
-	After all  6 files have been copied to the stage are: Type **YES** to continue
+After all  6 files have been copied to the stage are: Type **YES** to continue
 
 	
    ![Step 2: Executing etpat_at](screenshots/exec_etpat_at_success4.png)
