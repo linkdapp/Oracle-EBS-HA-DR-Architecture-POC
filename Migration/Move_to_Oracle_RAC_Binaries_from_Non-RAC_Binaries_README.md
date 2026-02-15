@@ -89,32 +89,32 @@ BACKUP the SERVER: TAKE A SNAPSHOT.
 
   - BACKUP ORACLE_HOME:
 
-takiing_a_backup_of_oracle_home_b4_relink4a.png
+taking_a_backup_of_oracle_home_b4_relink4a.png
 
-```bash
+	```bash
 	cd /u01/app/oracle/product/
 	
 	sudo tar -czvf 12.2.0.tar.gz 12.2.0/
-```
+	```
 	
  - As ORACLE_HOME owner, execute the following to relink:
 
 executing_make_rac_on4b.png
 
-```bash
+	```bash
 	cd $ORACLE_HOME/rdbms/lib/
 
 	make -f ins_rdbms.mk rac_on ioracle
-```
+	```
 	
 - Verify successfully completed:
 
-```bash
-	make_rac_on_completed_binaries_RAC_enabled4b.png
+  make_rac_on_completed_binaries_RAC_enabled4b.png
 
+	```bash
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
 	kcsm.o    <--------- The kcsm.o file indicates ORACLE RDBMS is RAC enabled.
-```
+	```
 	
 
 ### As a side note:
@@ -135,34 +135,34 @@ executing_make_rac_on4b.png
 
 5.  On the source server (Node1) Installation Node.
 
-	Tar the Oracle RAC enabled ORACLE_HOME 
+ - Tar the Oracle RAC enabled ORACLE_HOME 
 	
-```bash
+	```bash
 	cd /u01/app/oracle/product/
 	
 	sudo tar -czvf RAC12.2.0.tar.gz 12.2.0
-```	
+	```	
 	
 6. 	Copy the tar file to the target server (Node2) destination:/u01/app/oracle/product
 
-```bash
+	```bash
 	scp RAC12.2.0.tar.gz oracle@oradbserv02:/u01/app/oracle/product
-```	
+	```	
 	
 7. 	Log into the target server and untar the New Oracle RAC enabled home.
 
-```bash
+	```bash
 	cd /u01/app/oracle/product/
 	
 	sudo tar -xzvf RAC12.2.0.tar.gz
 	
 	ls -lrt
-```	
+	```	
 	
 8. 	Clone RAC home as ORACLE_HOME owner ( oracle user here ) on each node by specifying right 
     LOCAL_NODE for each node:
 
-```bash
+	```bash
 	export ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1
 	
 	export PATH=$PATH:$ORACLE_HOME/bin:/usr/bin
@@ -170,15 +170,15 @@ executing_make_rac_on4b.png
 	perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 \
 	ORACLE_BASE=/u01/app/oracle OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall \ 
 	"CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com"
-```	
+	```	
 	
 ### Sample output
 
-```bash   
-oradbserv02.usat.com-oraebs-/u01/app/oracle/product
->
->perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 ORACLE_BASE=/u01/app/oracle OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com"
-./runInstaller -clone -waitForCompletion  "ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1" "ORACLE_HOME_NAME=OraDB12Home1" "ORACLE_BASE=/u01/app/oracle" "oracle_install_OSDBA=oinstall" "oracle_install_OSOPER=oinstall" "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com" -silent -paramFile /u01/app/oracle/product/12.2.0/db_1/clone/clone_oraparam.ini
+	```bash   
+	oradbserv02.usat.com-oraebs-/u01/app/oracle/product
+	>
+	>perl $ORACLE_HOME/clone/bin/clone.pl ORACLE_HOME=$ORACLE_HOME ORACLE_HOME_NAME=OraDB12Home1 ORACLE_BASE=/u01/app/oracle 		OSDBA_GROUP=oinstall OSOPER_GROUP=oinstall "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" 	"LOCAL_NODE=oradbserv02.usat.com"
+	./runInstaller -clone -waitForCompletion  "ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1" "ORACLE_HOME_NAME=OraDB12Home1" "ORACLE_BASE=/u01/app/oracle" "oracle_install_OSDBA=oinstall" "oracle_install_OSOPER=oinstall" "CLUSTER_NODES={oradbserv01.usat.com,oradbserv02.usat.com}" "LOCAL_NODE=oradbserv02.usat.com" -silent -paramFile /u01/app/oracle/product/12.2.0/db_1/clone/clone_oraparam.ini
 Starting Oracle Universal Installer...
 
 Checking Temp space: must be greater than 500 MB.   Actual 16712 MB    Passed
@@ -242,16 +242,16 @@ Execute /u01/app/oracle/product/12.2.0/db_1/root.sh on the following nodes:
 
 9. As a root user, execute the *root.sh* script
 
-```bash
+	```bash
 	/u01/app/oracle/product/12.2.0/db_1/root.sh
-```
+	```
 	
 
 10. Verify the NEW Node2 and Node1 oraInventory contents and RAC is enabled.
 
 enabling_rac_option_10.png
 	
-```bash
+	```bash
 	ar -t $ORACLE_HOME/rdbms/lib/libknlopt.a|grep kcsm.o
 	kcsm.o
 	
@@ -278,11 +278,9 @@ enabling_rac_option_10.png
 	<COMPOSITEHOME_LIST>
 	</COMPOSITEHOME_LIST>
 	</INVENTORY>
-```	
-	
+	```
 
 ### Notes:
-
 
 How to Check Whether Oracle Binary/Instance is RAC Enabled and Relink Oracle Binary in RAC
 (Doc ID 284785.1)
