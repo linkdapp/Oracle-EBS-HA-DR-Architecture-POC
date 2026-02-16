@@ -1296,19 +1296,19 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 	
 	vi $ORACLE_HOME/network/admin/listener.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv01/listener.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb1_oradbserv01/listener.ora
 
 	#-- Edit the tnsnames.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/tnsnames.ora
 
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv01/tnsnames.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb1_oradbserv01/tnsnames.ora
 
 	#-- Edit the sqlnet.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/sqlnet.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv01/sqlnet.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb1_oradbserv01/sqlnet.ora
 ```	
 	
 ```bash
@@ -1318,19 +1318,19 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 	
 	vi $ORACLE_HOME/network/admin/listener.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv02/listener.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb2_oradbserv02/listener.ora
 
 	#-- Edit the tnsnames.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/tnsnames.ora
 
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv02/tnsnames.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb2_oradbserv02/tnsnames.ora
 
 	#-- Edit the sqlnet.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/sqlnet.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv02/sqlnet.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb2_oradbserv02/sqlnet.ora
 ```
 
 ### EBS App Service Configuration	
@@ -1342,7 +1342,7 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 	export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.0/db_1/lib:/u01/app/oracle/product/12.2.0/db_1/ctx/lib
 	export ORACLE_SID=ebsappdb1
 	export PATH=$PATH:$ORACLE_HOME/bin
-	export TNS_ADMIN=$ORACLE_HOME/network/admin/ebsappdb1_oradbserv01
+	export TNS_ADMIN=$ORACLE_HOME/network/admin
 	
 	srvctl setenv database -d ebsappdb -t ORA_NLS10=$ORACLE_HOME/nls/data/9idata
 	
@@ -1363,14 +1363,14 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 	export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.0/db_1/lib:/u01/app/oracle/product/12.2.0/db_1/ctx/lib
 	export ORACLE_SID=ebsappdb1
 	export PATH=$PATH:$ORACLE_HOME/bin
-	export TNS_ADMIN=$ORACLE_HOME/network/admin/ebsappdb1_oradbserv01
+	export TNS_ADMIN=$ORACLE_HOME/network/admin
 ```bash
 	
  -  Run **adbldxml.pl** to regenerate the DB context file with SCAN enabled:text
 	When prompted:
 	Enter Hostname of Database server: **scan-oradbserv** (use the SCAN name, not physical host like oradbserv01.usat.com).
 	Enter Port of Database server: **1521** (or your listener port).
-	Enter SID of Database server: **ebsappdb** (use the DB name, not instance like ebsappdb1—AutoConfig will handle instances).
+	Enter SID of Database server: **ebsappdb** (use the DB name, If that doesn't work try instance like ebsappdb1 — AutoConfig will handle the rest).
 	Enter Database Service Name: **ebsapp_serv** (your service name).
 	Do you want to enable SCAN addresses [N]: **Y** (answer Y)
     This generates a new context file: $ORACLE_HOME/appsutil/ebsappdb1_oradbserv01.xml (new $CONTEXT_NAME is something like ebsappdb_scan-oradbserv).
