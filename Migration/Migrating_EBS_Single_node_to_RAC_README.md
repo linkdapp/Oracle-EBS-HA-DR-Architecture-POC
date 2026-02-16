@@ -1364,6 +1364,7 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 	export ORACLE_SID=ebsappdb1
 	export PATH=$PATH:$ORACLE_HOME/bin
 	export TNS_ADMIN=$ORACLE_HOME/network/admin/ebsappdb1_oradbserv01
+
 ```bash
 	
  -  Run **adbldxml.pl** to regenerate the DB context file with SCAN enabled:text
@@ -1393,7 +1394,7 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 ```bash
 	# ------------------------ Example NODE 2 ------------
 	
-	[oracle@oradbserv02 bin]$  export ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1
+	[oracle@oradbserv02 bin]$ export ORACLE_HOME=/u01/app/oracle/product/12.2.0/db_1
 	[oracle@oradbserv02 bin]$ export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.0/db_1/lib:/u01/app/oracle/product/12.2.0/db_1/ctx/lib
 	[oracle@oradbserv02 bin]$ export ORACLE_SID=ebsappdb2
 	[oracle@oradbserv02 bin]$ export PATH=$PATH:$ORACLE_HOME/bin
@@ -1401,7 +1402,7 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 	[oracle@oradbserv02 bin]$
 	[oracle@oradbserv02 bin]$ cd $ORACLE_HOME/appsutil/bin
 	[oracle@oradbserv02 bin]$
-	[oracle@oradbserv02 bin]$  perl adbldxml.pl appsuser=apps appspass=apps
+	[oracle@oradbserv02 bin]$ perl adbldxml.pl appsuser=apps appspass=apps
 	
 	Starting context file generation for db tier..
 	Using JVM from /u01/app/oracle/product/12.2.0/db_1/appsutil/jre/bin/java to execute java programs..
@@ -1458,8 +1459,9 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 
 ### Configure Application Tier for RAC (Enable SCAN)
 
+ -  Make sure to update **/etc/hosts** file with SCAN ADDRESS
  -  Source the APPS environment on the app tier.
- -  Edit the app tier context file for RAC mine is *$INST_TOP/$CONTEXT_NAME/appl/admin/ebsappdb_orappsserv01.xml*
+ -  Edit the app tier context file for RAC mine is *$INST_TOP/appl/admin/ebsappdb_orappsserv01.xml*
     (use vi or your editor; search for related DB vars):
  -  Set **s_dbhost** to SCAN name (**scan-oradbserv**).
  -  Set **s_dbport** to **1521**.
@@ -1474,6 +1476,8 @@ alter system set log_archive_dest_1='' scope=both sid='*';
  -  This updates app tier tnsnames.ora in $TNS_ADMIN to use SCAN and service name.
 
  ```bash
+	cd /u01/app/oracle/ebsR122/fs1/inst/apps/ebsappdb_orappsserv01/admin/scripts/
+
      ./adautocfg.sh appspass=apps
  ```
  
