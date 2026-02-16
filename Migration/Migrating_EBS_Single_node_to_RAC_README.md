@@ -1259,19 +1259,29 @@ Checkout: [Migration](Move to Oracle RAC Binaries from Non-RAC Binaries_README.m
 
 ### Post-Migration Steps 
 
-#### RCONFIG enable block change tracking but stores the file on the local node.
+#### RCONFIG may enable block change tracking but stores the file on the local node.
      It's recommended to move the block chain tracking file into the ASM shared storage.
 
 ![Post1: rconfig](screenshots/block_change_tracking_relocate.png)
 	 
 ```bash 
-	alter database disable block change tracking;
+alter database disable block change tracking;
 	 
-	alter database enable block change tracking using file '+FRA01/ebsappdb/block_change_tracking.dbf';
+alter database enable block change tracking using file '+FRA01/ebsappdb/block_change_tracking.dbf';
 
-	alter system set log_archive_dest_1='LOCATION=+FRA01/ebsappdb/ARCHIVELOGS' scope=both sid='*';
-	
-	alter system set remote_listener='scan-oradbserv:1521' scope=both sid='*' 
+alter system set remote_listener='scan-oradbserv:1521' scope=both sid='*'
+
+alter system set db_recovery_file_dest_size=100G scope=both sid='*';
+
+alter system set db_recovery_file_dest='+FRA01' scope=both sid='*';
+
+alter system set db_create_online_log_dest_1='+DATA01' scope=both sid='*';
+
+alter system set db_create_online_log_dest_2='+FRA01' scope=both sid='*';
+
+alter system set log_archive_dest_1='' scope=both sid='*';
+
+
 ```
 
 ### Listener Configuration
@@ -1286,19 +1296,19 @@ Checkout: [Migration](Move to Oracle RAC Binaries from Non-RAC Binaries_README.m
 	
 	vi $ORACLE_HOME/network/admin/listener.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb1_oradbserv01/listener.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv01/listener.ora
 
 	#-- Edit the tnsnames.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/tnsnames.ora
 
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb1_oradbserv01/tnsnames.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv01/tnsnames.ora
 
 	#-- Edit the sqlnet.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/sqlnet.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb1_oradbserv01/sqlnet.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv01/sqlnet.ora
 ```	
 	
 ```bash
@@ -1308,19 +1318,19 @@ Checkout: [Migration](Move to Oracle RAC Binaries from Non-RAC Binaries_README.m
 	
 	vi $ORACLE_HOME/network/admin/listener.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb2_oradbserv02/listener.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv02/listener.ora
 
 	#-- Edit the tnsnames.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/tnsnames.ora
 
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb2_oradbserv02/tnsnames.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv02/tnsnames.ora
 
 	#-- Edit the sqlnet.ora file. ONLY include the IFILE
 	
 	vi $ORACLE_HOME/network/admin/sqlnet.ora
 	
-	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb2_oradbserv02/sqlnet.ora
+	IFILE=/u01/app/oracle/product/12.2.0/db_1/network/admin/ebsappdb_oradbserv02/sqlnet.ora
 ```
 
 ### EBS App Service Configuration	
