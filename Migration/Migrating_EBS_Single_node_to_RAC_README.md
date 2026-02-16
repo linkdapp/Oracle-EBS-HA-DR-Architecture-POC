@@ -1363,7 +1363,7 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 	export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.0/db_1/lib:/u01/app/oracle/product/12.2.0/db_1/ctx/lib
 	export ORACLE_SID=ebsappdb1
 	export PATH=$PATH:$ORACLE_HOME/bin
-	export TNS_ADMIN=$ORACLE_HOME/network/admin
+	export TNS_ADMIN=$ORACLE_HOME/network/admin/ebsappdb1_oradbserv01
 ```bash
 	
  -  Run **adbldxml.pl** to regenerate the DB context file with SCAN enabled:text
