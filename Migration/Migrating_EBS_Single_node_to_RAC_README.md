@@ -1378,6 +1378,12 @@ alter system set log_archive_dest_1='' scope=both sid='*';
 ```bash	
 	cd $ORACLE_HOME/appsutil/bin
 	perl adbldxml.pl appsuser=apps appspass=apps
+
+# --- After obtaining CONTEXTFILE execute adconfig.sh
+
+	cd $ORACLE_HOME/appsutil/bin
+	./adconfig.sh contextfile=$ORACLE_HOME/appsutil/ebsappdb1_oradbserv01.xml
+
 ```
 
  - Repeat on **NODE 2**
