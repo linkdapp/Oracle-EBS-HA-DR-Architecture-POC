@@ -41,7 +41,7 @@ Network: 3 NICs per server
 Shared Storage: Use VirtualBox shared disks (VDI files) for ASM (Automatic Storage Management). 
 I am using ~450 GB shared disk for DB files.
 
-	
+	```bash	
 	# Clone Golden Image Linux 7 VDI Disks
 	
 	"c:\Program Files\Oracle\VirtualBox\VBoxManage" clonehd "G:\virtualbox_vm\BackupLoc\Linux7server\bk_swapdisk01.vdi" "E:\virtualbox_vm\oradbserv02\Disks\oradbserv02_SWAPDISK.vdi"
@@ -107,14 +107,14 @@ I am using ~450 GB shared disk for DB files.
 	sudo fdisk -l                    #  List disks 
 	
 	sudo fdisk /dev/sdd              #  Format disks.
-	
+	```
 
 
 ###	Network DNS Configuration
 
  -  Edit */etc/hosts* file with the new IP addresses
  
-
+	```bash
 	Server names and IP addresses.
 	
 	# OEM Suite Server
@@ -148,7 +148,7 @@ I am using ~450 GB shared disk for DB files.
 	# Single instance dataguard db
 	
 	192.168.56.130 oradbserv04.usat.com   oradbserv04
-	
+	```
 
 
 
