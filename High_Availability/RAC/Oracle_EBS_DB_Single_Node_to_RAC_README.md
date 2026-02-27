@@ -391,8 +391,8 @@ I am using ~450 GB shared disk for DB files.
 
  -  Check that the parameter PEERDNS is set to no in /etc/sysconfig/network-scripts/ifcfg-enp0s3 to prevent the resolv.conf from being overwritten by the dhcp client.
 
-	
-	
+
+```bash
 	sudo cp /etc/sysconfig/network-scripts/ifcfg-enp0s3	 /etc/sysconfig/network-scripts/ifcfg-enp0s3.bak  
 	
 	
@@ -438,28 +438,28 @@ I am using ~450 GB shared disk for DB files.
 	DEVICE="enp0s3"
 	ONBOOT="no"
 	PEERDNS="no"
-	
+```	
 
 
  -  Restart the named service.
 
 
 	
-	
+```bash	
 	sudo service named restart
-	
+```	
 
  -  Restart network service.
 
 	
-	
+```bash	
 	sudo  service network restart
-	
+```	
 
  -  Change /etc/resolv.conf and check nslookup nodes and SCAN ips working fine.
 
 	
-	
+```bash	
 	============ BEFORE Change Sample ========
 	
 	
@@ -476,35 +476,35 @@ I am using ~450 GB shared disk for DB files.
 	search usat.com 
 	nameserver 192.168.56.126
 	nameserver 192.168.56.127
-	
+```	
 	
 
  -  Make it immutable to prevent future overwrites:
 
 	
-	
+```bash	
 	sudo chattr +i /etc/resolv.conf
-	
+```	
 
  -  To edit later if needed: 
 
 	
-	
+```bash	
 	sudo chattr -i /etc/resolv.conf
-	
+```	
 
  -  Restart the named service.
 
 	
-	
+```bash	
 	sudo service named restart
-	
+```	
 
  -  Restart network service.
  ![Step1: Migration](screenshots/step1_network_nslookup_ping_node1.png)
 
 	
-	
+```bash	
 	sudo  service network restart
 	
 
@@ -533,18 +533,18 @@ I am using ~450 GB shared disk for DB files.
 	Address: 192.168.56.161
 	Name:   scan-oradbserv.usat.com
 	Address: 192.168.56.151
-	
+```	
 		
 	
  -  Configuration DNS RAC NODE2 (oradbserv02) as the SLAVE
 	
-	```bash
+```bash
  
  	# --- Stop the DNS service.
  
  	sudo service named stop
  
-	```
+```
 
  -  As root, create the zone files for the usat.com domain on RAC NODE2 slave (oradbserv02)  by running the following command:
     Modify the file /etc/named.conf by using the following command:
