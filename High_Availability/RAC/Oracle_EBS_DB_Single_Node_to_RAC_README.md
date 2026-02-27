@@ -54,9 +54,7 @@ I am using ~450 GB shared disk for DB files.
 
 	# Create the disks and associate them with VirtualBox as virtual media.
 
-    # Rcongif will need extra 300 GB to convert the database to RAC in scenario
-			
-	# Remove the ASM DISKS Extra DISK GROUPS after RConfig is successful.
+    # Remove the ASM DISKS Extra DISK GROUPS after RConfig is successful.
 
 
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" createhd --filename "F:\virtualbox_vm\ASMDISKS\DATA1_ASM01.vdi" --size 155000 --format VDI --variant Fixed   
@@ -94,9 +92,6 @@ I am using ~450 GB shared disk for DB files.
 	"C:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach oradbserv02 --storagectl "SATA" --port 1 --device 0 --type hdd  --medium "G:\virtualbox_vm\ASMDISKS\FRA2_ASM02.vdi" 
 
 	
-
-	
-
 	# On both oradbserv01 RAC Node1 and oradbserv02 RAC Node2
 	
 	# Install ASMlib as ASM Filter driver ASMFD has been deprecated.
@@ -104,8 +99,10 @@ I am using ~450 GB shared disk for DB files.
 	sudo yum install -y oracleasm
 	sudo yum install -y oracleasm-support
 	
-	# Use fdisk command to format the ASM Disks. Don this On ONE server only. NODE1 (oradbserv01) 
+	# Use fdisk command to format the ASM Disks. Do this On ONE server only. NODE1 (oradbserv01) 
 	# For example
+
+	sudo lsblk
 	
 	sudo fdisk -l                    #  List disks 
 	
@@ -181,7 +178,8 @@ I am using ~450 GB shared disk for DB files.
  -  Verify that all the network interfaces are up.
 
 	
-	
+	sudo ip addr show
+
 	sudo ip l
 	
 
@@ -438,7 +436,7 @@ I am using ~450 GB shared disk for DB files.
 	NAME="enp0s3"
 	UUID="608fff3b-9ee3-4661-8652-0ded1bfb7ef4"
 	DEVICE="enp0s3"
-	ONBOOT="yes"
+	ONBOOT="no"
 	PEERDNS="no"
 	
 
@@ -510,10 +508,6 @@ I am using ~450 GB shared disk for DB files.
 	sudo  service network restart
 	
 
-
-
-	
-	
 	nslookup oradbserv01.usat.com
 	Server:         ::1
 	Address:        ::1#53
@@ -543,22 +537,27 @@ I am using ~450 GB shared disk for DB files.
 		
 	
  -  Configuration DNS RAC NODE2 (oradbserv02) as the SLAVE
-	Stop the DNS service.
-
 	
-	
-	sudo service named stop
-	
+	```bash
+ 
+ 	# --- Stop the DNS service.
+ 
+ 	sudo service named stop
+ 
+	```
 
  -  As root, create the zone files for the usat.com domain on RAC NODE2 slave (oradbserv02)  by running the following command:
     Modify the file /etc/named.conf by using the following command:
 
-	Copy from oradbserv01 to oradbserv02
+	
 
-	
-	
+	```bash
+	# --- Copy from oradbserv01 to oradbserv02
+ 
 	sudo scp /etc/named.conf root@oradbserv02:/etc
-
+ 
+	```
+ 
 	# Execute this script to edit the named.conf file on the 2 NODE. This is the SLAVE.
 	
 	sudo sed -i -e 's/listen-on .*/listen-on port 53 { 192.168.56.127; };/' \
@@ -645,7 +644,7 @@ I am using ~450 GB shared disk for DB files.
 	--- Make changes and save the file.
 	
     ---# Allow NTP client access from local network.
-	allow 192.168.0.0/16
+	allow 192.168.56.0/16
 
     ---# Serve time even if not synchronized to a time source.
 	local stratum 10
@@ -667,15 +666,15 @@ I am using ~450 GB shared disk for DB files.
 	
 	sudo chronyc tracking
 	
-	sudo chronyc sources
+	sudo chronyc sources -v
 	
-	sudo ntpdate 23.186.168.132
+	sudo ntpdate orappsserv01.usat.com
 	
 
  -  Chrony Client. Edit on all NODES in the RAC cluster-
 	
 	
-	
+	```bash
 	sudo vi /etc/chrony.conf
 	
 	#server 0.pool.ntp.org iburst
@@ -688,7 +687,7 @@ I am using ~450 GB shared disk for DB files.
 	
 	# Serve time even if not synchronized to a time source.
 	local stratum 10
-	
+	```
 
  -  Restart the network and check.
 	
@@ -702,7 +701,7 @@ I am using ~450 GB shared disk for DB files.
 	
 
 	
-### Network Configuration is complete.
+## Network Configuration is complete.
 
 
 
@@ -730,7 +729,7 @@ I am using ~450 GB shared disk for DB files.
 
 	vi  /etc/security/limits.conf ------> ( If configuring manually)
 	
-	# Oracle 
+	# Oracle  (Fixes VKTM issues in the alert.log)
 	
 	Oracle  soft   rtprio   99
 	Oracle  hard   rtprio   99
@@ -900,7 +899,7 @@ I am using ~450 GB shared disk for DB files.
  -  All OS parameters have been set.
  -  All Storage have been configured. ASM Disk created: ASMDISK[1-6]
  -  The DNS network configuration is complete. All DNS names are resolvable.
- -  All Os users Oracle and Grid have been created.
+ -  All OS users; Oracle, and Grid have been created.
  -  User ssh equivalence configure.
  
    
@@ -928,7 +927,8 @@ I am using ~450 GB shared disk for DB files.
  ![Step9: Migration](screenshots/Step2_shared_storeage_attach_to_node2verify.png)
 
 	
-	
+	sudo oracleasm scandisks
+
 	sudo oracleasm listdisks
 	ASMDISK1
 	ASMDISK2
@@ -946,8 +946,9 @@ I am using ~450 GB shared disk for DB files.
 	su - grid
 	
 	sudo mkdir -p /u01/app/oracle/product/12.2.0/db_1
-	sudo mkdir -p /u01/app/12.2.0/grid
 	sudo chown -R oracle:oinstall /u01
+	sudo mkdir -p /u01/app/12.2.0/grid
+	sudo chown -R grid:oinstall /u01/app/12.2.0/grid
 	sudo chmod -R 775 /u01
 	
 	ls -lrt /u01/app/
