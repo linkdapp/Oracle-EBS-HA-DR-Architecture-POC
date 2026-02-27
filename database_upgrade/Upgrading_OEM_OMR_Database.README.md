@@ -350,7 +350,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	  
 	```
 	
-	![Pre-Upgrade Checks Screenshot](screenshots/step4_Fixup Report_1.png)
+	![Pre-Upgrade Checks Screenshot](screenshots/step4_Fixup_Report_1.png)
 	
 
 	```bash
