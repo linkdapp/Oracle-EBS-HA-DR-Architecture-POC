@@ -1295,8 +1295,7 @@ Checkout: [High_Availability](RAC/Convert_Oracle_DB_Binary_to_RAC_README.md)
 
 ![Step37: Migration](screenshots/verify_host1.png)
 
-![Step38: Migration](screenshots/verify_srvctl_cmds.png)
-	
+
 	
 ```bash	
 	srvctl status server -servers "oradbserv01,oradbserv02" -detail
