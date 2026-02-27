@@ -155,51 +155,51 @@ I am using ~450 GB shared disk for DB files.
  -  Disable SELinux. Open the config file and change the SELINUX variable from enforcing to disabled.
 
 	
-	
+```bash	
 	sudo vi /etc/selinux/config
-	
+```	
 
  -  Turn off and disable the firewall IPTables. If exists.
 
 	
-	
+```bash
 	sudo chkconfig --list iptables
-	
+```
 
  -  Make life easier, just turn off  firewalld.
 
 	
-	
+```bash	
 	sudo service firewalld stop
 	
 	sudo systemctl disable firewalld
-	
+```	
 
  -  Verify that all the network interfaces are up.
 
-	
+```bash	
 	sudo ip addr show
 
 	sudo ip l
-	
+```	
 
  -  Install BIND on ALL RAC NODES in the cluster. if you do not have it
 
 	
-	
+```bash	
 	sudo yum install bind-libs bind bind-utils -y
-	
+```	
 
  -  Enable BIND DNS to start at boot time.
  
 	
-	
+```bash	
 	sudo chkconfig named on
-	
+```	
 
  -  Change named directory permissions
 
-	
+```bash	
 	
 	sudo ls -ltr /var/named
 	
@@ -208,30 +208,30 @@ I am using ~450 GB shared disk for DB files.
 	sudo chgrp named /var/named/usat.com
 	
 	sudo chmod g+w /var/named
-	
+```	
 
  -  Backup the BIND configuration file.
 
 	
-	
+```bash	
 	ls -ltr /etc/named.conf*
 	
 	sudo cp /etc/named.conf /etc/named.conf.bak
-	
+```	
 
 
  -  Change /etc/named.conf permissions.
 	Otherwise, the original protection may cause trouble in the restarting named step with write-protection errors in /var/log/messages. 
 
 	
-	
+```bash	
 	sudo chmod 664 /etc/named.conf
-	
+```	
 
  -  Replace or edit the /etc/named.conf file to change the named configuration manually RAC NODE1 (oradbserv01) will serve as the MASTER while RAC NODE2 (oradbserv02) the slave.
 
 	
-	
+```bash	
 	vi  /etc/named.conf file #--- Sample
 	//
 	// named.conf
@@ -308,12 +308,12 @@ I am using ~450 GB shared disk for DB files.
 	type master;
 	file "in-addr.arpa";
 	};
-	
+```	
 
  -  Create the zone file for the usat.com domain on oradbserv01 by running the following command:
 
 	
-	
+```bash
 	sudo vi /var/named/usat.com  #--- Sample
 	
 	(Paste this into the file)
@@ -340,12 +340,12 @@ I am using ~450 GB shared disk for DB files.
 	
 	
 	sudo sudo cat /var/named/usat.com
-	
+```
 
  -  Create the reverse zone file oradbserv01.
 
 	
-	
+```bash	
 	sudo vi /var/named/in-addr.arpa #--- Sample
 	
 	Copy and paste below command as root:
@@ -372,13 +372,13 @@ I am using ~450 GB shared disk for DB files.
 	
 	
 	sudo cat /var/named/in-addr.arpa
-	
+```
 	
 
  -  Generate the rndc.key file.
 
 	
-	
+```bash	
 	sudo rndc-confgen -a -r /dev/urandom
 	
 	sudo chgrp named /etc/rndc.key
@@ -386,7 +386,7 @@ I am using ~450 GB shared disk for DB files.
 	sudo chmod g+r /etc/rndc.key
 	
 	sudo ls -lrta /etc/rndc.key
-	
+```	
 
 
  -  Check that the parameter PEERDNS is set to no in /etc/sysconfig/network-scripts/ifcfg-enp0s3 to prevent the resolv.conf from being overwritten by the dhcp client.
