@@ -422,7 +422,7 @@ This guide demonstrates upgrading the Oracle Management Repository (OMR) databas
 	- Copying sqlnet(listener.ora, tnsnames.ora and sqlnet.ora) files over to the new $ORACLE_HOME AutoUpgrade will not do that.
 	- Setting all scheduled task such as backups, cron jobs, and bash (.env) profiles to reflect the new $ORACLE_HOME
 	
-	![Step 6: Post-Upgrade Checks](step6_run_post_upgrade_copyingListener.png)
+	![Step 6: Post-Upgrade Checks](screenshots/step6_run_post_upgrade_copyingListener.png)
 	
 	
 	
