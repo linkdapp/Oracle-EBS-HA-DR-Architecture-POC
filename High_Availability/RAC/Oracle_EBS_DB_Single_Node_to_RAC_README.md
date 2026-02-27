@@ -114,7 +114,7 @@ I am using ~450 GB shared disk for DB files.
 
  -  Edit */etc/hosts* file with the new IP addresses
  
-	```bash
+```bash
 	Server names and IP addresses.
 	
 	# OEM Suite Server
@@ -148,7 +148,7 @@ I am using ~450 GB shared disk for DB files.
 	# Single instance dataguard db
 	
 	192.168.56.130 oradbserv04.usat.com   oradbserv04
-	```
+```
 
 
 
