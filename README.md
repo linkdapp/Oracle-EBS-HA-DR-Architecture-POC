@@ -83,33 +83,24 @@ MIT License. Credits: Oracle MOS docs, usatdba@gmail.com.
 For questions, reach out via GitHub Issues or X: usatdba@gmail.com.
 
 
-## TASK 1: OEM Showcase
+## Showcase Index
 
-- [Deploying OEM Agents - Push](Monitoring/Deploy-OEM-Agents-Push-Pull.md) - Fresh Installation.
-- [Deploying OEM Agents - Pull & Deploy](Monitoring/Deploy_OEM_Agent_AgentPull.md) - Upgrade surprise!
+Full build-out plan, phase order, and content roadmap: see [PROJECT_ROADMAP.md](PROJECT_ROADMAP.md).
 
-## TASK 2: Upgrades Showcase
-- [OMR Database Upgrade (12c to 19c)](Database_Upgrade/Upgrading_OEM_OMR_Database.README.md) – Using AutoUpgrade for best practices.  
-- [OMS Upgrade (13.3 to 13.5)](OEM_Upgrade/OMS_upgrade_13.3_to_13.5.README.md) – Security-focused upgrade.
+### Monitoring (OEM)
+- [Deploying OEM Agents - Push](monitoring/deploy-oem-agent-push-README.md) - Fresh installation.
+- [Deploying OEM Agents - Pull & Deploy](monitoring/deploy-oem-agent-pull-README.md) - Upgrade surprise.
+- [Deploying OEM Agents via Golden Image](monitoring/deploy-oem-agent-goldimage-README.md) - Repeatable agent rollout.
 
-## TASK 2: Maintenance Showcase
+### Database & OEM Upgrades
+- [OMR Database Upgrade (12c to 19c)](database-upgrade/omr-database-upgrade-12c-to-19c-README.md) – Using AutoUpgrade for best practices.
+- [OMS Upgrade (13.3 to 13.5)](database-upgrade/oms-upgrade-13.3-to-13.5-README.md) – Security-focused upgrade.
 
-- [Applying AD & TXK Release Update Packs Using the ETPAT-AT](Maintenance/Applying_AD_TXK_Rel_Packs_to_EBS_README.md) - Patch Automation  
+### Maintenance & Patching
+- [Applying AD & TXK Release Update Packs Using the ETPAT-AT](maintenance/applying-ad-txk-release-packs-README.md) - Patch automation.
+- [Reorganizing Online Redo Logs](maintenance/online-redolog-reorg-README.md) - Performance optimization and HA.
+- [Patching an EBS Database](maintenance/patching-ebs-database-README.md) - GI/OJVM combo patch application.
 
-- [Reorganizing Online Redo Logs](Maintenance/online_redo_log_reorg_README.md) - Performance Optimization and HA 
-
-## TASK 4: Migration Showcase
-
-- [EBSR12.2 Migration to Oracle_RAC](Migration/Migrating_EBS_Single_node_to_RAC_README.md) - Move tp a service-oriented foundation
-
-- [Non RAC to RAC DB Binaries](Migration/Move_to_Oracle_RAC_Binaries_from_Non-RAC_Binaries_README.md) - Quickly replicate existing Oracle software
-
-## TASK 5: High_Availability Showcase
-
-- [EBSR12.2_Single_Instance_to_2-NODE_RAC](High_Availability/RAC/Switch_Oracle_DB_Binary_to_RAC_enable_README.md) - Ensure your ystem remains operational
-
-- [Non RAC to RAC DB Binaries](High_Availability/RAC/Oracle_EBS_DB_Single_Node_to_RAC_README.md) - Stay consistent with across RAC nodes
-
-
-
-
+### High Availability — RAC
+- [Single Instance EBS 12.2 to 2-Node Oracle RAC](high-availability/rac/single-instance-to-2node-rac-README.md) - Full conversion walkthrough.
+- [Enabling the RAC Option on Oracle Database Binaries](high-availability/rac/enable-rac-option-db-binaries-README.md) - Prep step for the R
