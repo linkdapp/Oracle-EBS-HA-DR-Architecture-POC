@@ -103,4 +103,9 @@ Full build-out plan, phase order, and content roadmap: see [PROJECT_ROADMAP.md](
 
 ### High Availability — RAC
 - [Single Instance EBS 12.2 to 2-Node Oracle RAC](high-availability/rac/single-instance-to-2node-rac-README.md) - Full conversion walkthrough.
-- [Enabling the RAC Option on Oracle Database Binaries](high-availability/rac/enable-rac-option-db-binaries-README.md) - Prep step for the R
+- [Enabling the RAC Option on Oracle Database Binaries](high-availability/rac/enable-rac-option-db-binaries-README.md) - Prep step for the RAC conversion above.
+
+### Coming soon
+Disaster Recovery, Data Guard FSFO, GoldenGate, Security, Automation, and Performance Tuning are in active development — see [PROJECT_ROADMAP.md](PROJECT_ROADMAP.md) for the phase-by-phase plan and expected order.
+
+

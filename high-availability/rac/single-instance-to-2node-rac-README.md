@@ -1507,4 +1507,5 @@ Set up PCP to distribute concurrent managers across RAC instances for load balan
 
 #Notes:
 	
-	Add multi-node config if app tier is multi-node
+	Add multi-node config if app tier is multi-node (per Doc ID 387709.1).
+	

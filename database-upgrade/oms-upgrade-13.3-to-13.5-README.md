@@ -1,4 +1,4 @@
-# Upgrading OEM OMR Database from 12c to 19c in EBS HA/DR POC
+# Upgrading OEM OMS from 13.3 to 13.5 in EBS HA/DR POC
 
 ## Overview
 
