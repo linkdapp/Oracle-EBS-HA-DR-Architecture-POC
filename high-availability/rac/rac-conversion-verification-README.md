@@ -4,9 +4,8 @@
 
 This is a working document for Phase 2 of the project (see [PROJECT_ROADMAP.md](../../PROJECT_ROADMAP.md)). Grid Infrastructure is installed on both nodes, `rconfig` has completed successfully, and SCAN/AutoConfig are done on the app tier per the [conversion walkthrough](single-instance-to-2node-rac-README.md). This doc is the checklist to run through in the lab to confirm the cluster is genuinely healthy end to end before building Data Guard on top of it — not just "the install finished without an error," but "every layer actually works."
 
-Fill in actual output/screenshots as you run each section. Anything that doesn't come back clean is worth fixing now, before a standby DB and FSFO observer add more moving parts on top.
 
-## Why this matters (plain language)
+## Why this matters
 
 A RAC install can complete successfully and still have a node that isn't really pulling its weight — a service that only ever fails over to one instance, an ASM disk group that's mounted on one node but not the other, a SCAN listener that resolves but doesn't load-balance. None of that shows up as an "error" during setup. It shows up during an actual node failure, which is the worst possible time to discover it. This checklist exists to find those gaps on a Tuesday afternoon instead of during a real outage.
 
@@ -22,8 +21,9 @@ crsctl stat res -t
 
 What "good" looks like: `crsctl check cluster -all` reports the CRS stack online on both nodes; `crsctl stat res -t` shows every resource (ASM, listener, ONS, SCAN VIP, database, services) as `ONLINE` on its expected node(s), not just `OFFLINE` with no error — a resource that's supposed to be running and isn't is exactly what a failover would expose later.
 
-_Paste output here:_
+_OUTPUT:_
 
+```bash
 [grid@oradbserv01 ~]$ crsctl check cluster -all
 **************************************************************
 oradbserv01:
@@ -117,7 +117,7 @@ ora.scan3.vip
       1        ONLINE  ONLINE       oradbserv01              STABLE
 --------------------------------------------------------------------------------
 [grid@oradbserv01 ~]$
-
+```
 
 ## 2. ASM and shared storage
 
@@ -129,9 +129,9 @@ asmcmd lsdg
 
 What "good" looks like: ASM instance up on both nodes, all disk groups (`DATA`, `FRA`) mounted on both nodes with matching `FREE_MB`/`TOTAL_MB` — a mismatch usually means a disk was only ever attached to one node (an easy miss when following the VirtualBox `storageattach` steps from the conversion doc).
 
-_Paste output here:_
+_OUTPUT:_
 
-
+```bash
 [oracle@oradbserv02 ~]$ srvctl status asm -node oradbserv01 -detail -verbose
 ASM is running on oradbserv01
 ASM is enabled on node oradbserv01.
@@ -152,7 +152,7 @@ MOUNTED  EXTERN  N         512             512   4096  67108864    309888   1175
 MOUNTED  EXTERN  N         512             512   4096  16777216    309984   309360                0          309360              0             Y  DATA02/
 MOUNTED  EXTERN  N         512             512   4096  67108864    149888   131520                0          131520              0             N  FRA01/
 [grid@oradbserv01 ~]$
-
+```
 
 ## 3. Database and instances
 
@@ -166,8 +166,9 @@ EOF
 
 What "good" looks like: both instances (`ebsappdb1`, `ebsappdb2`) report `OPEN` and `ACTIVE`, on the correct hosts.
 
-_Paste output here:_
+_OUTPUT:_
 
+```bash
 [oracle@oradbserv02 ~]$ srvctl status database -db ebsappdb -verbose
 Instance ebsappdb1 is running on node oradbserv01 with online services ebsapp_serv. Instance status: Open,HOME=/u01/app/oracle/product/12.2.0/db_1.
 Instance ebsappdb2 is running on node oradbserv02 with online services ebsapp_serv. Instance status: Open,HOME=/u01/app/oracle/product/12.2.0/db_1.
@@ -236,6 +237,7 @@ DATABASE_STATUS
 
 
 SQL> Disconnected
+```
 
 ## 4. Services (this is the one most EBS RAC setups get wrong)
 
@@ -244,10 +246,15 @@ srvctl status service -db ebsappdb -service ebsapp_serv -verbose
 srvctl config service -db ebsappdb -service ebsapp_serv
 ```
 
-What "good" looks like: the `ebsapp_serv` service shows `preferred` instances on **both** nodes, not just one — check this against the `srvctl add service` command in the conversion doc (`-preferred ebsappdb1,ebsappdb2`). A service configured with only one preferred instance will not fail over the app tier's connections if that instance goes down; it just fails, since the "preferred" instance isn't there to take over. This is the single most common RAC-for-EBS misconfiguration and won't surface until node 1 actually goes down.
+What "good" looks like: the `ebsapp_serv` service shows `preferred` instances on **both** nodes, not just one — check this against the `srvctl add service` command in the conversion doc (`-preferred ebsappdb1,ebsappdb2`).
 
-_Paste output here:_
+Two valid patterns exist for a RAC service, and it's worth being precise about the difference. A service can run actively on **multiple preferred instances** at once (what `ebsapp_serv` has) — if one instance dies, the surviving instance just keeps serving, with no failover delay. Or it can have a **single preferred instance plus a separate available instance** 
+— normal operation runs on the preferred instance only, and Clusterware relocates the service to the available instance automatically if the preferred one fails. It comes with real trade-offs worth knowing: relocation isn't instant (Clusterware has to detect the failure first, then start the service , any sessions connected to the failed instance are dropped rather than migrated (only new connections get routed to the available instance once relocation completes), and on 12.2 clusterware there's no automatic failback 
+— the service stays on the available instance even after the original preferred instance recovers, until someone runs `srvctl relocate service` by hand. 
 
+_OUTPUT:_
+
+```bash
 [oracle@oradbserv02 ~]$ srvctl status service -db ebsappdb -service ebsapp_serv -verbose
 Service ebsapp_serv is running on instance(s) ebsappdb1,ebsappdb2
 [oracle@oradbserv02 ~]$
@@ -281,7 +288,7 @@ Service is enabled
 Preferred instances: ebsappdb1,ebsappdb2
 Available instances:
 [oracle@oradbserv02 ~]$
-
+```
 
 ## 5. SCAN and listener
 
@@ -294,8 +301,9 @@ nslookup scan-oradbserv
 
 What "good" looks like: SCAN resolves to all 3 configured IPs (round-robin), and `srvctl status scan_listener` shows all SCAN listeners running, ideally distributed across nodes rather than stacked on one.
 
-_Paste output here:_
+_OUTPUT:_
 
+```bash
 [oracle@oradbserv02 ~]$ srvctl status scan
 SCAN VIP scan1 is enabled
 SCAN VIP scan1 is running on node oradbserv02
@@ -364,7 +372,7 @@ Address: 192.168.56.151
 
 [oracle@oradbserv02 ~]$
 [oracle@oradbserv02 ~]$
-
+```
 
 ## 6. App tier connectivity through SCAN
 
@@ -375,21 +383,12 @@ grep -i "s_apps_jdbc_connect_descriptor" $CONTEXT_FILE
 tnsping ebsappdb
 ```
 
-_Paste output here:_
-
+_OUTPUT:_
+```bash
 [applmgr@orappsserv01 ~]$ grep -i "s_apps_jdbc_connect_descriptor" $CONTEXT_FILE
          <jdbc_url oa_var="s_apps_jdbc_connect_descriptor">jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(LOAD_BALANCE=YES)(FAILOVER=YES)(ADDRESS=(PROTOCOL=tcp)(HOST=oradbserv01.usat.com)(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=oradbserv02.usat.com)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=ebsapp_serv)))</jdbc_url>
 [applmgr@orappsserv01 ~]$
-[applmgr@orappsserv01 ~]$ tnsping ebsapp_serv
-
-TNS Ping Utility for Linux: Version 10.1.0.5.0 - Production on 15-JUL-2026 20:11:24
-
-Copyright (c) 1997, 2003, Oracle.  All rights reserved.
-
-Used parameter files:
-
-TNS-03505: Failed to resolve name
-[applmgr@orappsserv01 ~]$
+```
 
 ### Root cause and fix
 
@@ -397,7 +396,7 @@ Editing `s_apps_jdbc_connect_descriptor` directly and rerunning `adconfig.sh` di
 
 Two explanations were tested before finding the real one.
 
-The first theory was that the database itself was the source of the stale value. EBS context files carry a serial number (`s_contextserial`) that's mirrored in a database table, `FND_OAM_CONTEXT_FILES`, and if that stored copy is treated as authoritative, AutoConfig can pull the old value back from the database instead of the file system. To test this, the table was backed up (`CREATE TABLE applsys.fnd_oam_context_files_bak AS SELECT * FROM applsys.fnd_oam_context_files`), the row for this app tier's context file was deleted, and `adconfig.sh` was rerun. This ruled the theory out rather than confirming it: the row simply reappeared afterward with the *same* broken descriptor, which means AutoConfig regenerated the bad value itself and re-uploaded it — the database wasn't the one overwriting the file, AutoConfig was overwriting both.
+The first theory was that the database itself was the source of the stale value. EBS context files carry a serial number (`s_contextserial`) that's mirrored in a database table, `APPLSYS.FND_OAM_CONTEXT_FILES`, and if that stored copy is treated as authoritative, AutoConfig can pull the old value back from the database instead of the file system. To test this, the table was backed up (`CREATE TABLE applsys.fnd_oam_context_files_bak AS SELECT * FROM applsys.fnd_oam_context_files`), the row for this app tier's context file was deleted, and `adconfig.sh` was rerun. This ruled the theory out rather than confirming it: the row simply reappeared afterward with the *same* broken descriptor, which means AutoConfig regenerated the bad value itself and re-uploaded it — the database wasn't the one overwriting the file, AutoConfig was overwriting both.
 
 That pointed at the real cause: the context variable `s_jdbc_connect_descriptor_generation` was `TRUE` (its default). With this flag on, AutoConfig doesn't treat `s_apps_jdbc_connect_descriptor` as a fixed value at all — it reconstructs it on every run, using RAC instance/node information it resolves elsewhere in the environment (the EBS node registry, `FND_NODES`). That registry still had the pre-SCAN node entries for `oradbserv01` and `oradbserv02` as individual hosts, so every AutoConfig run rebuilt the exact same old load-balanced, two-host descriptor regardless of what the context file said going in.
 
@@ -425,6 +424,9 @@ The JDBC fix above only covers WebLogic — its connect descriptor is embedded d
 ```bash
 env | grep -i two_task
 # TWO_TASK=ebsappdb
+
+grep -n "TWO_TASK" /u01/app/oracle/ebsR122/fs1/EBSapps/appl/ebsappdb_orappsserv01.env
+
 ```
 
 `ebsappdb` is generated by `adgentns.pl` into `tnsnames.ora`, and it had the identical problem: single host (`oradbserv01`), single instance, no `ADDRESS_LIST`, no SCAN — meaning Concurrent Manager had no RAC failover at all. This was masked because the app "worked fine" with both nodes up; it would only have surfaced the next time `oradbserv01` went down.
@@ -459,15 +461,15 @@ ebsappdb_patch=
 EOF
 ```
 
-**Confirmed:** `tnsping ebsappdb` resolves through SCAN, and a live `sqlplus` login from the app tier through `TWO_TASK=ebsappdb` succeeded.
+**Confirmed:** `tnsping ebsappdb and ebsappdb_patch` resolves through SCAN, and a live `sqlplus` login from the app tier through `TWO_TASK=ebsappdb` succeeded.
 
 ### Dual file system: fs1, fs2, and a near-miss with FND_OAM_CONTEXT_FILES
 
-EBS 12.2's dual-filesystem model means `fs1` and `fs2` are peer editions, each with a complete, independent tree — `EBSapps`, `inst`, `FMW_Home` — not shared. Every fix above was applied only to fs1, the current run edition. `fs2`, currently the idle patch edition, has an identical but separate context file, env files, and `tnsnames.ora`, deliberately left untouched during this investigation. (`fs_ne`, the non-editioned file system, is unrelated to any of this — it holds only shared transactional/log data, not app-tier configuration.)
+EBS 12.2's dual-filesystem model means `fs1` and `fs2` are peer editions, each with a complete, independent tree `EBSapps`, `inst`, `FMW_Home` not shared. Every fix above was applied only to fs1, the current run edition. `fs2`, currently the idle patch edition, has an identical but separate context file, env files, and `tnsnames.ora`, deliberately left untouched during this investigation. (`fs_ne`, the non-editioned file system, is unrelated to any of this — it holds only shared transactional/log data, not app-tier configuration.)
 
-This matters because fs1/fs2 roles swap on every completed patching cycle: whatever is on fs2 today is what goes live after the Delta 14 apply and cutover. `adop phase=prepare` syncs the patch file system from the run file system and reruns AutoConfig as part of that, so some of this may carry over automatically — but that isn't confirmed, particularly for hand-created customizations like the ifile. **Action for the Delta 14 retry: re-check fs2's context descriptor, generation flag, and tnsnames ifile immediately after the next `phase=prepare`, before proceeding further.**
+This matters because fs1/fs2 roles swap on every completed patching cycle: whatever is on fs2 today is what goes live after the Delta 14 apply and cutover. `adop phase=prepare` syncs the patch file system from the run file system and reruns AutoConfig as part of that, so some of this may carry over automatically — but that isn't confirmed, particularly for hand-created customizations like the ifile. **Action for any patching: re-check fs2's context descriptor, generation flag, and tnsnames ifile immediately after the next `phase=prepare`, before proceeding further.**
 
-One concrete consequence already surfaced: the `FND_OAM_CONTEXT_FILES` test above deleted the database rows for *both* fs1 and fs2's context files, not just fs1's. fs1's row was automatically re-created the next time `adconfig.sh` ran there; fs2's was not, since fs2 was intentionally left alone. A missing patch-edition row in `FND_OAM_CONTEXT_FILES` can cause `adop phase=prepare` to fail outright, so this was caught and fixed proactively using the supported `CtxSynchronizer` utility to re-upload fs2's (unmodified) context file into the database:
+One concrete consequence already surfaced: the `APPLSYS.FND_OAM_CONTEXT_FILES` test above deleted the database rows for *both* fs1 and fs2's context files, not just fs1's. fs1's row was automatically re-created the next time `adconfig.sh` ran there; fs2's was not, since fs2 was intentionally left alone. A missing patch-edition row in `FND_OAM_CONTEXT_FILES` can cause `adop phase=prepare` to fail outright, so this was caught and fixed proactively using the supported `CtxSynchronizer` utility to re-upload fs2's (unmodified) context file into the database:
 
 ```bash
 # run from the fs1 (run edition) environment
@@ -480,11 +482,8 @@ $ADJVAPRG oracle.apps.ad.autoconfig.oam.CtxSynchronizer action=upload \
 
 ### Still open
 
-- `FND_NODES` still has stale per-node RAC registrations — the actual structural root cause behind both the JDBC and tnsnames symptoms. `s_jdbc_connect_descriptor_generation=FALSE` and the tnsnames ifile are durable workarounds, not fixes to that source data.
-- Confirm `s_jdbc_connect_descriptor_generation` is currently `FALSE` — it was briefly flipped to `TRUE` mid-troubleshooting to test an unrelated theory and needs to be reset before this is considered closed.
-- `ebsappdb_patch` (the ifile entry for the patch-edition alias) hasn't been individually `tnsping`-tested yet — needed before the Delta 14 apply.
-- fs2 hasn't been checked against any of the fixes above — re-verify after the next `adop phase=prepare` (see above).
-
+- What is the actual structural root cause behind both the JDBC and tnsnames symptoms. `s_jdbc_connect_descriptor_generation=FALSE` and the tnsnames ifile are durable workarounds, not fixes to that source data.
+- Confirm `s_jdbc_connect_descriptor_generation` is currently `FALSE`. It was briefly flipped to `TRUE` mid-troubleshooting to test an unrelated theory and needs to be reset before this is considered closed.
 
 
 ## 7. The test that actually matters: kill a node
@@ -500,5 +499,5 @@ Then confirm from the app tier that active sessions reconnect to `ebsappdb2` (vi
 
 **Result: passed.** Failover completed in approximately 2 minutes.
 
-_Screenshot/command output still to be added._
+
 
