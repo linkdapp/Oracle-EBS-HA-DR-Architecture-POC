@@ -142,6 +142,41 @@ Launching Oracle Grid Infrastructure Setup Wizard...
 
 Rather than hand-editing the `.rsp` template blind, the wizard's own "generate response file" path was used to produce a correct one for this exact staged home — the safer route, since it guarantees every variable name matches what this specific 19.3.0 build actually expects.
 
+Resulting response file, `/u01/app/grid/19.3.0/install/response/upgrade_response.rsp` (key sections):
+
+```
+# SECTION A - BASIC
+INVENTORY_LOCATION=/u01/app/oraInventory
+oracle.install.option=UPGRADE
+ORACLE_BASE=/u01/app/oracle
+
+# SECTION B - GROUPS
+oracle.install.asm.OSDBA=asmdba
+oracle.install.asm.OSOPER=asmoper
+oracle.install.asm.OSASM=asmadmin
+
+# SECTION C - SCAN
+oracle.install.crs.config.scanType=LOCAL_SCAN
+oracle.install.crs.config.gpnp.scanName=scan-oradbserv
+oracle.install.crs.config.gpnp.scanPort=1521
+
+# SECTION D - CLUSTER & GNS
+oracle.install.crs.config.ClusterConfiguration=STANDALONE
+oracle.install.crs.config.configureAsExtendedCluster=false
+oracle.install.crs.config.clusterName=oradbapp-clust
+oracle.install.crs.config.gpnp.configureGNS=false
+oracle.install.crs.config.autoConfigureClusterNodeVIP=false
+oracle.install.crs.config.clusterNodes=oradbserv01.usat.com,oradbserv02.usat.com
+oracle.install.crs.configureGIMR=false
+oracle.install.asm.configureGIMRDataDG=false
+
+# SECTION H - UPGRADE
+oracle.install.crs.config.ignoreDownNodes=false
+
+# Root script execution configuration
+oracle.install.crs.rootconfig.executeRootScript=false
+```
+
 ![Step 3: Dry run, creating the response file](gi_upgrade/Step3_1a_Dry%20run_creating_creating_responsefile.png)
 
 Dry run (non-destructive, mandatory):
@@ -169,8 +204,6 @@ Dry run (non-destructive, mandatory):
 ```bash
 /u01/app/grid/19.3.0/gridSetup.sh -silent -responseFile /u01/app/grid/19.3.0/install/response/upgrade_response.rsp -logLevel finest
 ```
-
-
 
 _OUTPUT:_
 ```
