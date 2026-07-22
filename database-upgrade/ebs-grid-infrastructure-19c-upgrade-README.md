@@ -113,6 +113,9 @@ cd /u01/app/grid/19.3.0
 
 ![Step 2: Launching gridSetup to apply the patch](gi_upgrade/Step3_1d_launching_gridsetup_apply_patch.png)
 
+
+Applying the RU launches the Grid Infrastructure Setup Wizard automatically. 
+
 _OUTPUT:_
 ```
 Preparing the home to patch...
@@ -120,11 +123,6 @@ Applying the patch /u01/app/oracle/staging/patch/gi/38273558/38298204...
 Successfully applied the patch.
 Launching Oracle Grid Infrastructure Setup Wizard...
 ```
-
-## Step 3: Generate the response file (GUI wizard) and dry run
-
-Applying the RU launches the Grid Infrastructure Setup Wizard automatically. Rather than hand-editing the `.rsp` template blind, the wizard's own "generate response file" path was used to produce a correct one for this exact staged home — the safer route, since it guarantees every variable name matches what this specific 19.3.0 build actually expects.
-
 ![Step 3: GUI installer walkthrough](gi_upgrade/Step3_1e_gui_installer.png)
 ![Step 3: GUI installer walkthrough](gi_upgrade/Step3_1f_gui_installer.png)
 ![Step 3: GUI installer walkthrough](gi_upgrade/Step3_1g_gui_installer.png)
@@ -138,40 +136,13 @@ Applying the RU launches the Grid Infrastructure Setup Wizard automatically. Rat
 ![Step 3: GUI installer walkthrough](gi_upgrade/Step3_1o_gui_installer.png)
 ![Step 3: GUI installer walkthrough](gi_upgrade/Step3_1p_gui_installer.png)
 
-Resulting response file, `/u01/app/grid/19.3.0/install/response/upgrade_response.rsp` (key sections):
 
-```
-# SECTION A - BASIC
-INVENTORY_LOCATION=/u01/app/oraInventory
-oracle.install.option=UPGRADE
-ORACLE_BASE=/u01/app/oracle
 
-# SECTION B - GROUPS
-oracle.install.asm.OSDBA=asmdba
-oracle.install.asm.OSOPER=asmoper
-oracle.install.asm.OSASM=asmadmin
+## Step 3: Generate the response file (GUI wizard) and dry run
 
-# SECTION C - SCAN
-oracle.install.crs.config.scanType=LOCAL_SCAN
-oracle.install.crs.config.gpnp.scanName=scan-oradbserv
-oracle.install.crs.config.gpnp.scanPort=1521
+Rather than hand-editing the `.rsp` template blind, the wizard's own "generate response file" path was used to produce a correct one for this exact staged home — the safer route, since it guarantees every variable name matches what this specific 19.3.0 build actually expects.
 
-# SECTION D - CLUSTER & GNS
-oracle.install.crs.config.ClusterConfiguration=STANDALONE
-oracle.install.crs.config.configureAsExtendedCluster=false
-oracle.install.crs.config.clusterName=oradbapp-clust
-oracle.install.crs.config.gpnp.configureGNS=false
-oracle.install.crs.config.autoConfigureClusterNodeVIP=false
-oracle.install.crs.config.clusterNodes=oradbserv01.usat.com,oradbserv02.usat.com
-oracle.install.crs.configureGIMR=false
-oracle.install.asm.configureGIMRDataDG=false
-
-# SECTION H - UPGRADE
-oracle.install.crs.config.ignoreDownNodes=false
-
-# Root script execution configuration
-oracle.install.crs.rootconfig.executeRootScript=false
-```
+![Step 3: Dry run, creating the response file](gi_upgrade/Step3_1a_Dry%20run_creating_creating_responsefile.png)
 
 Dry run (non-destructive, mandatory):
 
@@ -179,7 +150,6 @@ Dry run (non-destructive, mandatory):
 ./gridSetup.sh -silent -dryRunForUpgrade -responseFile /u01/app/grid/19.3.0/install/response/upgrade_response.rsp
 ```
 
-![Step 3: Dry run, creating the response file](gi_upgrade/Step3_1a_Dry%20run_creating_creating_responsefile.png)
 ![Step 3: Dry run, executing](gi_upgrade/Step3_1b_Dry%20run_executing_cmd.png)
 
 ## Step 4: Cluster verification utility
@@ -200,7 +170,7 @@ Dry run (non-destructive, mandatory):
 /u01/app/grid/19.3.0/gridSetup.sh -silent -responseFile /u01/app/grid/19.3.0/install/response/upgrade_response.rsp -logLevel finest
 ```
 
-![Step 5: Silent GI upgrade launch](gi_upgrade/Step5_Run_the_silent_upgrade.png)
+
 
 _OUTPUT:_
 ```
@@ -236,7 +206,7 @@ The `INS-13014` warning is about optional (not mandatory) prerequisites and didn
 
 ## Step 6: Run `rootupgrade.sh` — rolling, one node at a time
 
-*(No screenshot — captured from the terminal/log output directly.)*
+![Step 5: Silent GI upgrade launch](gi_upgrade/Step5_Run_the_silent_upgrade.png)
 
 **`oradbserv01` first, as root:**
 
