@@ -187,9 +187,11 @@ Dry run (non-destructive, mandatory):
 *(No screenshot for this step — command and outcome recorded from the terminal transcript.)*
 
 ```bash
-./runcluvfy.sh stage -pre crsinst -upgrade -rolling \
-  -src_crshome /u01/app/grid/12.2.0 -dest_crshome /u01/app/grid/19.3.0 \
-  -dest_version 19.0.0.0.0 -fixup -verbose
+[grid@oradbserv01 ~]$ export ORACLE_HOME=/u01/app/grid/19.3.0
+[grid@oradbserv01 ~]$ export ORACLE_BASE=/u01/app/oracle
+[grid@oradbserv01 ~]$ export PATH=$PATH:$ORACLE_HOME/bin:$ORACLE_HOME/OPatch
+
+[grid@oradbserv01 ~]$ /u01/app/grid/19.3.0/runcluvfy.sh stage -pre crsinst -upgrade -rolling -src_crshome /u01/app/grid/12.2.0 -dest_crshome /u01/app/19.3.0/grid -dest_version 19.0.0.0.0 -fixupnoexec -verbose -method root
 ```
 
 ## Step 5: Run the silent upgrade
@@ -202,22 +204,32 @@ Dry run (non-destructive, mandatory):
 
 _OUTPUT:_
 ```
+/u01/app/grid/19.3.0/gridSetup.sh -silent -responseFile /u01/app/grid/19.3.0/install/response/upgrade_response.rsp -logLevel finest
+
+[grid@oradbserv01 response]$ /u01/app/grid/19.0.0/gridSetup.sh -silent -responseFile /u01/app/grid/19.3.0/install/response/upgrade_response.rsp -logLevel finest3
 Launching Oracle Grid Infrastructure Setup Wizard...
 
 [WARNING] [INS-13014] Target environment does not meet some optional requirements.
-   CAUSE: Some of the optional prerequisites are not met. See logs for details.
-   ACTION: Identify the list of failed prerequisite checks from the log...
+   CAUSE: Some of the optional prerequisites are not met. See logs for details. /u01/app/oraInventory/logs/GridSetupActions2026-07-22_10-48-59AM/gridSetupActions2026-07-22_10-48-59AM.log
+   ACTION: Identify the list of failed prerequisite checks from the log: /u01/app/oraInventory/logs/GridSetupActions2026-07-22_10-48-59AM/gridSetupActions2026-07-22_10-48-59AM.log. Then either from the log file or from installation manual find the appropriate configuration to meet the prerequisites and fix it manually.
+The response file for this session can be found at:
+ /u01/app/grid/19.3.0/install/response/grid_2026-07-22_10-48-59AM.rsp
+
 
 As a root user, execute the following script(s):
 1. /u01/app/grid/19.3.0/rootupgrade.sh
 
-Execute /u01/app/grid/19.3.0/rootupgrade.sh on the following nodes:
+Execute /u01/app/grid/19.3.0/rootupgrade.sh on the following nodes: 
 [oradbserv01, oradbserv02]
 
-Run the script on the local node first. After successful completion, you can start
-the script in parallel on all other nodes, except a node you designate as the last node.
+Run the script on the local node first. After successful completion, you can start the script in parallel on all other nodes, except a node you designate as the last node. When all the nodes except the last node are done successfully, run the script on the last node.
 
 Successfully Setup Software with warning(s).
+As install user, execute the following command to complete the configuration.
+/u01/app/grid/19.3.0/gridSetup.sh -executeConfigTools -responseFile /u01/app/grid/19.3.0/install/response/upgrade_response.rsp [-silent]
+
+
+[grid@oradbserv01 response]$
 ```
 
 The `INS-13014` warning is about optional (not mandatory) prerequisites and didn't block the upgrade — worth a look in the referenced log at some point, but it didn't need resolving before continuing.
@@ -232,23 +244,90 @@ The `INS-13014` warning is about optional (not mandatory) prerequisites and didn
 /u01/app/grid/19.3.0/rootupgrade.sh
 ```
 
-_OUTPUT (key milestones from the 18-step upgrade sequence):_
+_OUTPUT (key milestones from the 18-step NODE1 upgrade sequence):_
 ```
+[grid@oradbserv01 19.3.0]$ cat /u01/app/grid/19.3.0/install/root_oradbserv01.usat.com_2026-07-22_11-11-45-201212959.log
+Performing root user operation.
+
+The following environment variables are set as:
+    ORACLE_OWNER= grid
+    ORACLE_HOME=  /u01/app/grid/19.3.0
+   Copying dbhome to /usr/local/bin ...
+   Copying oraenv to /usr/local/bin ...
+   Copying coraenv to /usr/local/bin ...
+
+Entries will be added to the /etc/oratab file as needed by
+Database Configuration Assistant when a database is created
+Finished running generic part of root script.
+Now product-specific root actions will be performed.
+Relinking oracle with rac_on option
+Using configuration parameter file: /u01/app/grid/19.3.0/crs/install/crsconfig_params
+The log of current session can be found at:
+  /u01/app/oracle/crsdata/oradbserv01/crsconfig/crsupgrade_oradbserv01_2026-07-22_11-12-16AM.log
 2026/07/22 11:12:30 CLSRSC-595: Executing upgrade step 1 of 18: 'UpgradeTFA'.
+2026/07/22 11:12:30 CLSRSC-4015: Performing install or upgrade action for Oracle Trace File Analyzer (TFA) Collector.
+2026/07/22 11:12:30 CLSRSC-4012: Shutting down Oracle Trace File Analyzer (TFA) Collector.
+
 This version of AHF is older than 365 days. Please upgrade AHF using ahfctl upgrade
+2026/07/22 11:12:46 CLSRSC-4013: Successfully shut down Oracle Trace File Analyzer (TFA) Collector.
+2026/07/22 11:12:46 CLSRSC-595: Executing upgrade step 2 of 18: 'ValidateEnv'.
+2026/07/22 11:12:47 CLSRSC-595: Executing upgrade step 3 of 18: 'GetOldConfig'.
+2026/07/22 11:12:47 CLSRSC-692: Checking whether CRS entities are ready for upgrade. This operation may take a few minutes.
+2026/07/22 11:14:56 CLSRSC-4003: Successfully patched Oracle Trace File Analyzer (TFA) Collector.
+2026/07/22 11:15:27 CLSRSC-693: CRS entities validation completed successfully.
 2026/07/22 11:15:31 CLSRSC-464: Starting retrieval of the cluster configuration data
 PRCT-1470 : failed to reset the Rapid Home Provisioning (RHP) repository
-PRCR-1172 : Failed to execute "srvmhelper" for -getmgmtdbnodename
+ PRCR-1172 : Failed to execute "srvmhelper" for -getmgmtdbnodename
 CRS-4672: Successfully backed up the Voting File for Cluster Synchronization Service.
 2026/07/22 11:15:49 CLSRSC-515: Starting OCR manual backup.
 2026/07/22 11:16:02 CLSRSC-516: OCR manual backup successful.
-2026/07/22 11:16:07 CLSRSC-486: At this stage of upgrade, the OCR has changed.
+2026/07/22 11:16:07 CLSRSC-486:
+ At this stage of upgrade, the OCR has changed.
  Any attempt to downgrade the cluster after this point will require a complete cluster outage to restore the OCR.
+2026/07/22 11:16:08 CLSRSC-541:
+ To downgrade the cluster:
+ 1. All nodes that have been upgraded must be downgraded.
+2026/07/22 11:16:08 CLSRSC-542:
+ 2. Before downgrading the last node, the Grid Infrastructure stack on all other cluster nodes must be down.
+2026/07/22 11:16:15 CLSRSC-465: Retrieval of the cluster configuration data has successfully completed.
+2026/07/22 11:16:15 CLSRSC-595: Executing upgrade step 4 of 18: 'GenSiteGUIDs'.
+2026/07/22 11:16:15 CLSRSC-595: Executing upgrade step 5 of 18: 'UpgPrechecks'.
+2026/07/22 11:16:19 CLSRSC-363: User ignored prerequisites during installation
+2026/07/22 11:16:33 CLSRSC-595: Executing upgrade step 6 of 18: 'SetupOSD'.
+Redirecting to /bin/systemctl restart rsyslog.service
+2026/07/22 11:16:33 CLSRSC-595: Executing upgrade step 7 of 18: 'PreUpgrade'.
 2026/07/22 11:17:10 CLSRSC-468: Setting Oracle Clusterware and ASM to rolling migration mode
+2026/07/22 11:17:10 CLSRSC-482: Running command: '/u01/app/grid/12.2.0/bin/crsctl start rollingupgrade 19.0.0.0.0'
 CRS-1131: The cluster was successfully set to rolling upgrade mode.
+2026/07/22 11:17:15 CLSRSC-482: Running command: '/u01/app/grid/19.3.0/bin/asmca -silent -upgradeNodeASM -nonRolling false -oldCRSHome /u01/app/grid/12.2.0 -oldCRSVersion 12.2.0.1.0 -firstNode true -startRolling false '
+
 ASM configuration upgraded in local node successfully.
+
+2026/07/22 11:17:20 CLSRSC-469: Successfully set Oracle Clusterware and ASM to rolling migration mode
+2026/07/22 11:17:24 CLSRSC-466: Starting shutdown of the current Oracle Grid Infrastructure stack
+2026/07/22 11:17:57 CLSRSC-467: Shutdown of the current Oracle Grid Infrastructure stack has successfully completed.
+2026/07/22 11:18:00 CLSRSC-595: Executing upgrade step 8 of 18: 'CheckCRSConfig'.
+2026/07/22 11:18:01 CLSRSC-595: Executing upgrade step 9 of 18: 'UpgradeOLR'.
+2026/07/22 11:18:14 CLSRSC-595: Executing upgrade step 10 of 18: 'ConfigCHMOS'.
+2026/07/22 11:18:14 CLSRSC-595: Executing upgrade step 11 of 18: 'UpgradeAFD'.
+2026/07/22 11:18:21 CLSRSC-595: Executing upgrade step 12 of 18: 'createOHASD'.
+2026/07/22 11:18:27 CLSRSC-595: Executing upgrade step 13 of 18: 'ConfigOHASD'.
+2026/07/22 11:18:27 CLSRSC-329: Replacing Clusterware entries in file 'oracle-ohasd.service'
+2026/07/22 11:19:00 CLSRSC-595: Executing upgrade step 14 of 18: 'InstallACFS'.
+2026/07/22 11:19:12 CLSRSC-595: Executing upgrade step 15 of 18: 'InstallKA'.
+2026/07/22 11:19:18 CLSRSC-595: Executing upgrade step 16 of 18: 'UpgradeCluster'.
 2026/07/22 11:21:29 CLSRSC-343: Successfully started Oracle Clusterware stack
+clscfg: EXISTING configuration version 5 detected.
+Successfully taken the backup of node specific configuration in OCR.
+Successfully accumulated necessary OCR keys.
+Creating OCR keys for user 'root', privgrp 'root'..
+Operation successful.
+2026/07/22 11:21:51 CLSRSC-595: Executing upgrade step 17 of 18: 'UpgradeNode'.
+2026/07/22 11:21:55 CLSRSC-474: Initiating upgrade of resource types
+2026/07/22 11:23:46 CLSRSC-475: Upgrade of resource types successfully initiated.
+2026/07/22 11:23:55 CLSRSC-595: Executing upgrade step 18 of 18: 'PostUpgrade'.
 2026/07/22 11:24:05 CLSRSC-325: Configure Oracle Grid Infrastructure for a Cluster ... succeeded
+[grid@oradbserv01 19.3.0]$
 ```
 
 Two things worth noting from this log, not treated as blockers:
